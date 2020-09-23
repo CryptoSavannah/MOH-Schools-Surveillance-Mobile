@@ -2702,10 +2702,10 @@ expo-status-bar@~1.0.2:
   resolved "https://registry.yarnpkg.com/expo-status-bar/-/expo-status-bar-1.0.2.tgz#2441a77c56be31597898337b0d086981f2adefd8"
   integrity sha512-5313u744GcLzCadxIPXyTkYw77++UXv1dXCuhYDxDbtsEf93iMra7WSvzyE8a7mRQLIIPRuGnBOdrL/V1C7EOQ==
 
-expo@~39.0.2:
-  version "39.0.2"
-  resolved "https://registry.yarnpkg.com/expo/-/expo-39.0.2.tgz#81bbfe10ea3446c313e6b742689765fc213fe34d"
-  integrity sha512-WKSsyyv818wRLMxB8jOpuGzXtsh3ZMl/c3SfAb5hgVkaD/8NDqCOLJ/yGe0W64FLzOsTHh0QEM1cdyQirlbCYw==
+expo@^39.0.3:
+  version "39.0.3"
+  resolved "https://registry.yarnpkg.com/expo/-/expo-39.0.3.tgz#55d10609b2df9b8d511acb4f3e72e4dc162e6b27"
+  integrity sha512-pbLlkq43XDViEQpzgIW8hEPRibwjSml1uZQ3imPpCDfjMGlq7J6+IIN7q4kd+Hp+W0J6w6INYPR0E/dxdEBkSw==
   dependencies:
     "@babel/runtime" "^7.1.2"
     "@expo/vector-icons" "^10.0.2"
@@ -4905,13 +4905,6 @@ react-native-animatable@^1.3.3:
   integrity sha512-2ckIxZQAsvWn25Ho+DK3d1mXIgj7tITkrS4pYDvx96WyOttSvzzFeQnM2od0+FUMzILbdHDsDEqZvnz1DYNQ1w==
   dependencies:
     prop-types "^15.7.2"
-
-react-native-camera@^3.39.0:
-  version "3.40.0"
-  resolved "https://registry.yarnpkg.com/react-native-camera/-/react-native-camera-3.40.0.tgz#69845991e46b0892cc2b50322d49b18f292c3202"
-  integrity sha512-Ur0hZqZcl3SntTVMB9GxuiLYpQxqwgzhQVb+7EGae4WjfDzQEwlGF0bJ7UpZyeUTb1oZmsiSib58xUckn11XMw==
-  dependencies:
-    prop-types "^15.6.2"
 
 react-native-gesture-handler@^1.6.0:
   version "1.8.0"

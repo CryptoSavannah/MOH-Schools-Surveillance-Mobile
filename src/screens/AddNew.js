@@ -27,7 +27,18 @@ const AddNew = ({navigation}) => {
                         <Picker.Item value="Female" label="Female"/>
                     </Picker>
                 </View>
-
+                <View style={styles.action}>
+                    <Picker label="ID Type" placeholder="ID Type" onValueChange={(val) => setCurrency(val)}
+                            selectedValue={currency}>
+                        <Picker.Item value="" label="ID Type"/>
+                        <Picker.Item value="NIN" label="NIN"/>
+                        <Picker.Item value="Birth Certificate" label="Birth Certificate"/>
+                        <Picker.Item value="Passport" label="Passport"/>
+                    </Picker>
+                </View>
+                <View style={styles.action}>
+                    <FormInput label="ID Number" placeholder="ID Number" onChangeText={(val) => setAmount(val)}/>
+                </View>
             </ScrollView>
         </View>
     );
