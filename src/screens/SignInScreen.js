@@ -75,7 +75,7 @@ const SignInScreen = ({navigation}) => {
             >
                 <ScrollView>
                     <View style={styles.action}>
-                        <FormInput label="Usernames" placeholder="xtian"
+                        <FormInput label="School ID" placeholder=""
                                    onChangeText={(val) => setUsername(val)}/>
                     </View>
                     {data.isValidUser ? null :
@@ -85,8 +85,8 @@ const SignInScreen = ({navigation}) => {
                     }
                     <View style={styles.action}>
                         <FormInput
-                            label="Password"
-                            placeholder="testpass"
+                            label="PIN"
+                            placeholder=""
                             secureTextEntry={data.secureTextEntry}
                             onChangeText={(val) => setPassword(val)}/>
 
@@ -98,7 +98,7 @@ const SignInScreen = ({navigation}) => {
                     }
 
                     <TouchableOpacity>
-                        <Text style={{color: '#bc9151', marginTop: 15}}>Forgot password?</Text>
+                        <Text style={{color: '#bc9151', marginTop: 15}}>Reset PIN?</Text>
                     </TouchableOpacity>
                     <View style={styles.button}>
                         <Button

@@ -65,9 +65,9 @@ export function DrawerContent(props) {
                                     size={size}
                                 />
                             )}
-                            label="Add new"
+                            label="Enter Case"
                             onPress={() => {
-                                props.navigation.navigate('AddNew')
+                                props.navigation.navigate('CaseSteps')
                             }}
                         />
 
@@ -85,6 +85,19 @@ export function DrawerContent(props) {
                             }}
                         />
                     </Drawer.Section>
+                    <DrawerItem
+                            icon={({color, size}) => (
+                                <Icon
+                                    name="download"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Download"
+                            onPress={() => {
+                                // props.navigation.navigate('AddNew')
+                            }}
+                        />
                     <Drawer.Section title="Contacts">
                         <DrawerItem
                             icon={({color, size}) => (

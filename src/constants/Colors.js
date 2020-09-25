@@ -2,12 +2,14 @@ const tintColor = '#2f95dc';
 const whiteColor = '#ffffff';
 const blackColor = '#000000';
 const grayColor = '#808080';
+const blueColor = '#007bff';
 
 export default {
   whiteColor,
   blackColor,
   grayColor,
   tintColor,
+  blueColor,
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,
   tabBar: '#fefefe',

@@ -9,19 +9,19 @@ import * as Animatable from 'react-native-animatable';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const CaseSteps = ({ navigation }) => {
+  //the wizard initial state
   const wizard = useRef();
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isLastStep, setIsLastStep] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
+  //fields initial state
   const [fname, setFName] = useState('');
   const [lname, setLName] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [idType, setIDType] = useState('');
   const [idNum, setIDNum] = useState('');
-
-  const [studentDob] = useState("");
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -56,13 +56,11 @@ const CaseSteps = ({ navigation }) => {
     }
   };
 
-
+  //save case
   const saveStudent = (fname, lname, gender, dob, idType, idNum) => {
     // alert(fname + lname + gender + dob + idType + idNum);
-    // setIsFirstStep(1);
-    // navigation.navigate("CaseDetails");
-    // setCurrentStep();
-    // wizard.current.next()
+    
+    //step 1. check if hash already exits, 
     wizard.current.next();
   };
 

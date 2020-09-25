@@ -5,7 +5,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
-import AddNew from "../screens/AddNew";
+import CaseSteps from "../screens/wizard/CaseSteps";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 const Stack = createStackNavigator();
 
@@ -48,8 +48,8 @@ const DepositStackScreen = ({navigation}) => (
             fontWeight: 'bold'
         }
     }}>
-        <Stack.Screen name="AddNew" component={AddNew} options={{
-            title: 'New student\'s record',
+        <Stack.Screen name="CaseSteps" component={CaseSteps} options={{
+            title: 'Case record',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
                              onPress={() => navigation.openDrawer()}/>
