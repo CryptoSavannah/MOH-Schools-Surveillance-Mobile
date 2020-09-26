@@ -1,14 +1,17 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import Wizard from "react-native-wizard";
 
-import { SafeAreaView, Button, View, Text, TextInput, Picker, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { BackHandler, Switch, SafeAreaView, Button, View, Text, TextInput, Picker, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
 
 import Collapsible from 'react-native-collapsible';
 import CustomMultiPicker from "react-native-multiple-select-list";
 import * as Animatable from 'react-native-animatable';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const CaseSteps = ({ navigation }) => {
+
   //the wizard initial state
   const wizard = useRef();
   const [isFirstStep, setIsFirstStep] = useState(true);
@@ -56,14 +59,7 @@ const CaseSteps = ({ navigation }) => {
     }
   };
 
-  //save case
-  const saveStudent = (fname, lname, gender, dob, idType, idNum) => {
-    // alert(fname + lname + gender + dob + idType + idNum);
-    
-    //step 1. check if hash already exits, 
-    wizard.current.next();
-  };
-
+  // inital state of disease list view
   const [isToggled, setIsToggled] = useState(true);
   const toggle = useCallback(() => setIsToggled(!isToggled));
 
@@ -78,6 +74,18 @@ const CaseSteps = ({ navigation }) => {
     "125": "Pheumonia"
   }
 
+  // inital state of fatal result view
+  const [isToggled2, setIsToggled2] = useState(true);
+  const toggle2 = useCallback(() => setIsToggled2(!isToggled2));
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  // inital state of patient status result view
+  const [isToggled3, setIsToggled3] = useState(true);
+  const toggle3 = useCallback(() => setIsToggled3(!isToggled3));
+
+  // some validation variables
   const [data, setData] = React.useState({
     theDob: "",
     isValidFName: true,
@@ -87,17 +95,53 @@ const CaseSteps = ({ navigation }) => {
     hasResult: false,
   });
 
+  //helper method
   const removeSpaces = (string) => {
     return string.split(' ').join('');
   };
 
+
+
+  //SUBMIT METHODS
+  //save case
+  const saveStudent = (fname, lname, gender, dob, idType, idNum) => {
+    // alert(fname + lname + gender + dob + idType + idNum);
+
+    //step 1. check for required fields: fname, lname, gender, dob
+
+    //step 2. if hash already exits, 
+    //        a. if symptoms are the same, update results in localstorage
+    //        b. else send new case to the block chain and update symptoms in localstorage
+    // else if hash is different, send new case to block chain, save symptoms in localstorage, update results
+
+
+    //updating Results
+    //        Prompt user to  
+    //              a. move to next step if results are ready/ changed
+    //                  load selected items for that case if exists
+    wizard.current.next();
+    //              b. else cancel and return to home screen
+
+  };
+
+  // save case result 
+  const saveResults = (selectedItems, fatalBool, patientStatus) => {
+
+    // if fatal, save to blockchain ..maybe
+    // else save to db
+
+    //prompt user to
+    // a. review case .. return to step one
+    wizard.current.goTo(0);
+    // b. return to home screen
+  }
+
+  //list of all views in steps
   const stepList = [
     {
       content:
         <View style={styles.container} >
-          <View>
-            <Text>Enter Patient's Details</Text>
-          </View>
+            <View style={{paddingBottom: 10}}><Text>{"Enter Patient'\s Details".toUpperCase()}</Text></View>
           <View style={styles.action}>
             <TextInput label="First name" placeholder="First name" onChangeText={(val) => {
               setFName(val)
@@ -139,13 +183,19 @@ const CaseSteps = ({ navigation }) => {
               <Text value="dob">{data.theDob}.</Text>
           } */}
           </View>
-          <View style={{ alignItems: 'flex-end'}}>
-            <View style={{ width: 80, marginTop: 20}}><Button width="80" title="Next" onPress={() => wizard.current.next()} /></View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <View style={{ width: 80, marginTop: 20 }}>
+              <Button rounded
+                            block
+                            style={styles.btn}
+                            color="#bc9151" title="Next" onPress={() => wizard.current.next()} /></View>
           </View>
         </View>,
     },
     {
       content: <View style={styles.container} >
+        <Text style={{paddingBottom: 10}}>{'Patient Identification:'.toUpperCase()} </Text>
+
         <View style={styles.action2}>
           <Picker label="ID Type" style={{ color: "#dedede", padding: 0 }} placeholder="ID Type" onValueChange={(val) => setIDType(val)}
             selectedValue={idType}>
@@ -170,13 +220,17 @@ const CaseSteps = ({ navigation }) => {
         </View>
         <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', paddingTop: 10 }}>
           <View style={{ width: 80 }}>
-            <Button title="Prev" onPress={() => wizard.current.prev()} />
+            <Button rounded
+                            block
+                            style={styles.btn}
+                            color="#bc9151" title="Prev" onPress={() => wizard.current.prev()} />
           </View>
           <View style={{ width: 80 }}>
             <Button title="Save"
               rounded
-              // block
+              block
               style={styles.btn}
+              color="#bc9151"
               onPress={() => {
                 saveStudent(fname, lname, gender, dob, idType, idNum)
               }}
@@ -188,47 +242,17 @@ const CaseSteps = ({ navigation }) => {
         </View>
       </View>,
     },
-    // {
-    //   content:
-    //     <View style={styles.container} >
-    //       <View style={styles.action}>
-    //         <TextInput
-    //           style={styles.TextInputStyleClass}
-    //           underlineColorAndroid="transparent"
-    //           placeholder={"Describe the patient'\s symptoms"}
-    //           placeholderTextColor={"#9E9E9E"}
-    //           numberOfLines={10}
-    //           multiline={true}
-    //         />
-    //       </View>
-    //       <View>
-    //         <Button title="Save"
-    //           rounded
-    //           // block
-    //           style={styles.btn}
-    //           color="#bc9151"
-    //           onPress={() => {
-    //             saveStudent(fname, lname, gender, dob, idType, idNum)
-    //           }}
-    //         >
-    //           {/* <Icon name="briefcase" /> */}
-    //           {/* <Text>{'Save'}</Text> */}
-    //         </Button>
-    //       </View>
-    //     </View>,
-    // },
     {
       content:
-        <View style={{
-          width: 350, height: 550,
-          marginTop: 10,
-        }} >
-          <Text style={{ padding: 20 }}>Update case with medical results. </Text>
+        <View style={{justifyContent: "center",  width: 350, height: 550}} >
+          <Text style={{paddingLeft: 20, paddingBottom: 20}} >{'Patient medical results:'.toUpperCase()} </Text>
 
-          <ScrollView>
-            <TouchableOpacity onPress={toggle} style={{ marginBottom: 10 }}>
+          {/* <ScrollView> */}
+
+            <TouchableOpacity onPress={toggle} style={{ marginBottom: 15 }}>
               <View style={styles.header}>
-                <Text style={styles.headerText}>Click here to update Disease </Text>
+                <Text style={styles.headerText}>Update Disease &nbsp;
+                <Icon name="ios-arrow-forward" /></Text>
               </View>
             </TouchableOpacity>
             <Collapsible collapsed={isToggled} align="center" >
@@ -238,62 +262,91 @@ const CaseSteps = ({ navigation }) => {
                   search={true} // should show search bar?
                   multiple={true} //
                   placeholder={"Search Disease"}
-                  placeholderTextColor={'#F5FCFF'}
+                  placeholderTextColor={'#55A7FF'}
                   returnValue={"label"} // label or value
                   callback={(res) => { }} // callback, array of selected items
                   rowBackgroundColor={"#eee"}
                   rowHeight={40}
                   rowRadius={5}
-                  // searchIconName="ios-checkmark"
-                  searchIconColor="red"
+                  // searchIconName="ios-checkmark-circle"
+                  // searchIconColor="red"
                   searchIconSize={30}
-                  iconColor={"#F5FCFF"}
+                  iconColor={"#55A7FF"}
                   iconSize={30}
-                  // selectedIconName={"ios-checkmark-circle-outline"}
-                  // unselectedIconName={"ios-radio-button-off-outline"}
+                  selectedIconName={"ios-checkmark-circle"}
+                  // unselectedIconName={"ios-radio-button-off"}
                   scrollViewHeight={130}
-                  selected={[]} // list of options which are selected by default
+                  selected={selectedItems} // list of options which are selected by default
                 />
               </View>
             </Collapsible>
-            <View style={{
-              padding: 20, borderBottomColor: "#dedede",
-              borderBottomWidth: 1,
-              paddingBottom: 10, flexDirection: "row"
-            }}>
-              <TextInput
-                style={styles.TextInputStyleClass}
-                underlineColorAndroid="transparent"
-                placeholder={"Description"}
-                placeholderTextColor={"#9E9E9E"}
-                numberOfLines={3}
-                multiline={true}
+
+
+            <TouchableOpacity onPress={toggle2} style={{ marginBottom: 15 }}>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Record Fatal Case &nbsp;
+                <Icon name="ios-arrow-forward" /></Text>
+              </View>
+            </TouchableOpacity>
+            <Collapsible collapsed={isToggled2} align="center" >
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
               />
-            </View>
+            </Collapsible>
+
+
+            <TouchableOpacity onPress={toggle3} style={{ marginBottom: 15 }}>
+              <View style={styles.header}>
+                <Text style={styles.headerText}>Patient Status &nbsp;
+                <Icon name="ios-arrow-forward" /></Text>
+              </View>
+            </TouchableOpacity>
+            <Collapsible collapsed={isToggled3} align="center" >
+              <View style={{
+                padding: 20, borderBottomColor: "#dedede",
+                borderBottomWidth: 1,
+                paddingBottom: 10, flexDirection: "row"
+              }}>
+                <TextInput
+                  style={styles.TextInputStyleClass}
+                  underlineColorAndroid="transparent"
+                  placeholder={"Enter after care description of patient's status"}
+                  placeholderTextColor={"#9E9E9E"}
+                  numberOfLines={3}
+                  multiline={true}
+                />
+              </View>
+            </Collapsible>
+
 
             <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', padding: 10 }}>
               <View style={{ width: 80 }}>
-                <Button title="Prev" onPress={() => wizard.current.prev()} />
+                <Button rounded
+                            block
+                            style={styles.btn}
+                            color="#bc9151" title="Prev" onPress={() => wizard.current.prev()} />
               </View>
               <View style={{ width: 80 }}>
-                <Button rounded title="Save"
-                  onPress={() => { wizard.current.goTo(0) }} >
+                <Button rounded
+                            block
+                            style={styles.btn}
+                            color="#bc9151" title="Save"
+                  onPress={saveResults} >
                 </Button>
               </View>
             </View>
-          </ScrollView>
+          {/* </ScrollView> */}
         </View>,
     },
   ];
 
 
-
-
-
-  //required fields******************************************************************
-
-
   return (
+    // wizard setup 
     <View>
       <SafeAreaView style={{ backgroundColor: "#FFF" }}>
         {/* <View
@@ -305,9 +358,15 @@ const CaseSteps = ({ navigation }) => {
             borderBottomWidth: 1,
             padding: 10
           }}>
-          <Button disabled={isFirstStep} title="Prev" onPress={() => wizard.current.prev()} />
+          <Button rounded
+                            block
+                            style={styles.btn}
+                            color="#bc9151" disabled={isFirstStep} title="Prev" onPress={() => wizard.current.prev()} />
           <Text style={{ alignSelf: "center" }}>Step {currentStep + 1}</Text>
-          <Button disabled={isLastStep} title="Next" onPress={() => wizard.current.next()} />
+          <Button rounded
+                            block
+                            style={styles.btn}
+                            color="#bc9151" disabled={isLastStep} title="Next" onPress={() => wizard.current.next()} />
         </View> */}
       </SafeAreaView>
       <View style={{ flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
@@ -352,6 +411,7 @@ export default CaseSteps;
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
+    justifyContent: "center",
     width: 350, height: 450,
     marginTop: 10,
     padding: 20,
@@ -412,15 +472,20 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    backgroundColor: '#F5FCFF',
-    padding: 10,
-    marginTop: 10
+    // backgroundColor: '#55A7FF',
+    // padding: 10,
+    paddingBottom: 0,
+    marginBottom: 0,
+    marginTop: 10,
 
   },
   headerText: {
-    textAlign: 'center',
+    // textAlign: 'center',
+    paddingLeft: 20,
+    fontWeight: 'bold',
     fontSize: 16,
-    fontWeight: '500',
+    textDecorationLine: 'underline',
+    color: '#55A7FF'
   },
   content: {
     padding: 20,
