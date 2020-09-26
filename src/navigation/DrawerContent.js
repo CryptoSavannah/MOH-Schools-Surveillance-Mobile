@@ -88,10 +88,15 @@ export function DrawerContent(props) {
                     <DrawerItem
                             icon={({color, size}) => (
                                 <Icon
-                                    name="download"
+                                    name="download-outline"
                                     color={color}
                                     size={size}
                                 />
+                                // <Icon
+                                //     name="download"
+                                //     color={color}
+                                //     size={size}
+                                // />
                             )}
                             label="Download"
                             onPress={() => {

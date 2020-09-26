@@ -30,7 +30,7 @@ const TabNavigator = () => (
             options={{
                 tabBarLabel: 'Enter Case',
                 tabBarIcon: ({color}) => (
-                    <Icon name="ios-briefcase" color={color} size={26}/>
+                    <Icon name="ios-journal" color={color} size={26}/>
                 ),
             }}
         />
