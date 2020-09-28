@@ -5,7 +5,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
-import CaseSteps from "../screens/wizard/CaseSteps";
+import Case from "../screens/wizard/Case";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 const Stack = createStackNavigator();
 
@@ -48,7 +48,7 @@ const DepositStackScreen = ({navigation}) => (
             fontWeight: 'bold'
         }
     }}>
-        <Stack.Screen name="CaseSteps" component={CaseSteps} options={{
+        <Stack.Screen name="Case" component={Case} options={{
             title: 'Case record',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"

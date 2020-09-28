@@ -25,7 +25,7 @@ const TabNavigator = () => (
             }}
         />
         <Tab.Screen
-            name="CaseSteps"
+            name="Case"
             component={DepositStackScreen}
             options={{
                 tabBarLabel: 'Enter Case',
