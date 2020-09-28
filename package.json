@@ -18,6 +18,7 @@
     "@react-navigation/native": "^5.0.6",
     "@react-navigation/stack": "^5.0.6",
     "expo": "^39.0.3",
+    "expo-file-system": "^9.2.0",
     "expo-status-bar": "~1.0.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
@@ -36,9 +37,11 @@
     "react-native-safe-area-context": "^0.7.3",
     "react-native-screens": "^2.0.0-beta.8",
     "react-native-svg": "^12.1.0",
+    "react-native-table-component": "^1.2.1",
     "react-native-vector-icons": "^7.1.0",
     "react-native-web": "~0.13.12",
-    "react-native-wizard": "^2.1.0"
+    "react-native-wizard": "^2.1.0",
+    "xlsx": "^0.16.7"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
