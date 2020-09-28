@@ -5,7 +5,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
-import Case from "../screens/wizard/Case";
+import Case from "../screens/Case";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 const Stack = createStackNavigator();
 
