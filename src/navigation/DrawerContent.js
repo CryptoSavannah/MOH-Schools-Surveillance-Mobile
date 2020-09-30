@@ -100,7 +100,7 @@ export function DrawerContent(props) {
                             )}
                             label="Download"
                             onPress={() => {
-                                props.navigation.navigate('DownloadScreen')
+                                props.navigation.navigate('ResultScreen')
                             }}
                         />
                     <Drawer.Section title="Contacts">

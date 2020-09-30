@@ -98,4 +98,24 @@ const DownloadStackScreen = ({navigation}) => (
     </Stack.Navigator>
 );
 
-export {HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen};
+const ResultScreen = ({navigation}) => (
+    <Stack.Navigator screenOptions={{
+        headerStyle: {
+            backgroundColor: '#3a3838',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold'
+        }
+    }}>
+        <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                             onPress={() => navigation.openDrawer()}/>
+            ),
+            headerShown: false,
+        }}/>
+    </Stack.Navigator>
+);
+
+export {HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen, ResultScreen};

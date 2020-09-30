@@ -8,6 +8,8 @@ import XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
 // import * as Sharing from 'expo-sharing';
 
+// import { writeFile, readFile } from 'react-native-fs';
+
 const DownloadScreen = ({ navigation }) => {
 
     const initialState = {
@@ -182,7 +184,7 @@ const DownloadScreen = ({ navigation }) => {
               rounded
               block
               style={styles.btn}
-              color="#bc9151"
+              color="#FFB236"
               onPress={() => { exportRd() }}
             >
             </Button>

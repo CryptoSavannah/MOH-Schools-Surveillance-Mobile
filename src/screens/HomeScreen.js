@@ -11,6 +11,7 @@ import {
     Platform, Image
 } from 'react-native';
 import {useTheme} from '@react-navigation/native';
+import { Button as ButtonF, Icon as IconF, Text as TextF } from "@99xt/first-born";
 
 const HomeScreen = ({navigation}) => {
 
@@ -21,6 +22,12 @@ const HomeScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
                 <Text> Home screen</Text>
+                <ButtonF
+                    color="#808080"
+                    onPress={navigation.navigate("ResultScreen")}
+                  >
+                    <IconF name="arrow-forward" />
+                  </ButtonF>
         </View>
     );
 };
