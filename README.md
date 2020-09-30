@@ -37,11 +37,11 @@ yarn start -- --reset-cache
 
 Starts the expo cli build and the app runs in development mode.
 
-### Networking
+## Networking
 
 The app interracts with the block chain. Open .... file and set variables for the blockchain that has been set up for interfacing.
 
-### Troubleshooting
+## Troubleshooting
 
 Logs are displayed on the expo client on the phone, and a console started using the expo cli.
 
