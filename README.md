@@ -40,7 +40,6 @@ Starts the expo cli build and the app runs in development mode.
 ### Networking
 
 The app interracts with the block chain. Open .... file and set variables for the blockchain that has been set up for interfacing.
-blah blah blah
 
 ### Troubleshooting
 
