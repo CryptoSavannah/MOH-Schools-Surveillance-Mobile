@@ -1,15 +1,27 @@
-import React, {Component} from 'react';
-import {TouchableOpacity, Image, SafeAreaView, ScrollView, StyleSheet, View} from 'react-native';
-
-import {Block, Card, Text, Icon, Label} from '../components/index';
-import * as theme from "react-native-paper";
+import React from 'react';
+import {
+    View,
+    Text,
+    Button,
+    StyleSheet,
+    StatusBar,
+    ScrollView,
+    TextInput,
+    TouchableOpacity,
+    Platform, Image,
+    SafeAreaView
+} from 'react-native';
+import {useTheme} from '@react-navigation/native';
+import { Button as ButtonF, Icon as IconF, Text as TextF } from "@99xt/first-born";
+import Block from "../components/Block";
+import Card from "../components/Card";
+import Icon from "../components/Icon";
 
 const HomeScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.overview}>
             <ScrollView contentContainerStyle={{paddingVertical: 25}}>
-
 
                 <Block row style={[styles.margin]}>
                     <Card middle style={{marginRight: 7}}>
@@ -106,7 +118,7 @@ const styles = StyleSheet.create({
     overview: {
         flex: 1,
         flexDirection: 'column',
-        backgroundColor: theme.Colors.white,
+        backgroundColor: '#fff',
     },
     margin: {
         marginHorizontal: 25,

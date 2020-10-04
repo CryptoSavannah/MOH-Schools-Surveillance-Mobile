@@ -11,7 +11,7 @@ const Tab = createMaterialBottomTabNavigator();
 const TabNavigator = () => (
     <Tab.Navigator
         initialRouteName="Home"
-        activeColor="#eec971"
+        activeColor="#FFB236"
         barStyle={{backgroundColor: '#3a3838'}}
     >
         <Tab.Screen
@@ -25,7 +25,7 @@ const TabNavigator = () => (
             }}
         />
         <Tab.Screen
-            name="CaseSteps"
+            name="Case"
             component={DepositStackScreen}
             options={{
                 tabBarLabel: 'Enter Case',

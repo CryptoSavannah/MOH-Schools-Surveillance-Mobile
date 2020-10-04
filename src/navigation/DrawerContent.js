@@ -67,7 +67,7 @@ export function DrawerContent(props) {
                             )}
                             label="Enter Case"
                             onPress={() => {
-                                props.navigation.navigate('CaseSteps')
+                                props.navigation.navigate('Case')
                             }}
                         />
 
@@ -100,7 +100,7 @@ export function DrawerContent(props) {
                             )}
                             label="Download"
                             onPress={() => {
-                                // props.navigation.navigate('AddNew')
+                                props.navigation.navigate('ResultScreen')
                             }}
                         />
                     <Drawer.Section title="Contacts">

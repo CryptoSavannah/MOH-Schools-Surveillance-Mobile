@@ -5,7 +5,7 @@ import {createStackNavigator} from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
-import CaseSteps from "../screens/wizard/CaseSteps";
+import Case from "../screens/Case";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import {TouchableOpacity} from "react-native";
 import {Block, Text} from "../components";
@@ -60,7 +60,7 @@ const DepositStackScreen = ({navigation}) => (
             fontWeight: 'bold'
         }
     }}>
-        <Stack.Screen name="CaseSteps" component={CaseSteps} options={{
+        <Stack.Screen name="Case" component={Case} options={{
             title: 'Case record',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
@@ -90,4 +90,44 @@ const ProfileStackScreen = ({navigation}) => (
     </Stack.Navigator>
 );
 
-export {HomeStackScreen, DepositStackScreen, ProfileStackScreen};
+const DownloadStackScreen = ({navigation}) => (
+    <Stack.Navigator screenOptions={{
+        headerStyle: {
+            backgroundColor: '#3a3838',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold'
+        }
+    }}>
+        <Stack.Screen name="DownloadScreen" component={DownloadScreen} options={{
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                             onPress={() => navigation.openDrawer()}/>
+            ),
+            headerShown: false,
+        }}/>
+    </Stack.Navigator>
+);
+
+const ResultScreen = ({navigation}) => (
+    <Stack.Navigator screenOptions={{
+        headerStyle: {
+            backgroundColor: '#3a3838',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            fontWeight: 'bold'
+        }
+    }}>
+        <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                             onPress={() => navigation.openDrawer()}/>
+            ),
+            headerShown: false,
+        }}/>
+    </Stack.Navigator>
+);
+
+export {HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen, ResultScreen};
