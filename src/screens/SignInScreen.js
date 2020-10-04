@@ -1,47 +1,28 @@
 import React, {useState} from 'react';
-import {
-    View,
-    TouchableOpacity,
-    TextInput,
-    Platform,
-    StyleSheet,
-    StatusBar,
-    Alert,
-    ScrollView,
-} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-
-import {useTheme} from 'react-native-paper';
-
-import {AuthContext} from '../components/context';
-
+import {StyleSheet, Alert, Text, View, TextInput, TouchableOpacity, BackHandler, Image, ActivityIndicator} from 'react-native';
+import logo from '../assets/logo.png';
+// import {FormInput, Button, Icon, Text} from "@99xt/first-born";
 import Users from '../model/users';
-import {FormInput, Button, Icon, Text} from "@99xt/first-born";
+import {useTheme} from 'react-native-paper';
+import {AuthContext} from '../components/context';
 
 const SignInScreen = ({navigation}) => {
 
-    const [data, setData] = React.useState({
-        username: '',
-        password: '',
-        check_textInputChange: false,
-        secureTextEntry: true,
-        isValidUser: true,
-        isValidPassword: true,
-    });
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    // const [email, setEmail] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const {colors} = useTheme();
+    // const {colors} = useTheme();
 
     const {signIn} = React.useContext(AuthContext);
 
 
-    const loginHandle = (userName, password) => {
+    const loginHandle = (userName, passWord) => {
         // alert('User: ' + userName + ' Pass: ' + password)
 
         const foundUser = Users.filter(item => {
-            return userName == item.username && password == item.password;
+            return userName == item.username && passWord == item.password;
         });
 
         if (username.length === 0 || password.length === 0) {
@@ -57,75 +38,90 @@ const SignInScreen = ({navigation}) => {
             ]);
             return;
         }
+        setIsLoading(true)
         signIn(foundUser);
     };
 
 
+    const onLogin = () => {
+
+        // fetch(api, data)
+        //     .then(response => response.json())  // promise
+        //     .then(json => {
+        //         if (json.error) {
+        //             alert(json.error);
+        //         } else {
+        //             // alert(json.user._id);
+        //             AsyncStorage.setItem('user', JSON.stringify(json.user))
+        //                 .then(() => {
+        //                     // this.setState({ userId: user._id, showLoginForm: true });
+        //                 });
+        //             let usr = json.user;
+        //             this.setState({
+        //                 loading: false,
+        //                 showLoginForm: false,
+        //                 userId: usr._id,
+        //                 email: usr.email,
+        //                 phone: usr.phone,
+        //                 username: usr.name,
+        //             });
+        //         }
+        //     }).catch(function (err) {
+        //     alert('There was an error');
+        //     alert('Thanks');
+        //     console.log(err);
+        // });
+    }
+
+    const onSignup = () => {
+        navigation.navigate('SignUpScreen');
+    }
+
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#3a3838' barStyle="light-content"/>
-            <View style={styles.header}>
-                <Text style={styles.text_header}>Welcome!</Text>
+            <Image style={styles.logo} source={logo}/>
+            <Text style={styles.header}>Login</Text>
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.inputText}
+                    placeholder="School Number"
+                    placeholderTextColor="#003f5c"
+                    name="email"
+                    keyboardType="phone-pad"
+                    onChangeText={(text) => setUsername(text.toLowerCase())}/>
             </View>
-            <Animatable.View
-                animation="fadeInUpBig"
-                style={[styles.footer, {
-                    backgroundColor: colors.background
-                }]}
-            >
-                <ScrollView>
-                    <View style={styles.action}>
-                        <FormInput label="Usernames" placeholder="xtian"
-                                   onChangeText={(val) => setUsername(val)}/>
-                    </View>
-                    {data.isValidUser ? null :
-                        <Animatable.View animation="fadeInLeft" duration={500}>
-                            <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
-                        </Animatable.View>
-                    }
-                    <View style={styles.action}>
-                        <FormInput
-                            label="Password"
-                            placeholder="testpass"
-                            secureTextEntry={data.secureTextEntry}
-                            onChangeText={(val) => setPassword(val)}/>
+            <View style={styles.inputView}>
+                <TextInput
+                    secureTextEntry
+                    style={styles.inputText}
+                    placeholder="Password"
+                    placeholderTextColor="#003f5c"
+                    name="password"
+                    onChangeText={(text) => setPassword(text)}/>
+            </View>
 
-                    </View>
-                    {data.isValidPassword ? null :
-                        <Animatable.View animation="fadeInLeft" duration={500}>
-                            <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
-                        </Animatable.View>
-                    }
+            {isLoading ?
+                <TouchableOpacity
+                    style={styles.loginBtn}
+                >
+                    <ActivityIndicator animating={isLoading} color="#fff"/>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity
+                    style={styles.loginBtn}
+                    onPress={() => loginHandle("xtian", "testpass")}>
+                    <Text style={styles.loginText}>LOGIN</Text>
+                </TouchableOpacity>
 
-                    <TouchableOpacity>
-                        <Text style={{color: '#bc9151', marginTop: 15}}>Forgot password?</Text>
-                    </TouchableOpacity>
-                    <View style={styles.button}>
-                        <Button
-                            rounded
-                            block
-                            style={styles.button}
-                            color="#bc9151"
-                            onPress={() => {
-                                loginHandle(username, password)
-                            }}
-                        >
-                            <Icon name="checkmark"/>
-                            <Text>{'Sign in'}</Text>
-                        </Button>
 
-                        <Button
-                            rounded
-                            outline
-                            block
-                            onPress={() => navigation.navigate('SignUpScreen')}
-                        >
-                            <Text>{'Sign up'}</Text>
-                        </Button>
+            }
 
-                    </View>
-                </ScrollView>
-            </Animatable.View>
+            {/*<TouchableOpacity*/}
+            {/*    style={styles.signup}*/}
+            {/*    onPress={() => onSignup()}*/}
+            {/*>*/}
+            {/*    <Text>Signup</Text>*/}
+            {/*</TouchableOpacity>*/}
         </View>
     );
 };
@@ -135,68 +131,65 @@ export default SignInScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#3a3838'
+        backgroundColor: '#f0ebe5',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    logo: {
+        // fontWeight: 'bold',
+        // fontSize: 50,
+        // color: '#fb5b5a',
+        // marginBottom: 40,
+        width: 130,
+        height: 130,
+        marginBottom: 20,
     },
     header: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        paddingHorizontal: 20,
-        paddingBottom: 50
+        fontWeight: "bold",
+        fontSize: 24,
+        color: "#333",
+        marginTop: 20,
+        marginBottom: 30
     },
-    footer: {
-        flex: 3,
+    inputView: {
+        width: '80%',
         backgroundColor: '#fff',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        paddingHorizontal: 20,
-        paddingVertical: 30
-    },
-    text_header: {
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: 30
-    },
-    text_footer: {
-        color: '#05375a',
-        fontSize: 18
-    },
-    action: {
-        flexDirection: 'row',
-        // marginTop: 10,
-        // borderBottomWidth: 1,
-        // borderBottomColor: '#f2f2f2',
-        // paddingBottom: 5
-    },
-    actionError: {
-        flexDirection: 'row',
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#FF0000',
-        paddingBottom: 5
-    },
-    textInput: {
-        flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
-        paddingLeft: 10,
-        color: '#05375a',
-    },
-    errorMsg: {
-        color: '#FF0000',
-        // fontSize: 14,
-    },
-    button: {
-        alignItems: 'center',
-        marginTop: 10
-    },
-    signIn: {
-        width: '100%',
+        borderRadius: 25,
         height: 50,
+        marginBottom: 20,
         justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10
+        padding: 20,
     },
-    textSign: {
-        fontSize: 18,
-        fontWeight: 'bold'
-    }
+    inputText: {
+        height: 50,
+    },
+    forgot: {
+        // color: 'white',
+        fontSize: 11,
+    },
+    loginBtn: {
+        width: '80%',
+        backgroundColor: '#FFB236',
+        justifyContent: 'center',
+        borderRadius: 50,
+        padding: 10,
+        alignItems: "center",
+    },
+    loginText: {
+        color: 'white',
+    },
+    signup: {
+        marginTop: 20,
+        width: '80%',
+        borderRadius: 25,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        // marginTop: 40,
+        marginBottom: 10,
+    },
+    // logo: {
+    //     width: "80%",
+    //     height: "30%"
+    // }
 });

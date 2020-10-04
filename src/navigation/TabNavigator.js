@@ -25,12 +25,12 @@ const TabNavigator = () => (
             }}
         />
         <Tab.Screen
-            name="AddNew"
+            name="CaseSteps"
             component={DepositStackScreen}
             options={{
-                tabBarLabel: 'Add New',
+                tabBarLabel: 'Enter Case',
                 tabBarIcon: ({color}) => (
-                    <Icon name="ios-add-circle" color={color} size={26}/>
+                    <Icon name="ios-journal" color={color} size={26}/>
                 ),
             }}
         />
