@@ -79,6 +79,7 @@ const Results = ({ route, navigation }) => {
     const { gender } = route.params ?? {};
 
     useEffect(() => {
+        console.log("case res ...:")
         if (typeof name !== 'undefined') {
             setName(name);
         }
@@ -91,6 +92,8 @@ const Results = ({ route, navigation }) => {
         if (typeof gender !== 'undefined') {
             setGender(gender);
         }
+
+        return () => {navigation.navigate('Home');}
     }, [name, disease, status, gender]);
 
     const saveCase = () => {
@@ -174,7 +177,7 @@ const Results = ({ route, navigation }) => {
 
                         <CustomMultiPicker
                             options={userList}
-                            search={true} // should show search bar?
+                            // search={true} // should show search bar?
                             multiple={true} //
                             placeholder={"Search Disease"}
                             placeholderTextColor={'#55A7FF'}
@@ -187,13 +190,13 @@ const Results = ({ route, navigation }) => {
                             rowBackgroundColor={"#eee"}
                             rowHeight={40}
                             rowRadius={5}
-                            searchIconName="ios-checkmark"
-                            searchIconColor="red"
-                            searchIconSize={30}
+                            // searchIconName="ios-search"
+                            // searchIconColor="red"
+                            // searchIconSize={30}
                             iconColor={"#55A7FF"}
                             iconSize={30}
-                            selectedIconName={"ios-checkmark-circle"}
-                            // unselectedIconName={"ios-radio-button-off"}
+                            selectedIconName={"ios-checkmark-circle-outline"}
+                            // unselectedIconName={"ios-radio-button-off-outline"}
                             scrollViewHeight={'40%'}
                             selected={[vdisease]} // list of options which are selected by default
                         />
