@@ -1,0 +1,4 @@
+2020.10.14 01:03:03 INFO  started: Metals version 0.9.4 in workspace '/home/lillian26/Documents/Wrk_Current/Crypto S/schools-survailance' for client vscode.
+2020.10.14 01:03:08 INFO  time: initialize in 4.89s
+2020.10.14 01:03:14 WARN  no build tool detected in workspace '/home/lillian26/Documents/Wrk_Current/Crypto S/schools-survailance'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2020.10.14 01:13:24 INFO  shutting down Metals

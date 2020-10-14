@@ -10,6 +10,8 @@ import ProfileScreen from "../screens/profile/ProfileScreen";
 import {TouchableOpacity} from "react-native";
 import {Block, Text} from "../components";
 import PendingCases from "../screens/PendingCases";
+import ResultScreen from "../screens/Results";
+
 const Stack = createStackNavigator();
 
 const screenOptionStyle = {
@@ -46,6 +48,16 @@ const HomeStackScreen = ({navigation}) => (
                              onPress={() => navigation.openDrawer()}/>
             ),
             // headerShown: false,
+        }}/>
+        <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
+            title: 'Case Record',
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                             onPress={() => navigation.openDrawer()}/>
+            ),
+            headerRight: () => (
+                <TouchableOpacity><Icon notification /></TouchableOpacity>
+            )
         }}/>
     </Stack.Navigator>
 );
@@ -110,24 +122,4 @@ const DownloadStackScreen = ({navigation}) => (
     </Stack.Navigator>
 );
 
-const ResultScreen = ({navigation}) => (
-    <Stack.Navigator screenOptions={{
-        headerStyle: {
-            backgroundColor: '#3a3838',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-            fontWeight: 'bold'
-        }
-    }}>
-        <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
-            ),
-            headerShown: false,
-        }}/>
-    </Stack.Navigator>
-);
-
-export {HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen, ResultScreen};
+export {HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen};

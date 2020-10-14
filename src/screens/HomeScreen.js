@@ -46,7 +46,16 @@ const HomeScreen = ({navigation}) => {
                 >
                     <Text>NEW CASES</Text>
                     <Block style={styles.driver}>
-                        <TouchableOpacity activeOpacity={0.8}>
+                        <TouchableOpacity activeOpacity={0.8}
+                        onPress={() => {
+                            // navigation.navigate('ResultScreen')
+                            navigation.navigate('ResultScreen', {
+                                name: 'James Koko',
+                                gender: 'M',
+                                disease: 'Headacke',
+                                status: "Pending"
+                              });
+                        }}>
                             <Block row center>
                                 <Block>
                                     <Image
@@ -66,7 +75,16 @@ const HomeScreen = ({navigation}) => {
                         </TouchableOpacity>
                     </Block>
                     <Block style={styles.driver}>
-                        <TouchableOpacity activeOpacity={0.8}>
+                        <TouchableOpacity activeOpacity={0.8}
+                        onPress={() => {
+                            // navigation.navigate('ResultScreen')
+                            navigation.navigate('ResultScreen', {
+                                name: 'Alex Monza',
+                                gender: 'M',
+                                disease: 'Malaria',
+                                status: "Closed"
+                              });
+                        }}>
                             <Block row center>
                                 <Block>
                                     <Image
@@ -86,7 +104,16 @@ const HomeScreen = ({navigation}) => {
                         </TouchableOpacity>
                     </Block>
                     <Block style={styles.driver}>
-                        <TouchableOpacity activeOpacity={0.8}>
+                        <TouchableOpacity activeOpacity={0.8}
+                        onPress={() => {
+                            // navigation.navigate('ResultScreen')
+                            navigation.navigate('ResultScreen', {
+                                name: 'Julius Makayu',
+                                gender: 'M',
+                                disease: 'Covid',
+                                status: "Deceased"
+                              });
+                        }}>
                             <Block row center>
                                 <Block>
                                     <Image

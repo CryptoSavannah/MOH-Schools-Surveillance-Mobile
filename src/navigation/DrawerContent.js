@@ -81,7 +81,7 @@ export function DrawerContent(props) {
                             )}
                             label="School profile"
                             onPress={() => {
-                                props.navigation.navigate('Profile')
+                                props.navigation.navigate('School')
                             }}
                         />
                     </Drawer.Section>
@@ -100,7 +100,7 @@ export function DrawerContent(props) {
                             )}
                             label="Download"
                             onPress={() => {
-                                props.navigation.navigate('ResultScreen')
+                                // props.navigation.navigate('ResultScreen')
                             }}
                         />
                     <Drawer.Section title="Contacts">
