@@ -4,54 +4,21 @@ Mobile App written in React-Native and has read and write permissions to a Block
 
 ## Setup
 
-This project was built using expo cli (https://github.com/expo/expo-cli).
+This project was built using expo cli (https://github.com/expo/expo-cli), and Javascript.
 
-## Outline
+## Features
 
-* Available scripts
-* Networking
-* Testing
-* Customizing App Display, Name, Theme and Icon
-* License
+### School Information
+A school representative is able to log onto the app using details presented to them. The school's details are retrieved and stored on the device.
 
-## Available Scripts
+### Record details of a case.
+Information captured includes; patient's personal details that are maintained on the device, and pertaining health condition as described by the health worker.
 
-If Yarn was installed when the project was initialized, then dependencies will have been installed via Yarn, and you should probably use it to run these commands as well. Unlike dependency installation, command running syntax is identical for Yarn and NPM at the time of this writing.
+### Update a patient's record with status and results of testing.
+A Health worker is able to update a case record by entering the status of the patient and the disease that is confirmed after results of testing have been presented to them.
 
-### `npm start`
-
-Runs your app in development mode.
-
-Open it in the [Expo app](https://expo.io) on your phone to view it. It will reload if you save edits to your files, and you will see build errors and logs in the terminal.
-
-Sometimes you may need to reset or clear the React Native packager's cache. To do so, you can pass the `--reset-cache` flag to the start script:
-
-```
-npm start -- --reset-cache
-# or
-yarn start -- --reset-cache
-
-```
-
-### `expo start`
-
-Starts the expo cli build and the app runs in development mode.
-
-## Networking
-
-The app interracts with the block chain. Open .... file and set variables for the blockchain that has been set up for interfacing.
-
-## Troubleshooting
-
-Logs are displayed on the expo client on the phone, and a console started using the expo cli.
-
-## Customizing App Display Name and Icon
-
-You can edit `app.json` to include [configuration keys](https://docs.expo.io/versions/latest/guides/configuration.html) under the `expo` key.
-
-To change your app's display name, set the `expo.name` key in `app.json` to an appropriate string.
-
-To set an app icon, set the `expo.icon` key in `app.json` to be either a local path or a URL. It's recommended that you use a 512x512 png file with transparency.
+### Overview of cases recorded in the school.
+This feature displays a list of new cases recorded; a summary of recorded cases and their outcome. 
 
 ## License
 
