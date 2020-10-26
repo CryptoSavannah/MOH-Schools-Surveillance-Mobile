@@ -100,7 +100,7 @@ export function DrawerContent(props) {
                             )}
                             label="Download"
                             onPress={() => {
-                                // props.navigation.navigate('ResultScreen')
+                                props.navigation.navigate('Download')
                             }}
                         />
                     <Drawer.Section title="Contacts">
@@ -151,8 +151,8 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 16,
-        marginTop: 3,
-        fontWeight: 'bold',
+        // marginTop: 3,
+        // fontWeight: 'bold',
     },
     caption: {
         fontSize: 14,

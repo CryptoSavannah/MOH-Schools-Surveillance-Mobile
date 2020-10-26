@@ -12,13 +12,13 @@ This project was built using expo cli (https://github.com/expo/expo-cli), and Ja
 A school representative is able to log onto the app using details presented to them. The school's details are retrieved and stored on the device.
 
 ### Record details of a case.
-Information captured includes; patient's personal details that are maintained on the device, and pertaining health condition as described by the health worker.
+A patient's identification details are retrieved on the device, and information pertaining health condition is recorded as described by the health worker.
 
 ### Update a patient's record with status and results of testing.
-A Health worker is able to update a case record by entering the status of the patient and the disease that is confirmed after results of testing have been presented to them.
+A Health worker is able to update a case record by entering the condition of the patient and the disease that is presumed to be the cause of the patient's ailment or confirmed by results of testing have been presented to them.
 
 ### Overview of cases recorded in the school.
-This feature displays a list of new cases recorded; a summary of recorded cases and their outcome. 
+This feature displays a list of new cases recorded; a summary of recorded cases and their outcome drilled down to disease and common symptoms that have been presumed and, or confirmed. The user can also specify the time period that the would like to review. 
 
 ## License
 

@@ -1,8 +1,9 @@
 import React, { useRef, useState, useCallback, useEffect } from "react";
-import { Button, Image, View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Button, Image, View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 import { Table, TableWrapper, Row, Rows, Col, Cols, Cell } from 'react-native-table-component';
 import logo from '../assets/logo.png';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import XLSX from 'xlsx';
 import * as FileSystem from 'expo-file-system';
@@ -152,7 +153,37 @@ const DownloadScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <TouchableOpacity onPress={() => {navigation.goBack() }} style={styles.closeButton}>
+                <Icon
+                    name="close"
+                    color="rgba(134, 65, 244, 1)"
+                    size={35}
+                />
+            </TouchableOpacity>
+            <Image source={logo} style={{ width: 40, height: 30 }} />
+
+            <View style={[{ flex: 1, marginBottom: 10 }]}>
+                <Text style={[styles.subTitle, { marginTop: 30 }]}>
+                    {"Download Feature"}
+                </Text>
+            </View>
+
+            <View style={{flex: 1, alignSelf: 'center'}}>
+            <Icon
+                    name="cloud-download-outline"
+                    color="rgba(134, 65, 244, 1)"
+                    // color="#FFB236"
+                    size={70}
+                />
+            </View>
+
+            <View style={[{ flex: 1, width: '80%', alignSelf: "center" }]}>
+                <Text style={[{ alignSelf: "center" }]}>
+                    {"Under implementation: Health Surveillance app will soon allow you to download health records."}
+                </Text>
+            </View>
+
+            {/* <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                 <Text style={{ paddingBottom: 10, color: '#888', fontSize: 18 }}>{'Pending Records:'.toUpperCase()} </Text>
                 <Image source={logo} style={{ width: 40, height: 30 }} />
             </View>
@@ -188,7 +219,7 @@ const DownloadScreen = ({ navigation }) => {
               onPress={() => { exportRd() }}
             >
             </Button>
-          </View>
+          </View> */}
         </View>
 
     )
@@ -218,5 +249,27 @@ const styles = StyleSheet.create({
     row: {
         height: 40,
         backgroundColor: '#F7F8FA'
-    }
+    },
+    closeButton: {
+        position: "absolute",
+        top: "3%",
+        right: "3%",
+        height: "10%",
+        width: "16%",
+        borderRadius: Math.floor(50 / 2),
+        justifyContent: "center",
+        alignItems: "center",
+        // backgroundColor: "#dacdc9",
+        opacity: 0.7,
+        zIndex: 2,
+        alignSelf: "flex-end"
+    },
+    subTitle: {
+        paddingTop: 30,
+        color: '#000',
+        textAlign: 'center',
+        lineHeight: 30,
+        fontSize: 18,
+        fontWeight: '200',
+    },
 });
