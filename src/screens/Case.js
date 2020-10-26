@@ -10,6 +10,7 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import { Badge } from "react-native-elements";
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
+import PatientRecord from "./PatientRecord";
 
 const Case = ({ navigation }) => {
 
@@ -21,7 +22,7 @@ const Case = ({ navigation }) => {
 
   //fields initial state
   const [isNINAvailable, setIsNINAvailable] = useState(false);
-  const [pname, setPName] = useState('');
+  const [pname, setPName] = useState("Search Student");
   const [pID, setPID] = useState('');
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
@@ -37,56 +38,56 @@ const Case = ({ navigation }) => {
   var thePatients = [
     {
       id: 1,
-      nin: 'MF262002HYHSHJ5',
+      nin: '1',
       name: 'Gary Matovu',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 2,
-      nin: 'MF262002HYHSHJ5',
+      nin: '2',
       name: 'Yona Babu',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 3,
-      nin: 'MF262002HYHSHJ5',
+      nin: '3',
       name: 'Charity Ankunda',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 4,
-      nin: 'MF262002HYHSHJ5',
+      nin: '4',
       name: 'React Native',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 5,
-      nin: 'MF262002HYHSHJ5',
+      nin: '5',
       name: 'Andera Delphine',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 6,
-      nin: 'MF262002HYHSHJ5',
+      nin: '6',
       name: 'Anna Nakayi',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 7,
-      nin: 'MF262002HYHSHJ5',
+      nin: '7',
       name: 'Peter Ochaya',
       dob: '03/07/2002',
       gender: 'Male'
     },
     {
       id: 8,
-      nin: 'MF262002HYHSHJ5',
+      nin: '8',
       name: 'Ana kenrik',
       dob: '03/07/2002',
       gender: 'Male'
@@ -139,50 +140,55 @@ const Case = ({ navigation }) => {
     setPatients(thePatients);
     setConditions(theConditions);
 
-  //   axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
-  //     Schoolnumber: center_no,
-  //     token: userToken
-  //   })
-  //     .then(function (response) {
-  //       if (response.status == 200) {
-  //         setPatients(response.data.patients);
-  //         setConditions(response.data.conditions);
-          
-  //       } else {
-  //         Alert.alert('Error!', 'Failed to load Data \n check your connection.', [
-  //           { text: 'Okay' }
-  //         ]);
-  //       }
-  //       // console.log(response.status);
+    //   axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+    //     Schoolnumber: center_no,
+    //     token: userToken
+    //   })
+    //     .then(function (response) {
+    //       if (response.status == 200) {
+    //         setPatients(response.data.patients);
+    //         setConditions(response.data.conditions);
 
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
+    //       } else {
+    //         Alert.alert('Error!', 'Failed to load Data \n check your connection.', [
+    //           { text: 'Okay' }
+    //         ]);
+    //       }
+    //       // console.log(response.status);
+
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error);
+    //     });
 
 
   }
 
   const loadPatient = () => {
-    axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
-      patient_id: idNum,
-      token: userToken
-    })
-      .then(function (response) {
-        if (response.status == 200) {
-          // fill list of history for patient
-          
-        } else {
-          Alert.alert('Error!', 'Failed to load Patient Details \n check your connection.', [
-            { text: 'Okay' }
-          ]);
-        }
-        // console.log(response.status);
 
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    let the_name = patients.find(p => p.nin === idNum).name;
+    setPName(the_name);
+    wizard.current.next();
+
+    // axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+    //   patient_id: idNum,
+    //   token: userToken
+    // })
+    //   .then(function (response) {
+    //     if (response.status == 200) {
+    //       // fill list of history for patient
+
+    //     } else {
+    //       Alert.alert('Error!', 'Failed to load Patient Details \n check your connection.', [
+    //         { text: 'Okay' }
+    //       ]);
+    //     }
+    //     // console.log(response.status);
+
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
   }
 
   //helper method
@@ -195,6 +201,7 @@ const Case = ({ navigation }) => {
     let the_conditions = selectedConditions;
     let report_date = new Date();
     let the_token = userToken;
+    // school_id
 
     console.log("Patient : " + JSON.stringify(the_patient.id));
     console.log("conditions : " + JSON.stringify(the_conditions));
@@ -273,10 +280,6 @@ const Case = ({ navigation }) => {
 
   };
 
-  const showStdDetails = () => {
-    // filter list of students and fill patient details & history
-  }
-
   useEffect(() => {
     setCurrentStep(0);
     fetchData();
@@ -287,7 +290,7 @@ const Case = ({ navigation }) => {
     //     } else {
     //       let usr = JSON.parse(user);
     //       setUserToken(usr.token);
-            // setCenter_no(usr.center_no);
+    // setCenter_no(usr.center_no);
     //       // fetchData();
     //     }
     //   })
@@ -328,6 +331,7 @@ const Case = ({ navigation }) => {
                       items.push(item);
                       setSelectedPatients(selectedPatients => items);
                       setIDNum(item.nin);
+                      setPName(item.name);
                     }}
                     containerStyle={{ padding: 5 }}
                     onRemoveItem={(item, index) => {
@@ -349,7 +353,7 @@ const Case = ({ navigation }) => {
                     resetValue={false}
                     textInputProps={
                       {
-                        placeholder: "Search Student",
+                        placeholder: pname,
                         underlineColorAndroid: "transparent",
                         style: {
                           padding: 12,
@@ -371,7 +375,9 @@ const Case = ({ navigation }) => {
                 :
 
                 <View style={styles.action}>
-                  <TextInput style={{}} label="NIN" placeholder="Enter NIN" onChangeText={(val) => { setIDNum(val); }}
+                  <TextInput style={{ width: '100%' }} label="NIN" placeholder="Enter NIN" onChangeText={(val) => {
+                    setIDNum(val);
+                  }}
                     value={idNum} />
                 </View>
 
@@ -383,40 +389,56 @@ const Case = ({ navigation }) => {
                 <Button rounded
                   block
                   style={styles.btn}
-                  color="#FFB236" title="Next" onPress={() => wizard.current.next()} />
+                  color="#FFB236" title="Next" onPress={() => {
+                    if (pname === '' || idNum === '') {
+                      alert('Enter paient Name or NIN');
+                    }
+                    else {
+                      //check if nin exists
+                      if (patients.some(patient => patient.nin === idNum)) {
+                        loadPatient();
+                      } else {
+                        alert('Patient NIN not found. /n Try to search by name');
+                      }
+                    }
+                  }} />
               </View>
             </View>
           </View>
           {/* <View style={{flex: 2}}></View> */}
         </View>,
     },
-    // {
-    //   content:
-    //     <View style={styles.container} >
-    //       <View style={[styles.content, {}]}>
+    {
+      content:
+        <View style={styles.container} >
+          <View style={[styles.content, {}]}>
 
+            <Text style={styles.headerText}>{pname}</Text>
+            <Divider style={{ marginTop: 15 }} />
 
-    //         <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', paddingTop: 10, alignContent: "center" }}>
-    //           <View style={{ width: "30%", height: "30%" }}>
-    //             <ButtonF color="#FFB236"
-    //               outline transparent onPress={() => wizard.current.prev()} >
-    //               <IconF name="arrow-back"></IconF>
-    //               <TextF >{'BACK'}</TextF>
-    //             </ButtonF>
-    //           </View>
-    //           <View style={{ width: 90, justifyContent: "center" }}>
-    //             <Button
-    //               rounded
-    //               block
-    //               style={styles.btn}
-    //               color="#FFB236" title="Continue" onPress={() => wizard.current.next()}
-    //             >
-    //             </Button>
-    //           </View>
-    //         </View>
-    //       </View>
-    //     </View>,
-    // },
+            <PatientRecord />
+
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: "center" }}>
+              <View style={{ width: 90 }}>
+                <ButtonF color="#FFB236"
+                  outline transparent onPress={() => wizard.current.prev()} >
+                  <IconF name="arrow-back"></IconF>
+                  <TextF >{'BACK'}</TextF>
+                </ButtonF>
+              </View>
+              <View style={{ width: 90, justifyContent: "center" }}>
+                <Button
+                  rounded
+                  block
+                  style={styles.btn}
+                  color="#FFB236" title="Continue" onPress={() => wizard.current.next()}
+                >
+                </Button>
+              </View>
+            </View>
+          </View>
+        </View>,
+    },
     {
       content:
         <View style={styles.container} >
@@ -626,5 +648,15 @@ const styles = StyleSheet.create({
   errorMsg: {
     color: '#FF0000',
     // fontSize: 14,
-  }
+  },
+  headerText: {
+    textAlign: 'center',
+    color: "#131313",
+    // textDecorationLine: 'underline',
+    paddingTop: 5,
+    // top: "5%",
+    lineHeight: 25,
+    fontSize: 18,
+    fontWeight: '200',
+  },
 });

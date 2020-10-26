@@ -58,8 +58,11 @@ export default class CaseComponent extends Component {
                 </TouchableOpacity> */}
 
                 <View style={{ alignSelf: 'flex-start', flexDirection: 'row' }}>
-                    <Badge />
-                    <Text style={styles.nameTxt}>June 3, 2020</Text>
+                    <Badge 
+                    badgeStyle={{
+                        backgroundColor: "rgba(134, 65, 244, 1)"
+                      }}/>
+                    {/* <Text style={styles.nameTxt}>June 3, 2020</Text> */}
                 </View>
                 <View style={{
                     borderStyle: 'dotted',
@@ -69,22 +72,23 @@ export default class CaseComponent extends Component {
                     borderLeftWidth: 2
                 }}>
                     <View style={styles.nameContainer}>
-                        <Text style={styles.nameTxt}>Malaria</Text>
+                        {/* <Text style={styles.nameTxt}>Malaria</Text> */}
+                        <Text style={styles.nameTxt}>June 3, 2020</Text>
                         <View style={styles.msgContainer}>
-                            <Icon
+                            {/* <Icon
                                 name='done' size={15} color="#b3b3b3"
                                 style={{ marginLeft: 15, marginRight: 5 }}
-                            />
+                            /> */}
 
-                            <Text style={styles.msgTxt}>Confirmed</Text>
+                            {/* <Text style={styles.msgTxt}>St. Savio</Text> */}
 
                         </View>
                     </View>
-                    <View style={{marginLeft: 15,}}>
+                    <View style={{ marginLeft: 40 }}>
+                        <Text style={styles.time}>Abdominal pain</Text>
                         <Text style={styles.time}>Headache</Text>
-                        <Text style={styles.time}>Headache</Text>
-                        <Text style={styles.time}>Headache</Text>
-                        <Text style={styles.time}>Headache</Text>
+                        <Text style={styles.time}>Weakness</Text>
+                        <Text style={styles.time}>Fever</Text>
                     </View>
 
                 </View>

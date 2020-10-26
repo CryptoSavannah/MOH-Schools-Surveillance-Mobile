@@ -22,8 +22,6 @@ const PatientRecord = ({ navigation }) => {
             <CaseComponent/>
             <CaseComponent/>
             <CaseComponent/>
-            <CaseComponent/>
-            <CaseComponent/>
             </ScrollView>
         </SafeAreaView>
     );
@@ -34,6 +32,7 @@ export default PatientRecord;
 const styles = StyleSheet.create({
     overview: {
         flex: 1,
+        paddingHorizontal: 25,
         flexDirection: 'column',
         backgroundColor: theme.Colors.white,
     },

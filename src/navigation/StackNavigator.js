@@ -1,16 +1,19 @@
 // ./navigation/StackNavigator.js
 
 import React from "react";
-import {createStackNavigator} from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
 import Case from "../screens/Case";
 import ProfileScreen from "../screens/profile/ProfileScreen";
-import {TouchableOpacity} from "react-native";
-import {Block, Text} from "../components";
+import { TouchableOpacity } from "react-native";
+import { Block, Text } from "../components";
 import PendingCases from "../screens/PendingCases";
 import ResultScreen from "../screens/Results";
+import FilterScreen from "../screens/FilterScreen";
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import {View} from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -22,104 +25,115 @@ const screenOptionStyle = {
     headerBackTitle: "Back",
 };
 
-const HomeStackScreen = ({navigation}) => (
+const HomeStackScreen = ({ navigation }) => (
     <Stack.Navigator screenOptions={{
         headerStyle: {
             backgroundColor: '#3a3838',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold'
-        }
+            // fontWeight: 'bold'
+        },
+        safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="Home" component={HomeScreen} options={{
             title: 'Overview',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
+                    onPress={() => navigation.openDrawer()} />
             ),
             headerRight: () => (
-                <TouchableOpacity><Icon notification /></TouchableOpacity>
-            )
-        }}/>
+                <Icon2.Button name="dots-vertical" size={25} backgroundColor="#3a3838"
+                onPress={() =>
+                    //  {return(<View><Text>oooo</Text></View>);}
+                     navigation.navigate("FilterOptions")
+            } />)
+        }} />
         <Stack.Screen name="Pending" component={PendingCases} options={{
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
+                    onPress={() => navigation.openDrawer()} />
             ),
             // headerShown: false,
-        }}/>
+        }} />
         <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
             title: 'Case Record',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
+                    onPress={() => navigation.openDrawer()} />
             ),
-            headerRight: () => (
-                <TouchableOpacity><Icon notification /></TouchableOpacity>
-            )
-        }}/>
+        }} />
+        <Stack.Screen name="FilterOptions" component={FilterScreen} options={{
+            title: 'Select Period',
+            headerLeft: () => (
+                <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.goBack()} style={{paddingLeft: 20}}/>
+            ),
+        }} />
     </Stack.Navigator>
 );
 
-const DepositStackScreen = ({navigation}) => (
+const DepositStackScreen = ({ navigation }) => (
     <Stack.Navigator screenOptions={{
         headerStyle: {
             backgroundColor: '#3a3838',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold'
-        }
+            // fontWeight: 'bold'
+        },
+        safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="Case" component={Case} options={{
             title: 'Case record',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
+                    onPress={() => navigation.openDrawer()} />
             )
-        }}/>
+        }} />
     </Stack.Navigator>
 );
 
-const ProfileStackScreen = ({navigation}) => (
+const ProfileStackScreen = ({ navigation }) => (
     <Stack.Navigator screenOptions={{
         headerStyle: {
             backgroundColor: '#3a3838',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold'
-        }
+            // fontWeight: 'bold'
+        },
+        safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="Profile" component={ProfileScreen} options={{
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
+                    onPress={() => navigation.openDrawer()} />
             ),
             headerShown: false,
-        }}/>
+        }} />
     </Stack.Navigator>
 );
 
-const DownloadStackScreen = ({navigation}) => (
+const DownloadStackScreen = ({ navigation }) => (
     <Stack.Navigator screenOptions={{
         headerStyle: {
             backgroundColor: '#3a3838',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
-            fontWeight: 'bold'
-        }
+            // fontWeight: 'bold'
+        },
+        safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="DownloadScreen" component={DownloadScreen} options={{
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                             onPress={() => navigation.openDrawer()}/>
+                    onPress={() => navigation.openDrawer()} />
             ),
             headerShown: false,
-        }}/>
+        }} />
     </Stack.Navigator>
 );
 
-export {HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen};
+export { HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen };
