@@ -8,6 +8,8 @@ import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
 import { Checkbox, Divider } from 'react-native-paper';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 import { Badge } from "react-native-elements";
+import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
 
 const Case = ({ navigation }) => {
 
@@ -26,9 +28,13 @@ const Case = ({ navigation }) => {
   const [idNum, setIDNum] = useState('');
 
   const [symptoms, setSymptoms] = useState('');
+  const [userToken, setUserToken] = useState(null);
+  const [center_no, setCenter_no] = useState('');
+  const [patients, setPatients] = useState('');
+  const [conditions, setConditions] = useState('');
 
   //static data
-  var patients = [
+  var thePatients = [
     {
       id: 1,
       nin: 'MF262002HYHSHJ5',
@@ -90,7 +96,7 @@ const Case = ({ navigation }) => {
   const [selectedPatients, setSelectedPatients] = useState([]);
   const stdRef = useRef(null);
 
-  var conditions = [
+  var theConditions = [
     {
       id: 1,
       name: 'Fever',
@@ -127,12 +133,73 @@ const Case = ({ navigation }) => {
 
   const [selectedConditions, setSelectedConditions] = useState([]);
 
+  const fetchData = () => {
+    // loading patients, conditions
+
+    setPatients(thePatients);
+    setConditions(theConditions);
+
+  //   axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+  //     Schoolnumber: center_no,
+  //     token: userToken
+  //   })
+  //     .then(function (response) {
+  //       if (response.status == 200) {
+  //         setPatients(response.data.patients);
+  //         setConditions(response.data.conditions);
+          
+  //       } else {
+  //         Alert.alert('Error!', 'Failed to load Data \n check your connection.', [
+  //           { text: 'Okay' }
+  //         ]);
+  //       }
+  //       // console.log(response.status);
+
+  //     })
+  //     .catch(function (error) {
+  //       console.log(error);
+  //     });
+
+
+  }
+
+  const loadPatient = () => {
+    axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+      patient_id: idNum,
+      token: userToken
+    })
+      .then(function (response) {
+        if (response.status == 200) {
+          // fill list of history for patient
+          
+        } else {
+          Alert.alert('Error!', 'Failed to load Patient Details \n check your connection.', [
+            { text: 'Okay' }
+          ]);
+        }
+        // console.log(response.status);
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   //helper method
   const removeSpaces = (string) => {
     return string.split(' ').join('');
   };
 
   const saveCase = () => {
+    let the_patient = selectedPatients[0];
+    let the_conditions = selectedConditions;
+    let report_date = new Date();
+    let the_token = userToken;
+
+    console.log("Patient : " + JSON.stringify(the_patient.id));
+    console.log("conditions : " + JSON.stringify(the_conditions));
+    console.log("report_date : " + report_date.toString());
+    console.log("the_token : " + the_token);
 
     //step 1. check for required fields: idNum
     if (!(removeSpaces(idNum) === "")) {
@@ -142,7 +209,39 @@ const Case = ({ navigation }) => {
         .then(hash => {
 
           //step 3. send token, hashNIN, IDs of conditions, report_date
-          console.log(hash)
+          console.log("hashNIN : " + hash);
+          // axios.post('https://mc2.cryptosavannah.com/auth/verify', {
+          //   token: the_token,
+          //   Patient_id: the_patient,
+          //   hashNIN: hash,
+          //   condition_ids: the_conditions,
+          //   report_date: report_date
+          // })
+          //   .then(function (response) {
+          //     console.log(JSON.stringify(response));
+          //     if (response.data.status == 200) {
+
+          //       //step 4. display response, update home screen + back to home screen
+          //       alert("Case has been Recorded");
+
+          //       cancel();
+
+          //     } else {
+          //       alert('Error! Case Not Recorded. \n Try Again.', [
+          //         { text: 'Okay' }
+          //       ]);
+          //       console.log("Recording Error : " + response.error);
+          //     }
+          //     // console.log(response.status);
+
+          //   })
+          //   .catch(function (error) {
+          //     alert('Error! Case Not Recorded. \n Try Again.', [
+          //       { text: 'Okay' }
+          //     ]);
+          //     console.log("Recording Error : " + error);
+
+          //   });
 
           //step 4. display response, update home screen + back to home screen
           alert("Case has been Recorded");
@@ -151,7 +250,7 @@ const Case = ({ navigation }) => {
 
         })
         .catch(
-          // e => console.log(e)
+          e => console.log(e)
         );
 
 
@@ -180,6 +279,19 @@ const Case = ({ navigation }) => {
 
   useEffect(() => {
     setCurrentStep(0);
+    fetchData();
+    // AsyncStorage.getItem('user')
+    //   .then(user => {
+    //     if (user === null) {
+    //       // this.setState({loading: false, showLoginForm: true});
+    //     } else {
+    //       let usr = JSON.parse(user);
+    //       setUserToken(usr.token);
+            // setCenter_no(usr.center_no);
+    //       // fetchData();
+    //     }
+    //   })
+    //   .catch(err => console.log(err));
   }, []);
 
   //list of all views in steps
@@ -215,6 +327,7 @@ const Case = ({ navigation }) => {
                       var items = [];
                       items.push(item);
                       setSelectedPatients(selectedPatients => items);
+                      setIDNum(item.nin);
                     }}
                     containerStyle={{ padding: 5 }}
                     onRemoveItem={(item, index) => {
@@ -277,33 +390,33 @@ const Case = ({ navigation }) => {
           {/* <View style={{flex: 2}}></View> */}
         </View>,
     },
-    {
-      content:
-        <View style={styles.container} >
-          <View style={[styles.content, {}]}>
+    // {
+    //   content:
+    //     <View style={styles.container} >
+    //       <View style={[styles.content, {}]}>
 
 
-            <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', paddingTop: 10, alignContent: "center" }}>
-              <View style={{ width: "30%", height: "30%" }}>
-                <ButtonF color="#FFB236"
-                  outline transparent onPress={() => wizard.current.prev()} >
-                  <IconF name="arrow-back"></IconF>
-                  <TextF >{'BACK'}</TextF>
-                </ButtonF>
-              </View>
-              <View style={{ width: 90, justifyContent: "center" }}>
-                <Button
-                  rounded
-                  block
-                  style={styles.btn}
-                  color="#FFB236" title="Continue" onPress={() => wizard.current.next()}
-                >
-                </Button>
-              </View>
-            </View>
-          </View>
-        </View>,
-    },
+    //         <View style={{ flexDirection: 'row', marginTop: 10, justifyContent: 'space-between', paddingTop: 10, alignContent: "center" }}>
+    //           <View style={{ width: "30%", height: "30%" }}>
+    //             <ButtonF color="#FFB236"
+    //               outline transparent onPress={() => wizard.current.prev()} >
+    //               <IconF name="arrow-back"></IconF>
+    //               <TextF >{'BACK'}</TextF>
+    //             </ButtonF>
+    //           </View>
+    //           <View style={{ width: 90, justifyContent: "center" }}>
+    //             <Button
+    //               rounded
+    //               block
+    //               style={styles.btn}
+    //               color="#FFB236" title="Continue" onPress={() => wizard.current.next()}
+    //             >
+    //             </Button>
+    //           </View>
+    //         </View>
+    //       </View>
+    //     </View>,
+    // },
     {
       content:
         <View style={styles.container} >
