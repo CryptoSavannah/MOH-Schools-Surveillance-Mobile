@@ -2,10 +2,22 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "env:staging": "node scripts/set-environment.js staging",
+    "env:dev": "node scripts/set-environment.js development",
+    "env:prod": "node scripts/set-environment.js production",
+    "_android": "expo start --android",
+    "android": "npm run env:dev && npm run _android",
+    "android:staging": "npm run env:staging && npm run _android",
+    "android:prod": "npm run env:prod && npm run _android",
+    "_ios": "expo start --ios",
+    "ios": "npm run env:dev && npm run _ios",
+    "ios:staging": "npm run env:staging && npm run _ios",
+    "ios:prod": "npm run env:prod && npm run _ios",
+    "_web": "expo start --web",
+    "web": "npm run env:dev && npm run _web",
+    "web:staging": "npm run env:staging && npm run _web",
+    "web:prod": "npm run env:prod && npm run _web"
   },
   "dependencies": {
     "@99xt/first-born": "^1.1.8",

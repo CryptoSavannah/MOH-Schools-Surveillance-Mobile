@@ -6,6 +6,7 @@ import Users from '../model/users';
 import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../components/context';
 import * as Location from 'expo-location';
+import { SIGNIN_KEY } from '../../env.json';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -82,34 +83,34 @@ const SignInScreen = ({ navigation }) => {
         setIsLoading(true)
         signIn(foundUser);
 
-        // axios.post('https://mc2.cryptosavannah.com/auth/verify', {
-        //     centernumber: ''
-        // })
-        //     .then(function (response) {
-        //         // Alert.alert(response.toString());
-        //         if (response.status == 200) {
+        axios.post('', {
+            centernumber: ''
+        })
+            .then(function (response) {
+                // Alert.alert(response.toString());
+                if (response.status == 200) {
 
-        //             let theToken = response.token ? theToken = response.token : '';
-        //             let theName = response.data.firstName ? response.data.firstName + ' ' + response.data.lastName : '';
-        //             let theCenterNo = response.data.centerNumber
-        //             const user = { center_no: theCenterNo, token: theToken, 
-        //                 name: theName }
-        //             // console.log(value);
-        //             AsyncStorage.setItem('user', JSON.stringify(user))
-        //             signIn(user);
-        //         } else {
-        //             Alert.alert('Invalid User!', result.error, [
-        //                 { text: 'Okay' }
-        //             ]);
-        //         }
-        //         // console.log(response.status);
-        //         setIsLoading(true);
+                    let theToken = response.token ? theToken = response.token : '';
+                    let theName = response.data.firstName ? response.data.firstName + ' ' + response.data.lastName : '';
+                    let theCenterNo = response.data.centerNumber
+                    const user = { center_no: theCenterNo, token: theToken, 
+                        name: theName }
+                    // console.log(value);
+                    AsyncStorage.setItem('user', JSON.stringify(user))
+                    signIn(user);
+                } else {
+                    Alert.alert('Invalid User!', result.error, [
+                        { text: 'Okay' }
+                    ]);
+                }
+                // console.log(response.status);
+                setIsLoading(true);
 
-        //     })
-        //     .catch(function (error) {
-        //         // console.log(error);
-        //         setIsLoading(true);
-        //     });
+            })
+            .catch(function (error) {
+                // console.log(error);
+                setIsLoading(true);
+            });
     };
 
 

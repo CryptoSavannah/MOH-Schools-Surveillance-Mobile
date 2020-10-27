@@ -140,7 +140,7 @@ const Case = ({ navigation }) => {
     setPatients(thePatients);
     setConditions(theConditions);
 
-    //   axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+    //   axios.get('', {
     //     Schoolnumber: center_no,
     //     token: userToken
     //   })
@@ -170,7 +170,7 @@ const Case = ({ navigation }) => {
     setPName(the_name);
     wizard.current.next();
 
-    // axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+    // axios.get('', {
     //   patient_id: idNum,
     //   token: userToken
     // })
@@ -217,7 +217,7 @@ const Case = ({ navigation }) => {
 
           //step 3. send token, hashNIN, IDs of conditions, report_date
           console.log("hashNIN : " + hash);
-          // axios.post('https://mc2.cryptosavannah.com/auth/verify', {
+          // axios.post('', {
           //   token: the_token,
           //   Patient_id: the_patient,
           //   hashNIN: hash,
