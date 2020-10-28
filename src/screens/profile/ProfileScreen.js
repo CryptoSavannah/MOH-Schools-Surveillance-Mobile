@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Card} from 'native-base'
+import React, { Component } from 'react'
+import { Card } from 'native-base'
 import {
     ImageBackground,
     Linking,
@@ -9,10 +9,14 @@ import {
     View,
     TouchableOpacity,
     SafeAreaView,
+    Image
 } from 'react-native'
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 // import Icon from 'react-native-ionicons'
 import Icon from 'react-native-vector-icons/Ionicons';
+import logo from '../../assets/logo.png';
+import AsyncStorage from "@react-native-community/async-storage";
+
 
 class PersonalScreen extends Component {
     state = {
@@ -22,6 +26,26 @@ class PersonalScreen extends Component {
             latitudeDelta: 0.02,
             longitudeDelta: 0.02,
         },
+        school: {
+            center_no: '',
+            location: ''
+
+        }
+    }
+
+    componentDidMount(){
+        // AsyncStorage.getItem('user')
+        //   .then(user => {
+        //     if (user === null) {
+        //       // this.setState({loading: false, showLoginForm: true});
+        //     } else {
+        //       let usr = JSON.parse(user);
+        //       setUserToken(usr.token);
+        //       console.log(JSON.stringify(usr));
+        //       // fetchData();
+        //     }
+        //   })
+        //   .catch(err => console.log(err));
     }
 
     renderHeader = () => {
@@ -29,7 +53,7 @@ class PersonalScreen extends Component {
         return (
 
             <SafeAreaView style={styles.mapContainer}>
-                <MapView initialRegion={this.state.region} style={styles.container}>
+                {/* <MapView initialRegion={this.state.region} style={styles.container}>
                     <Marker
                         title={'Hope For Life'}
                         description={'Key Population Uganda'}
@@ -38,7 +62,11 @@ class PersonalScreen extends Component {
                             longitude: this.state.region.longitude
                         }}
                     />
-                </MapView>
+                </MapView> */}
+                <Image
+                    source={logo}
+                    style={styles.imageStyle}
+                />
             </SafeAreaView>
         )
     };
@@ -59,13 +87,13 @@ class PersonalScreen extends Component {
                     {this.renderHeader()}
 
                     <Card>
-                        <View style={{padding: 10}}>
+                        <View style={{ padding: 10 }}>
                             {/*contact us*/}
 
                             <TouchableOpacity>
                                 <View style={[telStyles.container]}>
                                     <View style={telStyles.iconRow}>
-                                        <Icon name="ios-call" style={{color: "#d42329",}} size={26}/>
+                                        <Icon name="ios-call" style={{ color: "#3a3838", }} size={26} />
                                     </View>
                                     <TouchableOpacity
                                         style={telStyles.telRow}>
@@ -73,14 +101,16 @@ class PersonalScreen extends Component {
                                             <Text style={telStyles.telNumberText}>Phone</Text>
                                         </View>
                                         <View style={telStyles.telNameColumn}>
-                                            <Text style={telStyles.telNameText}>256 787 344 529</Text>
+                                            {/* <Text style={telStyles.telNameText}>256 787 344 529</Text> */}
+                                            <Text style={telStyles.telNameText}></Text>
+
                                         </View>
                                     </TouchableOpacity>
                                     <View style={telStyles.smsRow}>
                                         <Icon
                                             ios="logo-whatsapp"
                                             android="logo-whatsapp"
-                                            style={{color: "#d42329",}}/>
+                                            style={{ color: "#3a3838", }} />
                                     </View>
                                 </View>
                             </TouchableOpacity>
@@ -88,9 +118,9 @@ class PersonalScreen extends Component {
                             <TouchableOpacity>
                                 <View style={[telStyles.container]}>
                                     <View style={telStyles.iconRow}>
-                                        <Icon name="ios-home" style={{color: "#d42329",}} size={26}/>
+                                        <Icon name="ios-home" style={{ color: "#3a3838", }} size={26} />
                                     </View>
-                                    <TouchableOpacity
+                                    {/* <TouchableOpacity
                                         style={telStyles.telRow}>
                                         <View style={telStyles.telNumberColumn}>
                                             <Text style={telStyles.telNumberText}>Name</Text>
@@ -98,20 +128,29 @@ class PersonalScreen extends Component {
                                         <View style={telStyles.telNameColumn}>
                                             <Text style={telStyles.telNameText}>Savannah High School</Text>
                                         </View>
+                                    </TouchableOpacity> */}
+                                    <TouchableOpacity
+                                        style={telStyles.telRow}>
+                                        <View style={telStyles.telNumberColumn}>
+                                            <Text style={telStyles.telNumberText}>Center</Text>
+                                        </View>
+                                        <View style={telStyles.telNameColumn}>
+                                            <Text style={telStyles.telNameText}>U004</Text>
+                                        </View>
                                     </TouchableOpacity>
                                     <View style={telStyles.smsRow}>
                                         <Icon
                                             ios="logo-whatsapp"
                                             android="logo-whatsapp"
-                                            style={{color: "#d42329",}}/>
+                                            style={{ color: "#3a3838", }} />
                                     </View>
                                 </View>
                             </TouchableOpacity>
 
                             {/*Seperator line*/}
                             <View style={sepStyles.container}>
-                                <View style={sepStyles.separatorOffset}/>
-                                <View style={sepStyles.separator}/>
+                                <View style={sepStyles.separatorOffset} />
+                                <View style={sepStyles.separator} />
                             </View>
 
                             <TouchableOpacity>
@@ -119,8 +158,8 @@ class PersonalScreen extends Component {
                                     <View style={mailStyles.iconRow}>
                                         {/*<Icon*/}
                                         {/*    name="ios-mail"*/}
-                                        {/*    style={{color: "#d42329",}}/>*/}
-                                        <Icon name="ios-mail" style={{color: "#d42329",}} size={26}/>
+                                        {/*    style={{color: "#3a3838",}}/>*/}
+                                        <Icon name="ios-mail" style={{ color: "#3a3838", }} size={26} />
                                     </View>
                                     <TouchableOpacity
                                         style={mailStyles.emailRow}>
@@ -128,15 +167,17 @@ class PersonalScreen extends Component {
                                             <Text style={mailStyles.emailText}>Email</Text>
                                         </View>
                                         <View style={mailStyles.emailNameColumn}>
-                                            <Text style={mailStyles.emailNameText}>info@gmail.com</Text>
+                                            {/* <Text style={mailStyles.emailNameText}>info@gmail.com</Text> */}
+                                            <Text style={mailStyles.emailNameText}></Text>
+
                                         </View>
                                     </TouchableOpacity>
                                 </View>
                             </TouchableOpacity>
                             {/*Seperator line*/}
                             <View style={sepStyles.container}>
-                                <View style={sepStyles.separatorOffset}/>
-                                <View style={sepStyles.separator}/>
+                                <View style={sepStyles.separatorOffset} />
+                                <View style={sepStyles.separator} />
                             </View>
 
                             <TouchableOpacity>
@@ -144,7 +185,7 @@ class PersonalScreen extends Component {
                                     <View style={mailStyles.iconRow}>
                                         <Icon
                                             name="md-globe"
-                                            style={{color: "#d42329",}}
+                                            style={{ color: "#3a3838", }}
                                             size={26}
                                         />
                                     </View>
@@ -154,7 +195,8 @@ class PersonalScreen extends Component {
                                             <Text style={mailStyles.emailText}>Website</Text>
                                         </View>
                                         <View style={mailStyles.emailNameColumn}>
-                                            <Text style={mailStyles.emailNameText}>www.savannahhigh.com</Text>
+                                            {/* <Text style={mailStyles.emailNameText}>www.savannahhigh.com</Text> */}
+                                            <Text style={mailStyles.emailNameText}></Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
@@ -162,8 +204,8 @@ class PersonalScreen extends Component {
 
                             {/*Seperator line*/}
                             <View style={sepStyles.container}>
-                                <View style={sepStyles.separatorOffset}/>
-                                <View style={sepStyles.separator}/>
+                                <View style={sepStyles.separatorOffset} />
+                                <View style={sepStyles.separator} />
                             </View>
 
                             {/*Location view*/}
@@ -172,7 +214,7 @@ class PersonalScreen extends Component {
                                     <View style={mailStyles.iconRow}>
                                         <Icon
                                             name="ios-pin"
-                                            style={{color: "#d42329",}}
+                                            style={{ color: "#3a3838", }}
                                             size={26}
                                         />
                                     </View>
@@ -181,10 +223,11 @@ class PersonalScreen extends Component {
                                             <Text style={mailStyles.emailText}>Location</Text>
                                         </View>
                                         <View style={mailStyles.emailNameColumn}>
-                                            <Text style={mailStyles.emailNameText}>
+                                            {/* <Text style={mailStyles.emailNameText}>
                                                 P.O Box 25603, Kampala – Uganda,
                                                 Bweyogerere
-                                            </Text>
+                                            </Text> */}
+                                            <Text style={mailStyles.emailNameText}>Wakiso</Text>
                                         </View>
                                     </View>
                                 </View>
@@ -249,7 +292,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     userImage: {
-        borderColor: '#d42329',
+        borderColor: '#3a3838',
         borderRadius: 85,
         borderWidth: 3,
         height: 170,
@@ -262,6 +305,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingTop: 90,
         textAlign: 'center',
+    },
+    imageStyle:
+    {
+        resizeMode: 'center',
+        width: '88%',
+        height: '80%',
+        position: 'absolute',
+        top: '5%',
+        // right: 10,
+        alignSelf: 'center',
+        // elevation: 10,
+        borderRadius: 5
+        // backgroundColor: 'yellow',
     },
 });
 const mailStyles = StyleSheet.create({
@@ -276,7 +332,7 @@ const mailStyles = StyleSheet.create({
         marginBottom: 5,
     },
     emailIcon: {
-        color: '#d42329',
+        color: '#3a3838',
         fontSize: 30,
     },
     emailNameColumn: {
@@ -357,7 +413,7 @@ const telStyles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     telIcon: {
-        color: '#d42329',
+        color: '#3a3838',
         fontSize: 30,
     },
     telNameColumn: {

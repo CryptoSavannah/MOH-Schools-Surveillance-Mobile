@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
 import Case from "../screens/Case";
+import AddNew from "../screens/AddNew";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import { TouchableOpacity } from "react-native";
 import { Block, Text } from "../components";
@@ -67,8 +68,15 @@ const HomeStackScreen = ({ navigation }) => (
             title: 'Select Period',
             headerLeft: () => (
                 <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
-                    onPress={() => navigation.goBack()} style={{paddingLeft: 20}}/>
+                    onPress={() => navigation.navigate("Home")} style={{paddingLeft: 20}}/>
             ),
+        }} />
+        <Stack.Screen name="AddNew" component={AddNew} options={{
+            title: 'Add Patient',
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.openDrawer()} />
+            )
         }} />
     </Stack.Navigator>
 );
@@ -86,6 +94,13 @@ const DepositStackScreen = ({ navigation }) => (
     }}>
         <Stack.Screen name="Case" component={Case} options={{
             title: 'Case record',
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.openDrawer()} />
+            )
+        }} />
+        <Stack.Screen name="AddNew" component={AddNew} options={{
+            title: 'Add Patient',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
                     onPress={() => navigation.openDrawer()} />
@@ -111,6 +126,13 @@ const ProfileStackScreen = ({ navigation }) => (
                     onPress={() => navigation.openDrawer()} />
             ),
             headerShown: false,
+        }} />
+        <Stack.Screen name="AddNew" component={AddNew} options={{
+            title: 'Add Patient',
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.openDrawer()} />
+            )
         }} />
     </Stack.Navigator>
 );

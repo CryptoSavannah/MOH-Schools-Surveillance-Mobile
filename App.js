@@ -22,14 +22,14 @@ import DrawerNavigator from "./src/navigation/DrawerNavigator";
 
 const App = () => {
   // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
+  // const [token, settoken] = React.useState(null);
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
 
   const initialLoginState = {
     isLoading: true,
-    userName: null,
-    userToken: null,
+    center_no: null,
+    token: null,
   };
 
   const CustomDefaultTheme = {
@@ -61,28 +61,28 @@ const App = () => {
       case 'RETRIEVE_TOKEN':
         return {
           ...prevState,
-          userToken: action.token,
+          token: action.token,
           isLoading: false,
         };
       case 'LOGIN':
         return {
           ...prevState,
-          userName: action.id,
-          userToken: action.token,
+          center_no: action.id,
+          token: action.token,
           isLoading: false,
         };
       case 'LOGOUT':
         return {
           ...prevState,
-          userName: null,
-          userToken: null,
+          center_no: null,
+          token: null,
           isLoading: false,
         };
       case 'REGISTER':
         return {
           ...prevState,
-          userName: action.id,
-          userToken: action.token,
+          center_no: action.id,
+          token: action.token,
           isLoading: false,
         };
     }
@@ -92,31 +92,31 @@ const App = () => {
 
   const authContext = React.useMemo(() => ({
     signIn: async (foundUser) => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
-      const userToken = String(foundUser[0].userToken);
-      const userName = foundUser[0].username;
+      // settoken('fgkj');
+      // console.log("jjjj: " + JSON.stringify(foundUser));
+      const token = String(foundUser.token);
+      const center_no = foundUser.center_no;
 
       try {
-        await AsyncStorage.setItem('userToken', userToken);
+        await AsyncStorage.setItem('token', token);
       } catch (e) {
         console.log(e);
       }
-      // console.log('user token: ', userToken);
-      dispatch({type: 'LOGIN', id: userName, token: userToken});
+      // console.log('user token: ', token);
+      dispatch({type: 'LOGIN', id: center_no, token: token});
     },
     signOut: async () => {
-      // setUserToken(null);
+      // settoken(null);
       // setIsLoading(false);
       try {
-        await AsyncStorage.removeItem('userToken');
+        await AsyncStorage.removeItem('token');
       } catch (e) {
         console.log(e);
       }
       dispatch({type: 'LOGOUT'});
     },
     signUp: () => {
-      // setUserToken('fgkj');
+      // settoken('fgkj');
       // setIsLoading(false);
     },
     toggleTheme: () => {
@@ -127,14 +127,14 @@ const App = () => {
   useEffect(() => {
     setTimeout(async () => {
       // setIsLoading(false);
-      let userToken;
-      userToken = null;
+      let token;
+      token = null;
       try {
-        userToken = await AsyncStorage.getItem('userToken');
+        token = await AsyncStorage.getItem('token');
       } catch (e) {
         console.log(e);
       }
-      dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
+      dispatch({type: 'RETRIEVE_TOKEN', token: token});
     }, 1000);
   }, []);
 
@@ -149,7 +149,7 @@ const App = () => {
       <PaperProvider theme={theme}>
         <AuthContext.Provider value={authContext}>
           <NavigationContainer theme={theme}>
-            {loginState.userToken !== null ? (
+            {loginState.token !== null ? (
                     <DrawerNavigator/>
                 )
                 :

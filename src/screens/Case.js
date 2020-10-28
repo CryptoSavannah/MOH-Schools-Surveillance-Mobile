@@ -11,6 +11,7 @@ import { Badge } from "react-native-elements";
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
 import PatientRecord from "./PatientRecord";
+import { PATIENTS_KEY, PATIENT_KEY, CONDITIONS_KEY } from '../../env.json';
 
 const Case = ({ navigation }) => {
 
@@ -134,11 +135,41 @@ const Case = ({ navigation }) => {
 
   const [selectedConditions, setSelectedConditions] = useState([]);
 
+  const fetchPatients = async () => {
+    try {
+      const resp = await axios.get(PATIENTS_KEY, {
+        headers: {
+          'Authorization': `Bearer Token`
+        }
+      });
+      console.log("Patients: " + resp.data);
+    } catch (err) {
+      // Handle Error Here
+      console.error("Fetch Patients: " + err);
+    }
+  };
+
+  const fetchConditions = async () => {
+    try {
+      const resp = await axios.get(CONDITIONS_KEY, {
+        headers: {
+          Authorization: 'Bearer ' + userToken
+        }
+      });
+      console.log("Conditions: " + resp.data);
+    } catch (err) {
+      // Handle Error Here
+      console.error("Fetch Conditions: " + err);
+    }
+  };
+
+
   const fetchData = () => {
     // loading patients, conditions
 
     setPatients(thePatients);
     setConditions(theConditions);
+    fetchPatients();
 
     //   axios.get('', {
     //     Schoolnumber: center_no,
@@ -282,19 +313,24 @@ const Case = ({ navigation }) => {
 
   useEffect(() => {
     setCurrentStep(0);
-    fetchData();
-    // AsyncStorage.getItem('user')
-    //   .then(user => {
-    //     if (user === null) {
-    //       // this.setState({loading: false, showLoginForm: true});
-    //     } else {
-    //       let usr = JSON.parse(user);
-    //       setUserToken(usr.token);
-    // setCenter_no(usr.center_no);
-    //       // fetchData();
-    //     }
-    //   })
-    //   .catch(err => console.log(err));
+    setPatients(thePatients);
+    setConditions(theConditions);
+
+    AsyncStorage.getItem('user')
+      .then(user => {
+        if (user === null) {
+          // this.setState({loading: false, showLoginForm: true});
+        } else {
+          let usr = JSON.parse(user);
+          setUserToken(usr.token);
+          setCenter_no(usr.center_no);
+          // fetchData();
+          console.log('fetching... ' + usr.token)
+          fetchPatients();
+          fetchConditions();
+        }
+      })
+      .catch(err => console.log(err));
   }, []);
 
   //list of all views in steps

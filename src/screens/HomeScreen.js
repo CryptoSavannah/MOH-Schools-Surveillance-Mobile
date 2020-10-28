@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState, useCallback, useEffect, Component, Fragment } from "react";
 import {
     View,
     Text,
@@ -25,9 +25,15 @@ import {
     ContributionGraph,
     StackedBarChart
 } from "react-native-chart-kit";
+import axios from "axios";
+import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
+import AsyncStorage from "@react-native-community/async-storage";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ route, navigation }) => {
     const SCREEN_WIDTH = Dimensions.get("window").width;
+    const [userToken, setUserToken] = useState(null);
+    const { fromDate } = route.params ?? {};
+    const { toDate } = route.params ?? {};
 
     const chartConfig = {
         backgroundGradientFrom: "#1E2923",
@@ -89,6 +95,28 @@ const HomeScreen = ({ navigation }) => {
         );
     }
 
+    useEffect(() => {
+        if (typeof fromDate !== 'undefined') {
+            console.log("fromDate: " + fromDate)
+        }
+
+        if (typeof toDate !== 'undefined') {
+            console.log("toDate: " + toDate)
+        }
+        // AsyncStorage.getItem('user')
+        //   .then(user => {
+        //     if (user === null) {
+        //       // this.setState({loading: false, showLoginForm: true});
+        //     } else {
+        //       let usr = JSON.parse(user);
+        //       setUserToken(usr.token);
+        //       console.log(JSON.stringify(usr));
+        //       // fetchData();
+        //     }
+        //   })
+        //   .catch(err => console.log(err));
+      }, []);
+
     const chartData = {
         labels: ["25/06", "", "", "", "", "", "", "", "", "", "", "30/06"],
         datasets: [
@@ -123,132 +151,6 @@ const HomeScreen = ({ navigation }) => {
                     chartConfig={chartConfig}
                     style={{ flex: 1, marginVertical: 15 }}
                 />
-                {/* 
-                <Block row style={[styles.margin]}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Pending')}
-                    >
-                        <Card middle style={{ marginLeft: 7 }}>
-                            <Icon distance />
-                            <Text h3 style={{ marginTop: 17 }}>158.3</Text>
-                            <Text paragraph color="gray">Total Pending</Text>
-                        </Card>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Pending')}
-                    >
-                        <Card middle style={{ marginLeft: 7 }}>
-                            <Icon distance />
-                            <Text h3 style={{ marginTop: 17 }}>158.3</Text>
-                            <Text paragraph color="gray">Total Pending</Text>
-                        </Card>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Pending')}
-                    >
-                        <Card middle style={{ marginLeft: 7 }}>
-                            <Icon distance />
-                            <Text h3 style={{ marginTop: 17 }}>158.3</Text>
-                            <Text paragraph color="gray">Total Pending</Text>
-                        </Card>
-                    </TouchableOpacity>
-
-                </Block> */}
-
-                {/* <View
-                    title="NEW CASES"
-                    style={[styles.margin, { marginTop: 18 }]}
-                >
-                    <Text>NEW CASES</Text>
-                    <Block style={styles.driver}>
-                        <TouchableOpacity activeOpacity={0.8}
-                            onPress={() => {
-                                // navigation.navigate('ResultScreen')
-                                navigation.navigate('ResultScreen', {
-                                    name: 'James Koko',
-                                    gender: 'M',
-                                    disease: 'Headacke',
-                                    status: "Pending"
-                                });
-                            }}>
-                            <Block row center>
-                                <Block>
-                                    <Image
-                                        style={styles.avatar}
-                                        source={require('../../assets/images/icons/icons-pending.png')}
-                                    />
-                                </Block>
-                                <Block flex={2}>
-                                    <Text h4>James Koko</Text>
-                                    <Text paragraph color="gray">Headacke</Text>
-                                </Block>
-                                <Block>
-                                    <Text paragraph right color="black">22:00</Text>
-                                    <Text paragraph right color="gray">Pending</Text>
-                                </Block>
-                            </Block>
-                        </TouchableOpacity>
-                    </Block>
-                    <Block style={styles.driver}>
-                        <TouchableOpacity activeOpacity={0.8}
-                            onPress={() => {
-                                // navigation.navigate('ResultScreen')
-                                navigation.navigate('ResultScreen', {
-                                    name: 'Alex Monza',
-                                    gender: 'M',
-                                    disease: 'Malaria',
-                                    status: "Closed"
-                                });
-                            }}>
-                            <Block row center>
-                                <Block>
-                                    <Image
-                                        style={styles.avatar}
-                                        source={require('../../assets/icons8-checkmark.png')}
-                                    />
-                                </Block>
-                                <Block flex={2}>
-                                    <Text h4>Alex Monza</Text>
-                                    <Text paragraph color="gray">Malaria</Text>
-                                </Block>
-                                <Block>
-                                    <Text paragraph right color="black">2 min</Text>
-                                    <Text paragraph right color="gray">Closed</Text>
-                                </Block>
-                            </Block>
-                        </TouchableOpacity>
-                    </Block>
-                    <Block style={styles.driver}>
-                        <TouchableOpacity activeOpacity={0.8}
-                            onPress={() => {
-                                // navigation.navigate('ResultScreen')
-                                navigation.navigate('ResultScreen', {
-                                    name: 'Julius Makayu',
-                                    gender: 'M',
-                                    disease: 'Covid',
-                                    status: "Deceased"
-                                });
-                            }}>
-                            <Block row center>
-                                <Block>
-                                    <Image
-                                        style={styles.avatar}
-                                        source={require('../../assets/images/icons/icon-cancel.png')}
-                                    />
-                                </Block>
-                                <Block flex={2}>
-                                    <Text h4>Julius Makayu</Text>
-                                    <Text paragraph color="gray">Covid</Text>
-                                </Block>
-                                <Block>
-                                    <Text paragraph right color="black">2 hrs</Text>
-                                    <Text paragraph right color="gray">Deceased</Text>
-                                </Block>
-                            </Block>
-                        </TouchableOpacity>
-                    </Block>
-                </View> */}
-
             </ScrollView>
         </SafeAreaView>
     );
