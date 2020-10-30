@@ -71,13 +71,6 @@ const HomeStackScreen = ({ navigation }) => (
                     onPress={() => navigation.navigate("Home")} style={{paddingLeft: 20}}/>
             ),
         }} />
-        <Stack.Screen name="AddNew" component={AddNew} options={{
-            title: 'Add Patient',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                    onPress={() => navigation.openDrawer()} />
-            )
-        }} />
     </Stack.Navigator>
 );
 
@@ -93,14 +86,7 @@ const DepositStackScreen = ({ navigation }) => (
         safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="Case" component={Case} options={{
-            title: 'Case record',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                    onPress={() => navigation.openDrawer()} />
-            )
-        }} />
-        <Stack.Screen name="AddNew" component={AddNew} options={{
-            title: 'Add Patient',
+            title: 'Record Case',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
                     onPress={() => navigation.openDrawer()} />
@@ -127,6 +113,20 @@ const ProfileStackScreen = ({ navigation }) => (
             ),
             headerShown: false,
         }} />
+    </Stack.Navigator>
+);
+
+const AddNewStackScreen = ({ navigation }) => (
+    <Stack.Navigator screenOptions={{
+        headerStyle: {
+            backgroundColor: '#3a3838',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            // fontWeight: 'bold'
+        },
+        safeAreaInsets: { top: 0, bottom: 0 }
+    }}>
         <Stack.Screen name="AddNew" component={AddNew} options={{
             title: 'Add Patient',
             headerLeft: () => (
@@ -158,4 +158,4 @@ const DownloadStackScreen = ({ navigation }) => (
     </Stack.Navigator>
 );
 
-export { HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen };
+export { HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen, AddNewStackScreen };

@@ -31,9 +31,11 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 const HomeScreen = ({ route, navigation }) => {
     const SCREEN_WIDTH = Dimensions.get("window").width;
-    const [userToken, setUserToken] = useState(null);
     const { fromDate } = route.params ?? {};
     const { toDate } = route.params ?? {};
+    const [userToken, setUserToken] = useState('');
+    const [center_no, setCenter_no] = useState('');
+    const [school_id, setSchool_id] = useState('');
 
     const chartConfig = {
         backgroundGradientFrom: "#1E2923",
@@ -44,7 +46,7 @@ const HomeScreen = ({ route, navigation }) => {
         strokeWidth: 1, // optional, default 3
         barPercentage: 0.6,
         useShadowColorFromDataset: false // optional
-      };
+    };
 
     const DATA = [
         {
@@ -103,19 +105,29 @@ const HomeScreen = ({ route, navigation }) => {
         if (typeof toDate !== 'undefined') {
             console.log("toDate: " + toDate)
         }
-        // AsyncStorage.getItem('user')
-        //   .then(user => {
-        //     if (user === null) {
-        //       // this.setState({loading: false, showLoginForm: true});
-        //     } else {
-        //       let usr = JSON.parse(user);
-        //       setUserToken(usr.token);
-        //       console.log(JSON.stringify(usr));
-        //       // fetchData();
-        //     }
-        //   })
-        //   .catch(err => console.log(err));
-      }, []);
+        AsyncStorage.getItem('user')
+            .then(user => {
+                if (user === null) {
+                    // this.setState({loading: false, showLoginForm: true});
+                } else {
+                    let usr = JSON.parse(user);
+                    setUserToken(usr.token);
+                    setCenter_no(usr.center_no);
+                    setSchool_id(usr.school_id);
+                    // fetchData();
+                    console.log('fetching... ' + usr.school_id);
+                }
+            })
+            .catch(err => console.log(err));
+
+
+        if (userToken === '') {
+
+        } else {
+            // loadConditions();
+            // loadCases();
+        }
+    }, [userToken, fromDate, toDate]);
 
     const chartData = {
         labels: ["25/06", "", "", "", "", "", "", "", "", "", "", "30/06"],

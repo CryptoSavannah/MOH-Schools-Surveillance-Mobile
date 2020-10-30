@@ -14,6 +14,7 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Iconf from 'react-native-vector-icons/FontAwesome';
+import Icond from 'react-native-vector-icons/Ionicons';
 
 import { AuthContext } from '../components/context';
 import logo from '../assets/logo.png';
@@ -60,20 +61,6 @@ export function DrawerContent(props) {
                                 props.navigation.navigate('Home')
                             }}
                         />
-
-                        <DrawerItem
-                            icon={({ color, size }) => (
-                                <Icon
-                                    name="bookmark-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Enter Case"
-                            onPress={() => {
-                                props.navigation.navigate('Case')
-                            }}
-                        />
                         <DrawerItem
                             icon={({ color, size }) => (
                                 <Icon
@@ -86,6 +73,19 @@ export function DrawerContent(props) {
                             onPress={() => {
                                 props.navigation.navigate('AddNew');
 
+                            }}
+                        />
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <Icon
+                                    name="folder-outline"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Enter Case"
+                            onPress={() => {
+                                props.navigation.navigate('Case')
                             }}
                         />
 
@@ -128,7 +128,20 @@ export function DrawerContent(props) {
                 </View>
             </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
-                {/* <DrawerItem
+                <DrawerItem
+                    icon={({ color, size }) => (
+                        <Iconf
+                            name="institution"
+                            color={color}
+                            size={17}
+                        />
+                    )}
+                    label="School"
+                    onPress={() => {
+                        props.navigation.navigate('School')
+                    }}
+                />
+                <DrawerItem
                     icon={({ color, size }) => (
                         <Icon
                             name="exit-to-app"
@@ -139,19 +152,6 @@ export function DrawerContent(props) {
                     label="Sign Out"
                     onPress={() => {
                         signOut()
-                    }}
-                /> */}
-                <DrawerItem
-                    icon={({ color, size }) => (
-                        <Iconf
-                            name="institution"
-                            color={color}
-                            size={17}
-                        />
-                    )}
-                    label="School profile"
-                    onPress={() => {
-                        props.navigation.navigate('School')
                     }}
                 />
             </Drawer.Section>

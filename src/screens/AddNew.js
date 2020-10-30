@@ -9,24 +9,39 @@ import { Checkbox, Divider } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
 import { CREATE_PATIENT_KEY } from '../../env.json';
+import AsyncStorage from "@react-native-community/async-storage";
+import axios from "axios";
 
 const AddNew = ({ route, navigation }) => {
 
+    const [userToken, setUserToken] = useState(null);
+    const [center_no, setCenter_no] = useState('');
 
     useEffect(() => {
 
+        AsyncStorage.getItem('user')
+            .then(user => {
+                if (user === null) {
+                    // this.setState({loading: false, showLoginForm: true});
+                } else {
+                    let usr = JSON.parse(user);
+                    setUserToken(usr.token);
+                    setCenter_no(usr.center_no);
+                }
+            })
+            .catch(err => console.log(err));
 
     });
 
-    useFocusEffect(
-        React.useCallback(() => {
-            return () => {
-                const popAction = StackActions.pop(1);
-                navigation.dispatch(popAction);
-                // console.log("cleaned up");
-              };
-        }, [])
-      );
+    // useFocusEffect(
+    //     React.useCallback(() => {
+    //         return () => {
+    //             const popAction = StackActions.pop(1);
+    //             navigation.dispatch(popAction);
+    //             console.log("cleaned up");
+    //         };
+    //     }, [])
+    // );
 
 
 
@@ -34,7 +49,6 @@ const AddNew = ({ route, navigation }) => {
     const [lname, setLName] = useState('');
     const [gender, setGender] = useState('');
     const [dob, setDob] = useState('');
-    const [idType, setIDType] = useState('');
     const [idNum, setIDNum] = useState('');
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -57,7 +71,8 @@ const AddNew = ({ route, navigation }) => {
         }
         else {
             //format date
-            setDob((date.getDate() + 1) + '/' + date.getMonth() + '/' + date.getFullYear())
+            // setDob((date.getDate() + 1) + '/' + date.getMonth() + '/' + date.getFullYear())
+            setDob((date.getFullYear() + 1) + '-' + date.getMonth() + '-' + date.getDate())
 
         }
 
@@ -110,21 +125,56 @@ const AddNew = ({ route, navigation }) => {
         data.isValidLName = !(removeSpaces(lname) === "");
         data.isValidGender = !(removeSpaces(gender) === "");
         data.isValidDob = !(removeSpaces(dob) === "");
+        data.isValidNIN = !(removeSpaces(idNum) === "");
 
-        if (data.isValidFName && data.isValidLName && data.isValidGender && data.isValidDob) {
-            var stdID = fname + lname + dob + gender;
+        if (data.isValidFName && data.isValidLName && data.isValidGender && data.isValidDob && data.isValidNIN) {
+            var stdID = idNum;
             JSHash(stdID, CONSTANTS.HashAlgorithms.sha256)
                 .then(hash => {
-                    console.log(hash);
+                    console.log("sending.." + userToken);
                     //save patient
+                    // console.log('check.. '+ idNum + "...\n"+ hash)
+                    var data = {
+                        "fname": `${fname}`,
+                        "lname": `${lname}`,
+                        "nin": `${idNum}`,
+                        "nin_hash": `${hash}`,
+                        "gender": `${gender}`,
+                        "dob": `${dob}`
+                    };
+
+                    var config = {
+                        method: 'post',
+                        url: CREATE_PATIENT_KEY,
+                        headers: {
+                            'Authorization': `Bearer ${userToken}`
+                        },
+                        data: data
+                    };
+
+                    if (userToken === null) {
+                        alert("Login to continue");
+                    } else {
+                        axios(config)
+                            .then(function (response) {
+
+                                if (response.status === 201) {
+                                    alert("Patient has been Recorded");
+
+                                    clearState();
+                                } else {
+                                    alert("Error failed to record patient\n Try again.")
+                                    console.log(JSON.stringify(response.data));
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                    }
                 })
                 .catch(
-                    // e => console.log(e)
+                    e => console.log("Hashing Catch: " + e)
                 );
-
-            alert("Case has been Recorded");
-
-            clearState();
         }
         else {
             alert("Fill in all the fields");
@@ -168,8 +218,8 @@ const AddNew = ({ route, navigation }) => {
                         <Picker label="Gender" style={{ color: "#808080", padding: 0, width: '100%' }} placeholder="Gender" onValueChange={(val) => { setGender(val) }}
                             selectedValue={gender}>
                             <Picker.Item value="" label="Select Gender" />
-                            <Picker.Item value="Male" label="Male" />
-                            <Picker.Item value="Female" label="Female" />
+                            <Picker.Item value="M" label="Male" />
+                            <Picker.Item value="F" label="Female" />
                         </Picker>
                     </View>
                     <View style={styles.action}>
@@ -184,27 +234,30 @@ const AddNew = ({ route, navigation }) => {
                         onConfirm={handleConfirm}
                         onCancel={hideDatePicker}
                     />
-                    <View style={styles.action2}>
-                        <Picker label="ID Type" style={{ color: "#808080", padding: 0, width: '100%' }} placeholder="ID Type" onValueChange={(val) => setIDType(val)}
-                            selectedValue={idType}>
-                            <Picker.Item value="" label="ID Type" />
-                            <Picker.Item value="NIN" label="NIN" />
-                            <Picker.Item value="Birth Certificate" label="Birth Certificate" />
-                            <Picker.Item value="Passport" label="Passport" />
-                        </Picker>
-                    </View>
                     <View style={styles.action}>
-                        <TextInput style={{ fontSize: 16, width: '100%' }} label="ID Number" placeholder="ID Number" onChangeText={(val) => setIDNum(val)} value={idNum} />
+                        <TextInput style={{ fontSize: 16, width: '100%' }} label="NIN" placeholder="NIN" onChangeText={(val) => setIDNum(val)} value={idNum} />
                     </View>
-                    <View style={{ width: '50%', alignSelf: 'center', paddingTop: 30, marginBottom: 10 }}>
-                        <Button title="Save"
-                            rounded
-                            block
-                            style={styles.btn}
-                            color="#FFB236"
-                            onPress={() => { saveCase() }}
-                        >
-                        </Button>
+                    <View style={{
+                        flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5,
+                        paddingTop: 30, marginBottom: 10
+                    }}>
+                        <View style={{ width: 80, marginBottom: 10 }}>
+                            <Button rounded
+                                block
+                                style={styles.btn}
+                                color="red" title="Cancel" onPress={() => { cancel() }} />
+
+                        </View>
+                        <View style={{ width: 80, marginBottom: 10 }}>
+                            <Button title="Register"
+                                rounded
+                                block
+                                style={styles.btn}
+                                color="#FFB236"
+                                onPress={() => { saveCase() }}
+                            >
+                            </Button>
+                        </View>
                     </View>
 
                 </ScrollView>

@@ -59,22 +59,24 @@ const SignInScreen = ({ navigation }) => {
         setIsLoading(true);
 
         axios.post(SIGNIN_KEY.toString(), {
-            center_no: "U004"//center_no.toString()
+            "center_no":center_no.toString()
         })
             .then(function (response) {
                 // console.log(JSON.stringify(response));
                 if (response.data.status == 200) {
 
                     let theToken = response.data.token ? theToken = response.data.token : '';
-                    let theSchool = response.data.data;
+                    let theSchoolId = response.data.data.school_id;
                     let theCenterNo = center_no;
+                    let theSubCounty = response.data.data.subcounty;
                     const foundUser = {
                         center_no: theCenterNo, 
                         token: theToken,
-                        school: theSchool
+                        school_id: theSchoolId,
+                        subcounty: theSubCounty,
                     }
-                    // console.log(response.data.token);
-                    AsyncStorage.setItem('user', JSON.stringify(foundUser))
+                    // console.log('token: ' + theToken);
+                    AsyncStorage.setItem('user', JSON.stringify(foundUser));
                     signIn(foundUser);
                 } else {
                     alert('Invalid Center Number!', [
