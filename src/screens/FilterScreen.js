@@ -42,7 +42,7 @@ export default FilterScreen = ({ navigation }) => {
         }
         else {
             //format date
-            setToDate((date.getDate() + 1) + '/' + date.getMonth() + '/' + date.getFullYear())
+            setToDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1))
 
         }
 
@@ -71,7 +71,7 @@ export default FilterScreen = ({ navigation }) => {
         }
         else {
             //format date
-            setFromDate((date.getDate() + 1) + '/' + date.getMonth() + '/' + date.getFullYear())
+            setFromDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1))
 
         }
 

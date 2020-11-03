@@ -72,7 +72,7 @@ const AddNew = ({ route, navigation }) => {
         else {
             //format date
             // setDob((date.getDate() + 1) + '/' + date.getMonth() + '/' + date.getFullYear())
-            setDob((date.getFullYear() + 1) + '-' + date.getMonth() + '-' + date.getDate())
+            setDob(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1))
 
         }
 

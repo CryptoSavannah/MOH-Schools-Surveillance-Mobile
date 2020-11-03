@@ -34,106 +34,11 @@ const Case = ({ navigation }) => {
   const [userToken, setUserToken] = useState('');
   const [center_no, setCenter_no] = useState('');
   const [school_id, setSchool_id] = useState('');
-  const [patients, setPatients] = useState('');
-  const [conditions, setConditions] = useState('');
-
-  //static data
-  var thePatients = [
-    {
-      id: 1,
-      nin: '1',
-      name: 'Gary Matovu',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 2,
-      nin: '2',
-      name: 'Yona Babu',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 3,
-      nin: '3',
-      name: 'Charity Ankunda',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 4,
-      nin: '4',
-      name: 'React Native',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 5,
-      nin: '5',
-      name: 'Andera Delphine',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 6,
-      nin: '6',
-      name: 'Anna Nakayi',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 7,
-      nin: '7',
-      name: 'Peter Ochaya',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 8,
-      nin: '8',
-      name: 'Ana kenrik',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-  ];
+  const [patients, setPatients] = useState([]);
+  const [conditions, setConditions] = useState([]);
 
   const [selectedPatients, setSelectedPatients] = useState([]);
   const stdRef = useRef(null);
-
-  var theConditions = [
-    {
-      id: 1,
-      name: 'Fever',
-    },
-    {
-      id: 2,
-      name: 'Headache',
-    },
-    {
-      id: 3,
-      name: 'Abdominal Pain',
-    },
-    {
-      id: 4,
-      name: 'Weakness',
-    },
-    {
-      id: 5,
-      name: 'Diarrhoea',
-    },
-    {
-      id: 6,
-      name: 'Vomiting',
-    },
-    {
-      id: 7,
-      name: 'Jaundice',
-    },
-    {
-      id: 8,
-      name: 'Cough',
-    },
-  ];
 
   var servPatients =
   {
@@ -158,6 +63,22 @@ const Case = ({ navigation }) => {
   const [selectedConditions, setSelectedConditions] = useState([]);
 
   const fetchPatients = async () => {
+
+    let pats = [];
+
+    servPatients.data.map(x => {
+      let date = new Date(x.dob);
+      pats.push({
+        id: x.patient_id,
+        nin: x.nin,
+        nin_hash: x.nin_hash,
+        name: x.fname + ' ' + x.lname,
+        dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+        gender: x.gender
+      });
+    });
+    setPatients(pats);
+
     var config = {
       method: 'get',
       url: PATIENTS_KEY,
@@ -168,18 +89,45 @@ const Case = ({ navigation }) => {
 
     // console.log(JSON.stringify(config));
 
-    await axios(config)
-      .then(res => {
-        let ps = [];
-        ps = res.data;
-        console.log("Patients: " + JSON.stringify(ps));
-      })
-      .catch((error) => {
-        console.error("Fetching Patients: " + error);
-      });
+    // await axios(config)
+    //   .then(res => {
+    //     let ps = [];
+    //     ps = res.data;
+
+    //     let pats = [];
+
+    //     console.log("Patients: " + JSON.stringify(ps));
+
+    //     ps.map(x => {
+    //       let date = new Date(x.dob);
+    //       pats.push({
+    //         id: x.patient_id,
+    //         nin: x.nin,
+    //         nin_hash: x.nin_hash,
+    //         name: x.fname + ' ' + x.lname,
+    //         dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+    //         gender: x.gender
+    //       });
+    //     });
+    //     setPatients(pats);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Fetching Patients: " + error);
+    //   });
   };
 
   const fetchConditions = async () => {
+    let conds = [];
+
+    servConditions.data.map(x => {
+      conds.push({
+        id: x.condition_id,
+        name: x.condition,
+      });
+    });
+    setConditions(conds);
+
+
     var config = {
       method: 'get',
       url: CONDITIONS_KEY,
@@ -190,15 +138,23 @@ const Case = ({ navigation }) => {
 
     // console.log(JSON.stringify(config));
 
-    await axios(config)
-      .then(res => {
-        let ps = [];
-        ps = res.data;
-        console.log("Conditions: " + JSON.stringify(ps));
-      })
-      .catch((error) => {
-        console.error("Fetching Conditions: " + error);
-      });
+    // await axios(config)
+    //   .then(res => {
+    //     let ps = [];
+    //     ps = res.data;
+    //     let conds = [];
+    //     console.log("Conditions: " + JSON.stringify(ps));
+    //     ps.data.map(x => {
+    //       conds.push({
+    //         id: x.condition_id,
+    //         name: x.condition,
+    //       });
+    //     });
+    //     setConditions(conds);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Fetching Conditions: " + error);
+    //   });
   };
 
   const loadPatient = () => {
@@ -319,8 +275,6 @@ const Case = ({ navigation }) => {
 
   useEffect(() => {
     setCurrentStep(0);
-    setPatients(thePatients);
-    setConditions(theConditions);
 
     AsyncStorage.getItem('user')
       .then(user => {
@@ -335,15 +289,15 @@ const Case = ({ navigation }) => {
           console.log('fetching... ' + usr.school_id);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.log('fetching local... ' + err));
 
 
-    if (userToken === '') {
-
-    } else {
-      // fetchPatients();
-      // fetchConditions();
-    }
+    // if (userToken === '') {
+    //   console.log("Fetching data error: token is empty"); 
+    // } else {
+      fetchPatients();
+      fetchConditions();
+    // }
   }, [userToken]);
 
   const searchableDrpDwn = useRef();
@@ -399,11 +353,11 @@ const Case = ({ navigation }) => {
                       items.push(item);
                       setSelectedPatients(selectedPatients => items);
                       setIDNum(item.nin);
-                      setPName(item.name);
+                      setPName(item.fname + ' ' + item.lname);
                     }}
                     containerStyle={{ padding: 5 }}
                     onRemoveItem={(item, index) => {
-                      const items = selectedPatients.filter((sitem) => sitem.id !== item.id);
+                      const items = selectedPatients.filter((sitem) => sitem.patient_id !== item.patient_id);
                       setSelectedPatients(selectedPatients => items);
                     }}
                     itemStyle={{

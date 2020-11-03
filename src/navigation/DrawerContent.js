@@ -14,7 +14,6 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Iconf from 'react-native-vector-icons/FontAwesome';
-import Icond from 'react-native-vector-icons/Ionicons';
 
 import { AuthContext } from '../components/context';
 import logo from '../assets/logo.png';
