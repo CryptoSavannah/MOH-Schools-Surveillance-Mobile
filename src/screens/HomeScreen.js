@@ -18,12 +18,7 @@ import Card from "../components/Card";
 import Icon from "../components/Icon";
 import * as theme from '../constants/theme';
 import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph,
-    StackedBarChart
+    LineChart
 } from "react-native-chart-kit";
 import axios from "axios";
 import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
@@ -98,6 +93,7 @@ const HomeScreen = ({ route, navigation }) => {
     }
 
     useEffect(() => {
+        console.log('...starting...: ');
         if (typeof fromDate !== 'undefined') {
             console.log("fromDate: " + fromDate)
         }
@@ -130,10 +126,10 @@ const HomeScreen = ({ route, navigation }) => {
     }, [userToken, fromDate, toDate]);
 
     const chartData = {
-        labels: ["25/06", "", "", "", "", "", "", "", "", "", "", "30/06"],
+        labels: ["25/06", "30/06"],
         datasets: [
             {
-                data: [20, 5, 10, 18, 10, 8, 11, 15, 11, 22, 7, 9],
+                data: [20, 5, 10, 18, 10, 8, 11, 15, 11, 22, 7, 9,  10, 8, 11, 15, 11, 22, 7, 9],
                 color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }
@@ -156,13 +152,15 @@ const HomeScreen = ({ route, navigation }) => {
                     style={{ width: SCREEN_WIDTH + 5, height: '50%', marginHorizontal: 5, flex: 1 }}
                 />
 
-                <LineChart
-                    data={chartData}
-                    width={SCREEN_WIDTH}
-                    height={220}
-                    chartConfig={chartConfig}
-                    style={{ flex: 1, marginVertical: 15 }}
-                />
+                <ScrollView horizontal={true}>
+                    <LineChart
+                        data={chartData}
+                        width={SCREEN_WIDTH + 50}
+                        height={220}
+                        chartConfig={chartConfig}
+                        style={{ flex: 1, marginVertical: 15 }}
+                    />
+                </ScrollView>
             </ScrollView>
         </SafeAreaView>
     );
