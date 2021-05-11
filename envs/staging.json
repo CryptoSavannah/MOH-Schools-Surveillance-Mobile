@@ -1,0 +1,10 @@
+{
+    "SIGNIN_KEY": "https://mc2.cryptosavannah.com/surveillance/authenticate",
+    "DASH_LABEL_KEY": "",
+    "GRAPH_KEY": "",
+    "CONDITIONS_KEY": "https://mc2.cryptosavannah.com/surveillance/conditions",
+    "PATIENTS_KEY": "https://mc2.cryptosavannah.com/surveillance/patients",
+    "GET_PATIENT_KEY": "",
+    "CREATE_PATIENT_KEY": "https://mc2.cryptosavannah.com/surveillance/patients",
+    "CASE_KEY": "https://mc2.cryptosavannah.com/surveillance/cases"
+}

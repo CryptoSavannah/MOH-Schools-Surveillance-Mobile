@@ -1,0 +1,7 @@
+#Thu Mar 04 09:54:06 EAT 2021
+base.0=/home/lillian26/Documents/Wrk_Current/Crypto S/schools-survailance/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+path.1=classes2.dex
+renamed.1=classes2.dex
+path.0=classes.dex
+renamed.0=classes.dex
+base.1=/home/lillian26/Documents/Wrk_Current/Crypto S/schools-survailance/android/app/build/intermediates/dex/debug/mergeDexDebug/out/classes2.dex

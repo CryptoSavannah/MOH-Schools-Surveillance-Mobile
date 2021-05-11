@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/schoolmoh.iml" filepath="$PROJECT_DIR$/.idea/modules/schoolmoh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/schoolmoh.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/schoolmoh.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1931921673/schoolmoh.react-native-community_async-storage.iml" filepath="$PROJECT_DIR$/.idea/modules/1931921673/schoolmoh.react-native-community_async-storage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/274190986/schoolmoh.react-native-community_datetimepicker.iml" filepath="$PROJECT_DIR$/.idea/modules/274190986/schoolmoh.react-native-community_datetimepicker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-93006266/schoolmoh.react-native-community_masked-view.iml" filepath="$PROJECT_DIR$/.idea/modules/-93006266/schoolmoh.react-native-community_masked-view.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-44478404/schoolmoh.react-native-community_toolbar-android.iml" filepath="$PROJECT_DIR$/.idea/modules/-44478404/schoolmoh.react-native-community_toolbar-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-992472030/schoolmoh.react-native-fs.iml" filepath="$PROJECT_DIR$/.idea/modules/-992472030/schoolmoh.react-native-fs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1517605201/schoolmoh.react-native-gesture-handler.iml" filepath="$PROJECT_DIR$/.idea/modules/1517605201/schoolmoh.react-native-gesture-handler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1095536163/schoolmoh.react-native-hash.iml" filepath="$PROJECT_DIR$/.idea/modules/1095536163/schoolmoh.react-native-hash.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2137556323/schoolmoh.react-native-linear-gradient.iml" filepath="$PROJECT_DIR$/.idea/modules/2137556323/schoolmoh.react-native-linear-gradient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-63480158/schoolmoh.react-native-maps.iml" filepath="$PROJECT_DIR$/.idea/modules/-63480158/schoolmoh.react-native-maps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1335131691/schoolmoh.react-native-reanimated.iml" filepath="$PROJECT_DIR$/.idea/modules/1335131691/schoolmoh.react-native-reanimated.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1218913926/schoolmoh.react-native-safe-area-context.iml" filepath="$PROJECT_DIR$/.idea/modules/-1218913926/schoolmoh.react-native-safe-area-context.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/886368786/schoolmoh.react-native-screens.iml" filepath="$PROJECT_DIR$/.idea/modules/886368786/schoolmoh.react-native-screens.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-935527569/schoolmoh.react-native-svg.iml" filepath="$PROJECT_DIR$/.idea/modules/-935527569/schoolmoh.react-native-svg.iml" />
+    </modules>
+  </component>
+</project>

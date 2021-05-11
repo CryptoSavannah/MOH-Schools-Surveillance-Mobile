@@ -1,0 +1,100 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.schoolmoh"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+8-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:4:5-67
+11-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:4:22-64
+12    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+12-->[:react-native-fs] /home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/node_modules/react-native-fs/android/build/intermediates/library_manifest/release/AndroidManifest.xml:11:5-81
+12-->[:react-native-fs] /home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/node_modules/react-native-fs/android/build/intermediates/library_manifest/release/AndroidManifest.xml:11:22-78
+13    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- Include required permissions for Google Maps API to run. -->
+13-->[:react-native-maps] /home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/node_modules/react-native-maps/lib/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:5-81
+13-->[:react-native-maps] /home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/node_modules/react-native-maps/lib/android/build/intermediates/library_manifest/release/AndroidManifest.xml:10:22-78
+14    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+14-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:23:5-79
+14-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:23:22-76
+15
+16    <uses-feature
+16-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:26:5-28:35
+17        android:glEsVersion="0x00020000"
+17-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:27:9-41
+18        android:required="true" />
+18-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:28:9-32
+19
+20    <application
+20-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:6:5-25:19
+21        android:name="com.schoolmoh.MainApplication"
+21-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:7:7-38
+22        android:allowBackup="false"
+22-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:11:7-34
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.1.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/639e914bfc1efa21e36199d3ff2c5eef/core-1.1.0/AndroidManifest.xml:24:18-86
+24        android:icon="@mipmap/ic_launcher"
+24-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:9:7-41
+25        android:label="@string/app_name"
+25-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:8:7-39
+26        android:roundIcon="@mipmap/ic_launcher_round"
+26-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:10:7-52
+27        android:theme="@style/AppTheme" >
+27-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:12:7-38
+28        <activity
+28-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:13:7-23:18
+29            android:name="com.schoolmoh.MainActivity"
+29-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:14:9-37
+30            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+30-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:16:9-86
+31            android:label="@string/app_name"
+31-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:15:9-41
+32            android:launchMode="singleTask"
+32-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:17:9-40
+33            android:windowSoftInputMode="adjustResize" >
+33-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:18:9-51
+34            <intent-filter>
+34-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:19:9-22:25
+35                <action android:name="android.intent.action.MAIN" />
+35-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:20:13-65
+35-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:20:21-62
+36
+37                <category android:name="android.intent.category.LAUNCHER" />
+37-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:21:13-73
+37-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:21:23-70
+38            </intent-filter>
+39        </activity>
+40        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+40-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:24:7-84
+40-->/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/src/main/AndroidManifest.xml:24:17-81
+41        <!-- Needs to be explicitly declared on P+ -->
+42        <uses-library
+42-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:33:9-35:40
+43            android:name="org.apache.http.legacy"
+43-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:34:13-50
+44            android:required="false" />
+44-->[com.google.android.gms:play-services-maps:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/3ca81724f46a1af5d268488a528eb8e5/play-services-maps-17.0.0/AndroidManifest.xml:35:13-37
+45
+46        <activity
+46-->[com.google.android.gms:play-services-base:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/fc8046cb9a5df9499609a5f7f8270b1b/play-services-base-17.0.0/AndroidManifest.xml:23:9-26:75
+47            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+47-->[com.google.android.gms:play-services-base:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/fc8046cb9a5df9499609a5f7f8270b1b/play-services-base-17.0.0/AndroidManifest.xml:24:13-79
+48            android:exported="false"
+48-->[com.google.android.gms:play-services-base:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/fc8046cb9a5df9499609a5f7f8270b1b/play-services-base-17.0.0/AndroidManifest.xml:25:13-37
+49            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+49-->[com.google.android.gms:play-services-base:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/fc8046cb9a5df9499609a5f7f8270b1b/play-services-base-17.0.0/AndroidManifest.xml:26:13-72
+50
+51        <meta-data
+51-->[com.google.android.gms:play-services-basement:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/7b982d9368777915a28721c4e1befd88/jetified-play-services-basement-17.0.0/AndroidManifest.xml:23:9-25:69
+52            android:name="com.google.android.gms.version"
+52-->[com.google.android.gms:play-services-basement:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/7b982d9368777915a28721c4e1befd88/jetified-play-services-basement-17.0.0/AndroidManifest.xml:24:13-58
+53            android:value="@integer/google_play_services_version" />
+53-->[com.google.android.gms:play-services-basement:17.0.0] /home/lillian26/.gradle/caches/transforms-2/files-2.1/7b982d9368777915a28721c4e1befd88/jetified-play-services-basement-17.0.0/AndroidManifest.xml:25:13-66
+54    </application>
+55
+56</manifest>

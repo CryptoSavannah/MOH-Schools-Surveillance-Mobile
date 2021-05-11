@@ -1,0 +1,4 @@
+#Wed Mar 03 15:57:01 EAT 2021
+base.0=/home/lillian26/Documents/Wrk_Current/Crypto S/MOH/schoolmoh/android/app/build/intermediates/dex/release/mergeDexRelease/out/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex
