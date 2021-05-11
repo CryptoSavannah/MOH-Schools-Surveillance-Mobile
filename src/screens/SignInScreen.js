@@ -5,7 +5,7 @@ import logo from '../assets/logo.png';
 import Users from '../model/users';
 import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../components/context';
-import * as Location from 'expo-location';
+// import * as Location from 'expo-location';
 import { SIGNIN_KEY } from '../../env.json';
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -35,24 +35,24 @@ const SignInScreen = ({ navigation }) => {
 
     }, []);
 
-    const getLocation = () => {
-        (async () => {
-            try {
-                let { status } = await Location.requestPermissionsAsync();
-                let location = await Location.getCurrentPositionAsync({});
-                setLocation(location);
-                // console.log(location.coords.latitude, location.coords.longitude)
-            }
-            catch (e) {
-                // if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied');
-                // navigation.goBack()
-                // }
-            }
+    // const getLocation = () => {
+    //     (async () => {
+    //         try {
+    //             let { status } = await Location.requestPermissionsAsync();
+    //             let location = await Location.getCurrentPositionAsync({});
+    //             setLocation(location);
+    //             // console.log(location.coords.latitude, location.coords.longitude)
+    //         }
+    //         catch (e) {
+    //             // if (status !== 'granted') {
+    //             setErrorMsg('Permission to access location was denied');
+    //             // navigation.goBack()
+    //             // }
+    //         }
 
 
-        })();
-    }
+    //     })();
+    // }
 
     const loginHandle = (center_no) => {
         // getLocation();

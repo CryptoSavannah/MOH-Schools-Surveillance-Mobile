@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useEffect, Component, Fragment } from "react";
 import Wizard from "react-native-wizard";
 
-import { Dimensions, SafeAreaView, Button, View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
+import { Dimensions, SafeAreaView, Button, View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 
 import { Button as ButtonF, Icon as IconF, Text as TextF } from "@99xt/first-born";
 import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
@@ -38,16 +38,18 @@ const Case = ({ navigation }) => {
   const [conditions, setConditions] = useState([]);
 
   const [selectedPatients, setSelectedPatients] = useState([]);
+  const [selectedPatient2, setSelectedPatient2] = useState([]);
+
   const stdRef = useRef(null);
 
   var servPatients =
   {
     "status": 200,
     "data": [
-      { "patient_id": 1, "fname": "Jane", "lname": "Doe", "nin": "TH1234", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E8959882A", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-27T02:16:32.544Z" },
-      { "patient_id": 6, "fname": "Jane", "lname": "Doe", "nin": "TH123", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E895988A", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T13:59:01.826Z" },
-      { "patient_id": 8, "fname": "Jane", "lname": "Doe", "nin": "TH12", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E895988", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:04:11.415Z" },
-      { "patient_id": 15, "fname": "Jane", "lname": "Doe", "nin": "${idNum}", "nin_hash": "${hash}", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:16:21.334Z" },
+      { "patient_id": 1, "fname": "Rachael", "lname": "Kembi", "nin": "TH1234", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E8959882A", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-27T02:16:32.544Z" },
+      { "patient_id": 6, "fname": "Brian", "lname": "Aine", "nin": "TH123", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E895988A", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T13:59:01.826Z" },
+      { "patient_id": 8, "fname": "Dee", "lname": "Obura", "nin": "TH12", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E895988", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:04:11.415Z" },
+      // { "patient_id": 15, "fname": "Jane", "lname": "Doe", "nin": "${idNum}", "nin_hash": "${hash}", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:16:21.334Z" },
       { "patient_id": 16, "fname": "Jane", "lname": "Doe", "nin": "Mndtgff", "nin_hash": "a018e0133c9536a8233bc0cc083b24c0af8ef79615bb7ec7bbad8398506f3064", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:18:15.504Z" }
     ]
   };
@@ -190,6 +192,28 @@ const Case = ({ navigation }) => {
   };
 
   const saveCase = () => {
+    console.log("id.." + selectedPatients.length)
+    if (selectedPatients.length === 0) {
+      Alert.alert("Missing Patient Id", "Please try again", [
+        {
+          text: "Cancel",
+          onPress: () => {
+            clearState();
+            navigation.navigate("Home");
+          },
+          style: "cancel"
+        },
+        {
+          text: "OK", onPress: () => {
+            clearState();
+            setCurrentStep(0);
+            wizard.current.currentStep = 0;
+          }
+        }
+      ])
+      return
+    }
+
     let the_patient = selectedConditions.length > 0 ? selectedPatients[0].id : '';
     let the_conditions = selectedConditions;
     the_conditions = (the_conditions.map(x => x["id"]));
@@ -274,6 +298,7 @@ const Case = ({ navigation }) => {
   };
 
   useEffect(() => {
+    clearState()
     setCurrentStep(0);
 
     AsyncStorage.getItem('user')
@@ -295,8 +320,8 @@ const Case = ({ navigation }) => {
     // if (userToken === '') {
     //   console.log("Fetching data error: token is empty"); 
     // } else {
-      fetchPatients();
-      fetchConditions();
+    fetchPatients();
+    fetchConditions();
     // }
   }, [userToken]);
 
@@ -351,9 +376,10 @@ const Case = ({ navigation }) => {
                     onItemSelect={(item) => {
                       var items = [];
                       items.push(item);
+                      // console.log(item.id)
                       setSelectedPatients(selectedPatients => items);
                       setIDNum(item.nin);
-                      setPName(item.fname + ' ' + item.lname);
+                      setPName(item.name);
                     }}
                     containerStyle={{ padding: 5 }}
                     onRemoveItem={(item, index) => {
@@ -435,7 +461,7 @@ const Case = ({ navigation }) => {
         <View style={styles.container} >
           <View style={[styles.content, {}]}>
 
-            <Text style={styles.headerText}>{pname}</Text>
+            <Text style={styles.headerText}>{pname !== "" ? pname : "Press Back to Select Student"}</Text>
             <Divider style={{ marginTop: 15 }} />
 
             {idNum !== "" ? <PatientRecord /> : null}

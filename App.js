@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {View, ActivityIndicator} from 'react-native';
+import {View, ActivityIndicator, LogBox} from 'react-native';
 import {
   NavigationContainer,
   DefaultTheme as NavigationDefaultTheme,
@@ -11,7 +11,6 @@ import {
   DarkTheme as PaperDarkTheme
 } from 'react-native-paper';
 
-
 import {AuthContext} from './src/components/context';
 
 import RootStackScreen from './src/navigation/RootStackScreen';
@@ -19,8 +18,13 @@ import RootStackScreen from './src/navigation/RootStackScreen';
 import AsyncStorage from '@react-native-community/async-storage';
 import DrawerNavigator from "./src/navigation/DrawerNavigator";
 
+LogBox.ignoreLogs(['Require cycles...']);
 
 const App = () => {
+  // LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+  // LogBox.ignoreLogs(['Require cycle: ...']);
+  LogBox.ignoreAllLogs();
+  
   // const [isLoading, setIsLoading] = React.useState(true);
   // const [token, settoken] = React.useState(null);
 

@@ -11,7 +11,7 @@ import ProfileScreen from "../screens/profile/ProfileScreen";
 import { TouchableOpacity } from "react-native";
 import { Block, Text } from "../components";
 import PendingCases from "../screens/PendingCases";
-import ResultScreen from "../screens/Results";
+// import ResultScreen from "../screens/Results";
 import FilterScreen from "../screens/FilterScreen";
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {View} from 'react-native';
@@ -57,18 +57,18 @@ const HomeStackScreen = ({ navigation }) => (
             ),
             // headerShown: false,
         }} />
-        <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
+        {/* <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
             title: 'Case Record',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
                     onPress={() => navigation.openDrawer()} />
             ),
-        }} />
+        }} /> */}
         <Stack.Screen name="FilterOptions" component={FilterScreen} options={{
             title: 'Select Period',
             headerLeft: () => (
                 <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
-                    onPress={() => navigation.navigate("Home")} style={{paddingLeft: 20}}/>
+                    onPress={() => navigation.goBack()} style={{paddingLeft: 20}}/>
             ),
         }} />
     </Stack.Navigator>
@@ -159,3 +159,4 @@ const DownloadStackScreen = ({ navigation }) => (
 );
 
 export { HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen, AddNewStackScreen };
+
