@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Linking} from 'react-native';
+import { View, StyleSheet, Linking } from 'react-native';
 import {
     useTheme,
     Avatar,
@@ -13,38 +13,42 @@ import {
 } from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Iconf from 'react-native-vector-icons/FontAwesome';
 
-import {AuthContext} from '../components/context';
+import { AuthContext } from '../components/context';
+import logo from '../assets/logo.png';
 
 export function DrawerContent(props) {
 
     const paperTheme = useTheme();
 
-    const {signOut, toggleTheme} = React.useContext(AuthContext);
+    const { signOut, toggleTheme } = React.useContext(AuthContext);
 
     return (
-        <View style={{flex: 1, backgroundColor: '#eec971'}}>
+        <View style={{ flex: 1, backgroundColor: '#eec971' }}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <Drawer.Section style={styles.drawerSection}>
-                    <View style={styles.userInfoSection}>
-                        <View style={{flexDirection: 'row', marginTop: 15}}>
-                            <Avatar.Image
-                                source={{
-                                    uri: 'https://cryptosavannah.com/img/23456_8.jpg'
-                                }}
-                                size={50}
-                            />
-                            <View style={{marginLeft: 15, flexDirection: 'column'}}>
-                                <Title style={styles.title}>Eng Xtian</Title>
-                                <Caption style={styles.caption}>xtianm4@gmail.com</Caption>
+                        <View style={styles.userInfoSection}>
+                            <View style={{ marginTop: 15 }}>
+                                <View style={{ paddingLeft: '10%' }}>
+                                    <Avatar.Image
+                                        source={logo}
+                                        size={100}
+                                        backgroundColor={'#dacdc9'}
+                                        style={{ borderRadius: 50 }}
+                                    />
+                                </View>
+                                <View style={{ marginLeft: '15%', flexDirection: 'column' }}>
+                                    <Title style={styles.title}>U004</Title>
+                                    <Caption style={styles.caption}>Wakiso</Caption>
+                                </View>
                             </View>
                         </View>
-                    </View>
                     </Drawer.Section>
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem
-                            icon={({color, size}) => (
+                            icon={({ color, size }) => (
                                 <Icon
                                     name="home-outline"
                                     color={color}
@@ -56,11 +60,24 @@ export function DrawerContent(props) {
                                 props.navigation.navigate('Home')
                             }}
                         />
-
                         <DrawerItem
-                            icon={({color, size}) => (
+                            icon={({ color, size }) => (
                                 <Icon
-                                    name="bookmark-outline"
+                                    name="account-check-outline"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Add Patient"
+                            onPress={() => {
+                                props.navigation.navigate('AddNew');
+
+                            }}
+                        />
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <Icon
+                                    name="folder-outline"
                                     color={color}
                                     size={size}
                                 />
@@ -71,21 +88,8 @@ export function DrawerContent(props) {
                             }}
                         />
 
-                        <DrawerItem
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="account-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="School profile"
-                            onPress={() => {
-                                props.navigation.navigate('School')
-                            }}
-                        />
                     </Drawer.Section>
-                    <DrawerItem
+                    {/* <DrawerItem
                             icon={({color, size}) => (
                                 <Icon
                                     name="download-outline"
@@ -102,12 +106,12 @@ export function DrawerContent(props) {
                             onPress={() => {
                                 props.navigation.navigate('Download')
                             }}
-                        />
+                        /> */}
                     <Drawer.Section title="Contacts">
                         <DrawerItem
-                            icon={({color, size}) => (
+                            icon={({ color, size }) => (
                                 <Icon
-                                    name="account-check-outline"
+                                    name="web"
                                     color={color}
                                     size={size}
                                 />
@@ -124,7 +128,20 @@ export function DrawerContent(props) {
             </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem
-                    icon={({color, size}) => (
+                    icon={({ color, size }) => (
+                        <Iconf
+                            name="institution"
+                            color={color}
+                            size={17}
+                        />
+                    )}
+                    label="School"
+                    onPress={() => {
+                        props.navigation.navigate('School')
+                    }}
+                />
+                <DrawerItem
+                    icon={({ color, size }) => (
                         <Icon
                             name="exit-to-app"
                             color={color}

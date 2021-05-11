@@ -3,7 +3,9 @@ import { View, StyleSheet, TextInput, Text, SafeAreaView, Button, Dimensions } f
 import {
   FormInput,
 } from "@99xt/first-born";
-import { Picker } from 'native-base';
+// import { Picker } from 'native-base';
+// import {Picker} from '@react-native-picker/picker';
+import { RadioButton } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { StackActions, useFocusEffect } from '@react-navigation/native';
 import { Checkbox, Divider } from 'react-native-paper';
@@ -12,6 +14,7 @@ import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
 import { CREATE_PATIENT_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
+import { TouchableOpacity } from 'react-native';
 
 const AddNew = ({ route, navigation }) => {
 
@@ -215,28 +218,21 @@ const AddNew = ({ route, navigation }) => {
             <TextInput style={{ fontSize: 16, width: '100%' }} label="Last name" placeholder="Last name" onChangeText={(val) => { setLName(val); }}
               value={lname} />
           </View>
-          <View style={styles.action2} >
-            <Picker style={{ width: Dimensions.get('window').width, opacity: 0.4 }}
-              label="Gender" placeholder="Gender" onValueChange={(val) => { setGender(val) }}
-              selectedValue={gender}
-              itemStyle={{
-                color: "blue",
-                backgroundColor: "green",
-                marginLeft: 0,
-                paddingLeft: 10
-              }}
-            >
-
-              <Picker.Item value="" label="Select Gender" />
-              <Picker.Item value="M" label="Male" />
-              <Picker.Item value="F" label="Female" />
-            </Picker>
+          <View style={[styles.view, { paddingTop: 20, paddingBottom: 5}]}>
+            <Text style={{ fontSize: 16, color: '#808080', marginRight: '2%' }}>Gender : </Text>
+            <TouchableOpacity onPress={() => setGender('M')} style={[styles.view, {paddingHorizontal: "4%"}]}>
+            <Text style={{fontSize: 15.5}}>Male</Text>
+            <RadioButton value="M" status={gender === 'M' ? 'checked' : 'unchecked'} color="purple" onPress={() => setGender('M')} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setGender('F')} style={[styles.view, {paddingHorizontal: "4%"}]}>
+            <Text style={{fontSize: 15.5}}>Female</Text>
+            <RadioButton value="F" color="purple" status={gender === 'F' ? 'checked' : 'unchecked'} onPress={() => setGender('F')} />
+            </TouchableOpacity>
           </View>
+
           <View style={styles.action}>
-            {/* <Text styles={{ color: "#dedede" }}>Date of Birth:</Text> */}
             <TextInput style={{ fontSize: 16, width: '100%' }} onFocus={showDatePicker} onKeyPress={showDatePicker} label="Date of Birth" placeholder="Enter Date of Birth"
               value={dob == '' ? '' : `Date of Birth:  ${dob}`} showSoftInputOnFocus={false} />
-            {/* <Text  style={{ width: "80%", paddingLeft: 5 }}>{dob !== ('') ?  : ""}</Text> */}
           </View>
           <DateTimePickerModal
             isVisible={isDatePickerVisible}
@@ -316,5 +312,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
 
+  },
+  view: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 20,
+    marginBottom: 10
   }
+
 });

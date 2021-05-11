@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 const SignInScreen = ({ navigation }) => {
 
-    const [username, setUsername] = useState('');
+    const [center_no, setcenter_no] = useState('');
     // const [password, setPassword] = useState('');
     // const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +31,7 @@ const SignInScreen = ({ navigation }) => {
     }
 
     useEffect(() => {
-        getLocation();
+        // getLocation();
 
     }, []);
 
@@ -53,31 +53,75 @@ const SignInScreen = ({ navigation }) => {
 
     //     })();
     // }
+<<<<<<< HEAD
 
-    const loginHandle = (userName) => {
-        // alert('User: ' + userName + ' Pass: ' + password)
-        getLocation();
+    const loginHandle = (center_no) => {
+        // getLocation();
+        setIsLoading(true);
+
+        axios.post(SIGNIN_KEY.toString(), {
+            "center_no":center_no.toString()
+        })
+            .then(function (response) {
+                // console.log(JSON.stringify(response));
+                if (response.data.status == 200) {
+=======
+>>>>>>> master
+
+                    let theToken = response.data.token ? theToken = response.data.token : '';
+                    let theSchoolId = response.data.data.school_id;
+                    let theCenterNo = center_no;
+                    let theSubCounty = response.data.data.subcounty;
+                    const foundUser = {
+                        center_no: theCenterNo, 
+                        token: theToken,
+                        school_id: theSchoolId,
+                        subcounty: theSubCounty,
+                    }
+                    // console.log('token: ' + theToken);
+                    AsyncStorage.setItem('user', JSON.stringify(foundUser));
+                    signIn(foundUser);
+                } else {
+                    alert('Invalid Center Number!', [
+                        { text: 'Okay' }
+                    ]);
+                    console.log("SignIn Error: " + result.error);
+                }
+                // console.log(response.status);
+                setIsLoading(false);
+
+            })
+            .catch(function (error) {
+                console.log("SignIn Error caught: " + error);
+                setIsLoading(false);
+            });
+
+    };
+
+    const loginHandle2 = (center_no) => {
+        // getLocation();
+        setIsLoading(true);
 
         const foundUser = Users.filter(item => {
-            return userName == item.username
+            return center_no == item.username
         });
 
-        if (username.length === 0) {
-            Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
+        if (center_no.length === 0) {
+            Alert.alert('Wrong Input!', 'center_no field cannot be empty.', [
                 { text: 'Okay' }
             ]);
             return;
         }
 
-        if (location === null) {
-            Alert.alert('Enable Location!', 'Turn on your location to continue.', [
-                { text: 'Okay' }
-            ]);
-            return;
-        }
+        // if (location === null) {
+        //     Alert.alert('Enable Location!', 'Turn on your location to continue.', [
+        //         { text: 'Okay' }
+        //     ]);
+        //     return;
+        // }
 
         if (foundUser.length === 0) {
-            Alert.alert('Invalid User!', 'Username or password is incorrect.', [
+            Alert.alert('Invalid User!', 'center_no is incorrect.', [
                 { text: 'Okay' }
             ]);
             return;
@@ -85,36 +129,7 @@ const SignInScreen = ({ navigation }) => {
         setIsLoading(true)
         signIn(foundUser);
 
-        // axios.post('https://mc2.cryptosavannah.com/auth/verify', {
-        //     centernumber: ''
-        // })
-        //     .then(function (response) {
-        //         // Alert.alert(response.toString());
-        //         if (response.status == 200) {
-
-        //             let theToken = response.token ? theToken = response.token : '';
-        //             let theName = response.data.firstName ? response.data.firstName + ' ' + response.data.lastName : '';
-        //             let theCenterNo = response.data.centerNumber
-        //             const user = { center_no: theCenterNo, token: theToken, 
-        //                 name: theName }
-        //             // console.log(value);
-        //             AsyncStorage.setItem('user', JSON.stringify(user))
-        //             signIn(user);
-        //         } else {
-        //             Alert.alert('Invalid User!', result.error, [
-        //                 { text: 'Okay' }
-        //             ]);
-        //         }
-        //         // console.log(response.status);
-        //         setIsLoading(true);
-
-        //     })
-        //     .catch(function (error) {
-        //         // console.log(error);
-        //         setIsLoading(true);
-        //     });
     };
-
 
     const onLogin = () => {
 
@@ -136,7 +151,7 @@ const SignInScreen = ({ navigation }) => {
         //                 userId: usr._id,
         //                 email: usr.email,
         //                 phone: usr.phone,
-        //                 username: usr.name,
+        //                 center_no: usr.name,
         //             });
         //         }
         //     }).catch(function (err) {
@@ -160,18 +175,9 @@ const SignInScreen = ({ navigation }) => {
                     placeholder="School Number"
                     placeholderTextColor="#003f5c"
                     name="email"
-                    keyboardType="phone-pad"
-                    onChangeText={(text) => setUsername(text.toLowerCase())} />
+                    // keyboardType="phone-pad"
+                    onChangeText={(text) => setcenter_no(text)} />
             </View>
-            {/* <View style={styles.inputView}>
-                <TextInput
-                    secureTextEntry
-                    style={styles.inputText}
-                    placeholder="Password"
-                    placeholderTextColor="#003f5c"
-                    name="password"
-                    onChangeText={(text) => setPassword(text)}/>
-            </View> */}
 
             {isLoading ?
                 <TouchableOpacity
@@ -182,19 +188,12 @@ const SignInScreen = ({ navigation }) => {
                 :
                 <TouchableOpacity
                     style={styles.loginBtn}
-                    onPress={() => loginHandle("xtian")}>
+                    onPress={() => loginHandle2(center_no)}>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
 
 
             }
-
-            {/*<TouchableOpacity*/}
-            {/*    style={styles.signup}*/}
-            {/*    onPress={() => onSignup()}*/}
-            {/*>*/}
-            {/*    <Text>Signup</Text>*/}
-            {/*</TouchableOpacity>*/}
         </View>
     );
 };
@@ -209,10 +208,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     logo: {
-        // fontWeight: 'bold',
-        // fontSize: 50,
-        // color: '#fb5b5a',
-        // marginBottom: 40,
         width: 130,
         height: 130,
         marginBottom: 20,
@@ -237,7 +232,6 @@ const styles = StyleSheet.create({
         height: 50,
     },
     forgot: {
-        // color: 'white',
         fontSize: 11,
     },
     loginBtn: {
