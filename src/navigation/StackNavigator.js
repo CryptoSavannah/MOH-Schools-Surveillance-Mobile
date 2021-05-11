@@ -6,6 +6,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
 import Icon from "react-native-vector-icons/Ionicons";
 import Case from "../screens/Case";
+import AddNew from "../screens/AddNew";
 import ProfileScreen from "../screens/profile/ProfileScreen";
 import { TouchableOpacity } from "react-native";
 import { Block, Text } from "../components";
@@ -85,7 +86,7 @@ const DepositStackScreen = ({ navigation }) => (
         safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="Case" component={Case} options={{
-            title: 'Case record',
+            title: 'Record Case',
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
                     onPress={() => navigation.openDrawer()} />
@@ -111,6 +112,27 @@ const ProfileStackScreen = ({ navigation }) => (
                     onPress={() => navigation.openDrawer()} />
             ),
             headerShown: false,
+        }} />
+    </Stack.Navigator>
+);
+
+const AddNewStackScreen = ({ navigation }) => (
+    <Stack.Navigator screenOptions={{
+        headerStyle: {
+            backgroundColor: '#3a3838',
+        },
+        headerTintColor: '#fff',
+        headerTitleStyle: {
+            // fontWeight: 'bold'
+        },
+        safeAreaInsets: { top: 0, bottom: 0 }
+    }}>
+        <Stack.Screen name="AddNew" component={AddNew} options={{
+            title: 'Add Patient',
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.openDrawer()} />
+            )
         }} />
     </Stack.Navigator>
 );

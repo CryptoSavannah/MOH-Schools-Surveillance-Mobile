@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Card} from 'native-base'
+import React, { useEffect, useState } from 'react'
+import { Card } from 'native-base'
 import {
     ImageBackground,
     Linking,
@@ -9,193 +9,260 @@ import {
     View,
     TouchableOpacity,
     SafeAreaView,
+    Image
 } from 'react-native'
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 // import Icon from 'react-native-ionicons'
 import Icon from 'react-native-vector-icons/Ionicons';
+import logo from '../../assets/logo.png';
+import AsyncStorage from "@react-native-community/async-storage";
+import { AuthContext } from '../../components/context';
 
-class PersonalScreen extends Component {
-    state = {
-        region: {
-            latitude: 0.347947,
-            longitude: 32.662294,
-            latitudeDelta: 0.02,
-            longitudeDelta: 0.02,
-        },
-    }
+const PersonalScreen = ({ navigation }) => {
 
-    renderHeader = () => {
+    const { signOut } = React.useContext(AuthContext);
+
+    const initialRegion = {
+        latitude: 0.347947,
+        longitude: 32.662294,
+        latitudeDelta: 0.02,
+        longitudeDelta: 0.02,
+    };
+
+
+    // const [region, setRegion] = useState(initialRegion);
+
+    const [station, setStation] = useState({
+        center_no: '',
+        location: ''
+    });
+
+    useEffect(() => {
+        // AsyncStorage.getItem('user')
+        //   .then(user => {
+        //     if (user === null) {
+        //       // this.setState({loading: false, showLoginForm: true});
+        //     } else {
+        //       let usr = JSON.parse(user);
+        //       setUserToken(usr.token);
+        //       console.log(JSON.stringify(usr));
+        //       // fetchData();
+        //     }
+        //   })
+        //   .catch(err => console.log(err));
+    }, []);
+
+    const renderHeader = () => {
 
         return (
 
             <SafeAreaView style={styles.mapContainer}>
-                <MapView initialRegion={this.state.region} style={styles.container}>
+                {/* <MapView initialRegion={initialRegion} style={styles.container}>
                     <Marker
-                        title={'Hope For Life'}
-                        description={'Key Population Uganda'}
+                        title={station.center_no}
+                        description={station.location}
                         coordinate={{
-                            latitude: this.state.region.latitude,
-                            longitude: this.state.region.longitude
+                            latitude: initialRegion.latitude,
+                            longitude: initialRegion.longitude
                         }}
                     />
-                </MapView>
+                </MapView> */}
+                <Image
+                    source={logo}
+                    style={styles.imageStyle}
+                />
             </SafeAreaView>
         )
     };
 
-    _pressCall = () => {
+    // ********** @xtian, what are these methods about ********************
+    const _pressCall = () => {
         const url = 'tel:+256794545069'
         Linking.openURL(url)
     }
 
-    _sendWhatApp = () => {
+    const _sendWhatApp = () => {
         Linking.openURL('whatsapp://send?text=hello&phone=+256794545069')
     };
 
-    render() {
-        return (
-            <ScrollView style={styles.scroll}>
-                <View style={styles.container}>
-                    {this.renderHeader()}
+    //******************************************************************* */
 
-                    <Card>
-                        <View style={{padding: 10}}>
-                            {/*contact us*/}
+    return (
+        <ScrollView style={styles.scroll}>
+            <View style={styles.container}>
+                {renderHeader()}
 
-                            <TouchableOpacity>
-                                <View style={[telStyles.container]}>
-                                    <View style={telStyles.iconRow}>
-                                        <Icon name="ios-call" style={{color: "#d42329",}} size={26}/>
-                                    </View>
-                                    <TouchableOpacity
-                                        style={telStyles.telRow}>
-                                        <View style={telStyles.telNumberColumn}>
-                                            <Text style={telStyles.telNumberText}>Phone</Text>
-                                        </View>
-                                        <View style={telStyles.telNameColumn}>
-                                            <Text style={telStyles.telNameText}>256 787 344 529</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <View style={telStyles.smsRow}>
-                                        <Icon
-                                            ios="logo-whatsapp"
-                                            android="logo-whatsapp"
-                                            style={{color: "#d42329",}}/>
-                                    </View>
+                <Card>
+                    <View style={{ padding: 10 }}>
+                        {/*contact us*/}
+
+                        <TouchableOpacity>
+                            <View style={[telStyles.container]}>
+                                <View style={telStyles.iconRow}>
+                                    <Icon name="ios-call" style={{ color: "#3a3838", }} size={26} />
                                 </View>
-                            </TouchableOpacity>
-                            {/*contact us*/}
-                            <TouchableOpacity>
-                                <View style={[telStyles.container]}>
-                                    <View style={telStyles.iconRow}>
-                                        <Icon name="ios-home" style={{color: "#d42329",}} size={26}/>
+                                <TouchableOpacity
+                                    style={telStyles.telRow}>
+                                    <View style={telStyles.telNumberColumn}>
+                                        <Text style={telStyles.telNumberText}>Phone</Text>
                                     </View>
-                                    <TouchableOpacity
-                                        style={telStyles.telRow}>
-                                        <View style={telStyles.telNumberColumn}>
-                                            <Text style={telStyles.telNumberText}>Name</Text>
-                                        </View>
-                                        <View style={telStyles.telNameColumn}>
-                                            <Text style={telStyles.telNameText}>Savannah High School</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <View style={telStyles.smsRow}>
-                                        <Icon
-                                            ios="logo-whatsapp"
-                                            android="logo-whatsapp"
-                                            style={{color: "#d42329",}}/>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
+                                    <View style={telStyles.telNameColumn}>
+                                        {/* <Text style={telStyles.telNameText}>256 787 344 529</Text> */}
+                                        <Text style={telStyles.telNameText}></Text>
 
-                            {/*Seperator line*/}
-                            <View style={sepStyles.container}>
-                                <View style={sepStyles.separatorOffset}/>
-                                <View style={sepStyles.separator}/>
+                                    </View>
+                                </TouchableOpacity>
+                                <View style={telStyles.smsRow}>
+                                    <Icon
+                                        ios="logo-whatsapp"
+                                        android="logo-whatsapp"
+                                        style={{ color: "#3a3838", }} />
+                                </View>
                             </View>
-
-                            <TouchableOpacity>
-                                <View style={[mailStyles.container]}>
-                                    <View style={mailStyles.iconRow}>
-                                        {/*<Icon*/}
-                                        {/*    name="ios-mail"*/}
-                                        {/*    style={{color: "#d42329",}}/>*/}
-                                        <Icon name="ios-mail" style={{color: "#d42329",}} size={26}/>
-                                    </View>
-                                    <TouchableOpacity
-                                        style={mailStyles.emailRow}>
-                                        <View style={mailStyles.emailColumn}>
-                                            <Text style={mailStyles.emailText}>Email</Text>
-                                        </View>
-                                        <View style={mailStyles.emailNameColumn}>
-                                            <Text style={mailStyles.emailNameText}>info@gmail.com</Text>
-                                        </View>
-                                    </TouchableOpacity>
+                        </TouchableOpacity>
+                        {/*contact us*/}
+                        <TouchableOpacity>
+                            <View style={[telStyles.container]}>
+                                <View style={telStyles.iconRow}>
+                                    <Icon name="ios-home" style={{ color: "#3a3838", }} size={26} />
                                 </View>
-                            </TouchableOpacity>
-                            {/*Seperator line*/}
-                            <View style={sepStyles.container}>
-                                <View style={sepStyles.separatorOffset}/>
-                                <View style={sepStyles.separator}/>
+                                {/* <TouchableOpacity
+                                    style={telStyles.telRow}>
+                                    <View style={telStyles.telNumberColumn}>
+                                        <Text style={telStyles.telNumberText}>Name</Text>
+                                    </View>
+                                    <View style={telStyles.telNameColumn}>
+                                        <Text style={telStyles.telNameText}>Savannah High School</Text>
+                                    </View>
+                                </TouchableOpacity> */}
+                                <TouchableOpacity
+                                    style={telStyles.telRow}>
+                                    <View style={telStyles.telNumberColumn}>
+                                        <Text style={telStyles.telNumberText}>Center</Text>
+                                    </View>
+                                    <View style={telStyles.telNameColumn}>
+                                        <Text style={telStyles.telNameText}>U004</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                <View style={telStyles.smsRow}>
+                                    <Icon
+                                        ios="logo-whatsapp"
+                                        android="logo-whatsapp"
+                                        style={{ color: "#3a3838", }} />
+                                </View>
                             </View>
+                        </TouchableOpacity>
 
-                            <TouchableOpacity>
-                                <View style={[mailStyles.container]}>
-                                    <View style={mailStyles.iconRow}>
-                                        <Icon
-                                            name="md-globe"
-                                            style={{color: "#d42329",}}
-                                            size={26}
-                                        />
-                                    </View>
-                                    <TouchableOpacity
-                                        style={mailStyles.emailRow}>
-                                        <View style={mailStyles.emailColumn}>
-                                            <Text style={mailStyles.emailText}>Website</Text>
-                                        </View>
-                                        <View style={mailStyles.emailNameColumn}>
-                                            <Text style={mailStyles.emailNameText}>www.savannahhigh.com</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </TouchableOpacity>
-
-                            {/*Seperator line*/}
-                            <View style={sepStyles.container}>
-                                <View style={sepStyles.separatorOffset}/>
-                                <View style={sepStyles.separator}/>
-                            </View>
-
-                            {/*Location view*/}
-                            <TouchableOpacity>
-                                <View style={[mailStyles.container]}>
-                                    <View style={mailStyles.iconRow}>
-                                        <Icon
-                                            name="ios-pin"
-                                            style={{color: "#d42329",}}
-                                            size={26}
-                                        />
-                                    </View>
-                                    <View style={mailStyles.emailRow}>
-                                        <View style={mailStyles.emailColumn}>
-                                            <Text style={mailStyles.emailText}>Location</Text>
-                                        </View>
-                                        <View style={mailStyles.emailNameColumn}>
-                                            <Text style={mailStyles.emailNameText}>
-                                                P.O Box 25603, Kampala – Uganda,
-                                                Bweyogerere
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
+                        {/*Seperator line*/}
+                        <View style={sepStyles.container}>
+                            <View style={sepStyles.separatorOffset} />
+                            <View style={sepStyles.separator} />
                         </View>
 
-                    </Card>
-                </View>
-            </ScrollView>
-        )
-    }
+                        <TouchableOpacity>
+                            <View style={[mailStyles.container]}>
+                                <View style={mailStyles.iconRow}>
+                                    {/*<Icon*/}
+                                    {/*    name="ios-mail"*/}
+                                    {/*    style={{color: "#3a3838",}}/>*/}
+                                    <Icon name="ios-mail" style={{ color: "#3a3838", }} size={26} />
+                                </View>
+                                <TouchableOpacity
+                                    style={mailStyles.emailRow}>
+                                    <View style={mailStyles.emailColumn}>
+                                        <Text style={mailStyles.emailText}>Email</Text>
+                                    </View>
+                                    <View style={mailStyles.emailNameColumn}>
+                                        {/* <Text style={mailStyles.emailNameText}>info@gmail.com</Text> */}
+                                        <Text style={mailStyles.emailNameText}></Text>
+
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+                        {/*Seperator line*/}
+                        <View style={sepStyles.container}>
+                            <View style={sepStyles.separatorOffset} />
+                            <View style={sepStyles.separator} />
+                        </View>
+
+                        <TouchableOpacity>
+                            <View style={[mailStyles.container]}>
+                                <View style={mailStyles.iconRow}>
+                                    <Icon
+                                        name="md-globe"
+                                        style={{ color: "#3a3838", }}
+                                        size={26}
+                                    />
+                                </View>
+                                <TouchableOpacity
+                                    style={mailStyles.emailRow}>
+                                    <View style={mailStyles.emailColumn}>
+                                        <Text style={mailStyles.emailText}>Website</Text>
+                                    </View>
+                                    <View style={mailStyles.emailNameColumn}>
+                                        {/* <Text style={mailStyles.emailNameText}>www.savannahhigh.com</Text> */}
+                                        <Text style={mailStyles.emailNameText}></Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </TouchableOpacity>
+
+                        {/*Seperator line*/}
+                        <View style={sepStyles.container}>
+                            <View style={sepStyles.separatorOffset} />
+                            <View style={sepStyles.separator} />
+                        </View>
+
+                        {/*Location view*/}
+                        <TouchableOpacity>
+                            <View style={[mailStyles.container]}>
+                                <View style={mailStyles.iconRow}>
+                                    <Icon
+                                        name="ios-pin"
+                                        style={{ color: "#3a3838", }}
+                                        size={26}
+                                    />
+                                </View>
+                                <View style={mailStyles.emailRow}>
+                                    <View style={mailStyles.emailColumn}>
+                                        <Text style={mailStyles.emailText}>Location</Text>
+                                    </View>
+                                    <View style={mailStyles.emailNameColumn}>
+                                        {/* <Text style={mailStyles.emailNameText}>
+                                            P.O Box 25603, Kampala – Uganda,
+                                            Bweyogerere
+                                        </Text> */}
+                                        <Text style={mailStyles.emailNameText}>Wakiso</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    
+                    {/* signout action */}
+                    <TouchableOpacity onPress={() => { signOut() }}
+                        style={{
+                            elevation: 2, backgroundColor: '#F3F6F9',
+                            shadowOpacity: 0.5, borderColor: '#F3F6F9', paddingTop: 25
+                        }}>
+                        <View style={[mailStyles.container]}>
+                            <View style={mailStyles.emailRow}>
+                                <View style={[mailStyles.emailColumn, { justifyContent: "space-around" }]}>
+                                    <Text>Signout</Text>
+                                    <Icon
+                                        name="ios-exit"
+                                        style={{ color: "#3a3838", }}
+                                        size={26}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </Card>
+            </View>
+        </ScrollView>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -249,7 +316,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     userImage: {
-        borderColor: '#d42329',
+        borderColor: '#3a3838',
         borderRadius: 85,
         borderWidth: 3,
         height: 170,
@@ -262,6 +329,19 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         paddingTop: 90,
         textAlign: 'center',
+    },
+    imageStyle:
+    {
+        resizeMode: 'center',
+        width: '88%',
+        height: '80%',
+        position: 'absolute',
+        top: '5%',
+        // right: 10,
+        alignSelf: 'center',
+        // elevation: 10,
+        borderRadius: 5
+        // backgroundColor: 'yellow',
     },
 });
 const mailStyles = StyleSheet.create({
@@ -276,7 +356,7 @@ const mailStyles = StyleSheet.create({
         marginBottom: 5,
     },
     emailIcon: {
-        color: '#d42329',
+        color: '#3a3838',
         fontSize: 30,
     },
     emailNameColumn: {
@@ -357,7 +437,7 @@ const telStyles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     telIcon: {
-        color: '#d42329',
+        color: '#3a3838',
         fontSize: 30,
     },
     telNameColumn: {

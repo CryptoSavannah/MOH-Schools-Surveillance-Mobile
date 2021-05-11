@@ -1,9 +1,12 @@
 import React from 'react';
+import {Dimensions} from "react-native";
 
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Iconf from 'react-native-vector-icons/FontAwesome';
 
-import {DepositStackScreen, HomeStackScreen, ProfileStackScreen} from "./StackNavigator";
+
+import {DepositStackScreen, HomeStackScreen, ProfileStackScreen, AddNewStackScreen} from "./StackNavigator";
 
 
 const Tab = createMaterialBottomTabNavigator();
@@ -12,7 +15,7 @@ const TabNavigator = () => (
     <Tab.Navigator
         initialRouteName="Home"
         activeColor="#FFB236"
-        barStyle={{backgroundColor: '#3a3838'}}
+        barStyle={{backgroundColor: '#3a3838', width: Dimensions.get("window").width + 3.5}}
     >
         <Tab.Screen
             name="Home"
@@ -20,7 +23,7 @@ const TabNavigator = () => (
             options={{
                 tabBarLabel: 'Home',
                 tabBarIcon: ({color}) => (
-                    <Icon name="ios-home" color={color} size={26}/>
+                    <Icon name="ios-home" color={color} size={25}/>
                 ),
             }}
         />
@@ -28,9 +31,19 @@ const TabNavigator = () => (
             name="Case"
             component={DepositStackScreen}
             options={{
-                tabBarLabel: 'Enter Case',
+                tabBarLabel: 'Case',
                 tabBarIcon: ({color}) => (
-                    <Icon name="ios-journal" color={color} size={26}/>
+                    <Icon name="ios-folder" color={color} size={25}/>
+                ),
+            }}
+        />
+        <Tab.Screen
+            name="AddNew"
+            component={AddNewStackScreen}
+            options={{
+                tabBarLabel: 'Patient',
+                tabBarIcon: ({color}) => (
+                    <Icon name="ios-person" color={color} size={28}/>
                 ),
             }}
         />
@@ -38,9 +51,9 @@ const TabNavigator = () => (
             name="School"
             component={ProfileStackScreen}
             options={{
-                tabBarLabel: 'Profile',
+                tabBarLabel: 'School',
                 tabBarIcon: ({color}) => (
-                    <Icon name="ios-person" color={color} size={26}/>
+                    <Iconf name="institution" color={color} size={20}/>
                 ),
             }}
         />

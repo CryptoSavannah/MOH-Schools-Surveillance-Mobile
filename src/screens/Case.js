@@ -11,8 +11,10 @@ import { Badge } from "react-native-elements";
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
 import PatientRecord from "./PatientRecord";
+import { PATIENTS_KEY, PATIENT_KEY, CONDITIONS_KEY, CASE_KEY } from '../../env.json';
 
 const Case = ({ navigation }) => {
+  const SCREEN_WIDTH = Dimensions.get("window").width;
 
   //the wizard initial state
   const wizard = useRef();
@@ -29,75 +31,41 @@ const Case = ({ navigation }) => {
   const [idNum, setIDNum] = useState('');
 
   const [symptoms, setSymptoms] = useState('');
-  const [userToken, setUserToken] = useState(null);
+  const [userToken, setUserToken] = useState('');
   const [center_no, setCenter_no] = useState('');
-  const [patients, setPatients] = useState('');
-  const [conditions, setConditions] = useState('');
-
-  //static data
-  var thePatients = [
-    {
-      id: 1,
-      nin: '1',
-      name: 'Gary Matovu',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 2,
-      nin: '2',
-      name: 'Yona Babu',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 3,
-      nin: '3',
-      name: 'Charity Ankunda',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 4,
-      nin: '4',
-      name: 'React Native',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 5,
-      nin: '5',
-      name: 'Andera Delphine',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 6,
-      nin: '6',
-      name: 'Anna Nakayi',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 7,
-      nin: '7',
-      name: 'Peter Ochaya',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-    {
-      id: 8,
-      nin: '8',
-      name: 'Ana kenrik',
-      dob: '03/07/2002',
-      gender: 'Male'
-    },
-  ];
+  const [school_id, setSchool_id] = useState('');
+  const [patients, setPatients] = useState([]);
+  const [conditions, setConditions] = useState([]);
 
   const [selectedPatients, setSelectedPatients] = useState([]);
   const [selectedPatient2, setSelectedPatient2] = useState([]);
+<<<<<<< HEAD
 
   const stdRef = useRef(null);
+=======
+
+  const stdRef = useRef(null);
+
+  var servPatients =
+  {
+    "status": 200,
+    "data": [
+      { "patient_id": 1, "fname": "Rachael", "lname": "Kembi", "nin": "TH1234", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E8959882A", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-27T02:16:32.544Z" },
+      { "patient_id": 6, "fname": "Brian", "lname": "Aine", "nin": "TH123", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E895988A", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T13:59:01.826Z" },
+      { "patient_id": 8, "fname": "Dee", "lname": "Obura", "nin": "TH12", "nin_hash": "375B0072BEFC790CE0A3F6A9C2B27C75020B7A97BCCCBA52D000806E895988", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:04:11.415Z" },
+      // { "patient_id": 15, "fname": "Jane", "lname": "Doe", "nin": "${idNum}", "nin_hash": "${hash}", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:16:21.334Z" },
+      { "patient_id": 16, "fname": "Jane", "lname": "Doe", "nin": "Mndtgff", "nin_hash": "a018e0133c9536a8233bc0cc083b24c0af8ef79615bb7ec7bbad8398506f3064", "gender": "F", "dob": "2020-09-14T21:00:00.000Z", "date_added": "2020-10-29T14:18:15.504Z" }
+    ]
+  };
+
+  var servConditions = {
+    "status": 200, "data": [
+      { "condition_id": 2, "condition": "headache", "date_added": "2020-10-27T00:55:53.746Z" },
+      { "condition_id": 3, "condition": "fever", "date_added": "2020-10-27T00:56:05.479Z" },
+      { "condition_id": 4, "condition": "dysentry", "date_added": "2020-10-27T01:48:22.268Z" }
+    ]
+  }
+>>>>>>> master
 
   var servPatients =
   {
@@ -121,35 +89,100 @@ const Case = ({ navigation }) => {
 
   const [selectedConditions, setSelectedConditions] = useState([]);
 
-  const fetchData = () => {
-    // loading patients, conditions
+  const fetchPatients = async () => {
 
-    setPatients(thePatients);
-    setConditions(theConditions);
+    let pats = [];
 
-    //   axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
-    //     Schoolnumber: center_no,
-    //     token: userToken
-    //   })
-    //     .then(function (response) {
-    //       if (response.status == 200) {
-    //         setPatients(response.data.patients);
-    //         setConditions(response.data.conditions);
+    servPatients.data.map(x => {
+      let date = new Date(x.dob);
+      pats.push({
+        id: x.patient_id,
+        nin: x.nin,
+        nin_hash: x.nin_hash,
+        name: x.fname + ' ' + x.lname,
+        dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+        gender: x.gender
+      });
+    });
+    setPatients(pats);
 
-    //       } else {
-    //         Alert.alert('Error!', 'Failed to load Data \n check your connection.', [
-    //           { text: 'Okay' }
-    //         ]);
-    //       }
-    //       // console.log(response.status);
+    var config = {
+      method: 'get',
+      url: PATIENTS_KEY,
+      headers: {
+        'Authorization': `Bearer ${userToken}`
+      }
+    };
 
-    //     })
-    //     .catch(function (error) {
-    //       console.log(error);
+    // console.log(JSON.stringify(config));
+
+    // await axios(config)
+    //   .then(res => {
+    //     let ps = [];
+    //     ps = res.data;
+
+    //     let pats = [];
+
+    //     console.log("Patients: " + JSON.stringify(ps));
+
+    //     ps.map(x => {
+    //       let date = new Date(x.dob);
+    //       pats.push({
+    //         id: x.patient_id,
+    //         nin: x.nin,
+    //         nin_hash: x.nin_hash,
+    //         name: x.fname + ' ' + x.lname,
+    //         dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+    //         gender: x.gender
+    //       });
     //     });
+    //     setPatients(pats);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Fetching Patients: " + error);
+    //   });
+  };
+
+  const fetchConditions = async () => {
+    let conds = [];
+
+    servConditions.data.map(x => {
+      conds.push({
+        id: x.condition_id,
+        name: x.condition,
+      });
+    });
+    setConditions(conds);
 
 
-  }
+    var config = {
+      method: 'get',
+      url: CONDITIONS_KEY,
+      headers: {
+        'Authorization': `Bearer ${userToken}`
+      }
+    };
+
+    // console.log(JSON.stringify(config));
+
+    // await axios(config)
+    //   .then(res => {
+    //     let ps = [];
+    //     ps = res.data;
+    //     let conds = [];
+    //     console.log("Conditions: " + JSON.stringify(ps));
+    //     ps.data.map(x => {
+    //       conds.push({
+    //         id: x.condition_id,
+    //         name: x.condition,
+    //       });
+    //     });
+    //     setConditions(conds);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Fetching Conditions: " + error);
+    //   });
+  };
 
   const loadPatient = () => {
 
@@ -157,7 +190,7 @@ const Case = ({ navigation }) => {
     setPName(the_name);
     wizard.current.next();
 
-    // axios.get('https://mc2.cryptosavannah.com/auth/get_otp', {
+    // axios.get('', {
     //   patient_id: idNum,
     //   token: userToken
     // })
@@ -208,14 +241,11 @@ const Case = ({ navigation }) => {
 
     let the_patient = selectedConditions.length > 0 ? selectedPatients[0].id : '';
     let the_conditions = selectedConditions;
+    the_conditions = (the_conditions.map(x => x["id"]));
     let report_date = new Date();
+    report_date = report_date.getFullYear() + "-" + report_date.getMonth() + "-" + report_date.getDate();
     let the_token = userToken;
-    // school_id
-
-    console.log("Patient : " + JSON.stringify(the_patient.id));
-    console.log("conditions : " + JSON.stringify(the_conditions));
-    console.log("report_date : " + report_date.toString());
-    console.log("the_token : " + the_token);
+    let the_school_id = school_id;
 
     //step 1. check for required fields: idNum
     if (!(removeSpaces(idNum) === "")) {
@@ -226,43 +256,46 @@ const Case = ({ navigation }) => {
 
           //step 3. send token, hashNIN, IDs of conditions, report_date
           console.log("hashNIN : " + hash);
-          // axios.post('https://mc2.cryptosavannah.com/auth/verify', {
-          //   token: the_token,
-          //   Patient_id: the_patient,
-          //   hashNIN: hash,
-          //   condition_ids: the_conditions,
-          //   report_date: report_date
-          // })
-          //   .then(function (response) {
-          //     console.log(JSON.stringify(response));
-          //     if (response.data.status == 200) {
 
-          //       //step 4. display response, update home screen + back to home screen
-          //       alert("Case has been Recorded");
+          var data = {
+            "Patient_id": `${the_patient}`,
+            "conditions": `${the_conditions}`,
+            "report_date": `${report_date}`,
+            "school_id": `${the_school_id}`
+          };
 
-          //       cancel();
+          var config = {
+            method: 'post',
+            url: CASE_KEY,
+            headers: {
+              'Authorization': `Bearer ${userToken}`
+            },
+            data: data
+          };
 
-          //     } else {
-          //       alert('Error! Case Not Recorded. \n Try Again.', [
-          //         { text: 'Okay' }
-          //       ]);
-          //       console.log("Recording Error : " + response.error);
-          //     }
-          //     // console.log(response.status);
+          console.log("axios call config : " + JSON.stringify(config));
 
-          //   })
-          //   .catch(function (error) {
-          //     alert('Error! Case Not Recorded. \n Try Again.', [
-          //       { text: 'Okay' }
-          //     ]);
-          //     console.log("Recording Error : " + error);
+          if (userToken === null) {
+            alert("Login to continue");
+          } else {
+            // axios(config)
+            //   .then(function (response) {
 
-          //   });
+            //     if (response.status === 201) {
+            alert("Case has been Recorded");
 
-          //step 4. display response, update home screen + back to home screen
-          alert("Case has been Recorded");
-
-          cancel();
+            clearState();
+            setCurrentStep(0);
+            navigation.navigate("Home");
+            //     } else {
+            //       alert("Error failed to record Case\n Try again.")
+            //       console.log(JSON.stringify(response.data));
+            //     }
+            //   })
+            //   .catch(function (error) {
+            //     console.log(error);
+            //   });
+          }
 
         })
         .catch(
@@ -375,7 +408,7 @@ const Case = ({ navigation }) => {
                     }}
                     containerStyle={{ padding: 5 }}
                     onRemoveItem={(item, index) => {
-                      const items = selectedPatients.filter((sitem) => sitem.id !== item.id);
+                      const items = selectedPatients.filter((sitem) => sitem.patient_id !== item.patient_id);
                       setSelectedPatients(selectedPatients => items);
                     }}
                     itemStyle={{
@@ -456,7 +489,7 @@ const Case = ({ navigation }) => {
             <Text style={styles.headerText}>{pname !== "" ? pname : "Press Back to Select Student"}</Text>
             <Divider style={{ marginTop: 15 }} />
 
-            <PatientRecord />
+            {idNum !== "" ? <PatientRecord /> : null}
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: "center" }}>
               <View style={{ width: 90 }}>
@@ -511,8 +544,22 @@ const Case = ({ navigation }) => {
 
             {/* conditons */}
 
-            <View style={{ flex: 2 }}>
+            <FlatList
+              horizontal
+              pagingEnabled={true}
+              showsHorizontalScrollIndicator={false}
+              legacyImplementation={false}
+              data={selectedConditions.length < 5 ? selectedConditions
+                : [...selectedConditions, { id: "none", name: " ..." }]}
+              renderItem={({ item }) =>
+                <Item item={item} />}
+              keyExtractor={item => (item.id.toString())}
+              style={{ width: SCREEN_WIDTH + 5, flex: 1, height: '0.5%', backgroundColor: '#fff' }}
+            />
+
+            <View style={{ flex: 5 }}>
               <SearchableDropdown
+                ref={searchableDrpDwn}
                 multi={true}
                 selectedItems={selectedConditions}
                 onItemSelect={(item) => {
@@ -570,7 +617,7 @@ const Case = ({ navigation }) => {
 
               </View>
               <View style={{ width: 80 }}>
-                <Button title="Save"
+                <Button title="Record"
                   rounded
                   block
                   style={styles.btn}
