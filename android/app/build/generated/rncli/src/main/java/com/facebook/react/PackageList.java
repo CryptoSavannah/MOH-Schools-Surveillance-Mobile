@@ -11,6 +11,8 @@ import com.facebook.react.shell.MainReactPackage;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+// @nozbe/watermelondb
+import com.nozbe.watermelondb.WatermelonDBPackage;
 // @react-native-community/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 // @react-native-community/datetimepicker
@@ -37,6 +39,8 @@ import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.rnscreens.RNScreensPackage;
 // react-native-svg
 import com.horcrux.svg.SvgPackage;
+// react-native-vector-icons
+import com.oblador.vectoricons.VectorIconsPackage;
 
 public class PackageList {
   private Application application;
@@ -82,6 +86,7 @@ public class PackageList {
   public ArrayList<ReactPackage> getPackages() {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
+      new WatermelonDBPackage(),
       new AsyncStoragePackage(),
       new RNDateTimePickerPackage(),
       new RNCMaskedViewPackage(),
@@ -94,7 +99,8 @@ public class PackageList {
       new ReanimatedPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
-      new SvgPackage()
+      new SvgPackage(),
+      new VectorIconsPackage()
     ));
   }
 }

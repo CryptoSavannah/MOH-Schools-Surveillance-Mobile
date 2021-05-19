@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/home/lillian26/Documents/Wrk_Current/Crypto S/schools-survailance/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v18/values-v18.xml",
+            "outputFile": "/home/lillian/Documents/Lillian/MOH/schools-survailance/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v18/values-v18.xml",
             "map": [
                 {
-                    "source": "/home/lillian26/.gradle/caches/transforms-2/files-2.1/1cb9b9ea592aa2ea85233be252327dcf/appcompat-1.1.0/res/values-v18/values-v18.xml",
+                    "source": "/home/lillian/.gradle/caches/transforms-2/files-2.1/1cb9b9ea592aa2ea85233be252327dcf/appcompat-1.1.0/res/values-v18/values-v18.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
