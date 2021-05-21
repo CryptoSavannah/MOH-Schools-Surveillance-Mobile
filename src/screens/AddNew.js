@@ -101,7 +101,7 @@ const AddNew = ({ route, navigation }) => {
     return string.split(' ').join('');
   };
 
-  const saveCase = () => {
+  const savePatient = () => {
 
     // if (isNINAvailable) {
     //   data.isValidNIN = !(removeSpaces(idNum) === "");
@@ -260,7 +260,7 @@ const AddNew = ({ route, navigation }) => {
                 block
                 style={styles.btn}
                 color="#FFB236"
-                onPress={() => { saveCase() }}
+                onPress={() => { savePatient() }}
               >
               </Button>
             </View>

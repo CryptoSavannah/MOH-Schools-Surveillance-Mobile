@@ -13,7 +13,9 @@ import schema from './src/model/schema'
 import migrations from './src/model/migrations'
 // import Post from './src/model/Post' // ⬅️ You'll import your Models here
 import Case from './src/model/Case'
-import Summary from './src/model/CaseSummary'
+import Patient from './src/model/Patient'
+import Condition from './src/model/Condition'
+import ConditionStatus from './src/model/ConditionStatus'
 
 // First, create the adapter to the underlying database:
 const adapter = new SQLiteAdapter({
@@ -34,7 +36,7 @@ const adapter = new SQLiteAdapter({
   // Then, make a Watermelon database from it!
   const database = new Database({
     adapter,
-    modelClasses: [Case, Summary
+    modelClasses: [Case, Patient, Condition, ConditionStatus
       // Post, // ⬅️ You'll add Models to Watermelon here
     ],
     actionsEnabled: true,
