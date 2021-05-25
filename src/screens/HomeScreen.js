@@ -23,8 +23,10 @@ import {
 import axios from "axios";
 import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
+import { useDatabase } from '@nozbe/watermelondb/hooks';
+import PatientList from "../components/PatientList";
 
-const HomeScreen = ({ route, navigation }) => {
+const HomeScreen = ({ route, navigation, database }) => {
     const SCREEN_WIDTH = Dimensions.get("window").width;
     const { fromDate } = route.params ?? {};
     const { toDate } = route.params ?? {};
@@ -75,6 +77,17 @@ const HomeScreen = ({ route, navigation }) => {
             number: 0
         },
     ];
+
+    const {patients, setPatients} = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        setIsLoading(true);
+
+
+
+    })
 
     function Item({ title, number }) {
         return (
@@ -161,6 +174,7 @@ const HomeScreen = ({ route, navigation }) => {
                         style={{ flex: 1, marginVertical: 15 }}
                     />
                 </ScrollView>
+                <PatientList database={database} search="" navigation={navigation} />
             </ScrollView>
         </SafeAreaView>
     );
