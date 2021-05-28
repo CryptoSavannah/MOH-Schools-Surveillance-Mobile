@@ -60,7 +60,7 @@ export function DrawerContent(props) {
                                 props.navigation.navigate('Home')
                             }}
                         />
-                        <DrawerItem
+                        {/* <DrawerItem
                             icon={({ color, size }) => (
                                 <Icon
                                     name="account-check-outline"
@@ -73,7 +73,7 @@ export function DrawerContent(props) {
                                 props.navigation.navigate('AddNew');
 
                             }}
-                        />
+                        /> */}
                         <DrawerItem
                             icon={({ color, size }) => (
                                 <Icon

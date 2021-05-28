@@ -53,7 +53,6 @@ const SignInScreen = ({ navigation }) => {
 
     //     })();
     // }
-<<<<<<< HEAD
 
     const loginHandle = (center_no) => {
         // getLocation();
@@ -65,8 +64,6 @@ const SignInScreen = ({ navigation }) => {
             .then(function (response) {
                 // console.log(JSON.stringify(response));
                 if (response.data.status == 200) {
-=======
->>>>>>> master
 
                     let theToken = response.data.token ? theToken = response.data.token : '';
                     let theSchoolId = response.data.data.school_id;
