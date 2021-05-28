@@ -12,9 +12,9 @@ import { TouchableOpacity } from "react-native";
 import { Block, Text } from "../components";
 import PendingCases from "../screens/PendingCases";
 // import ResultScreen from "../screens/Results";
-import FilterScreen from "../screens/FilterScreen";
+// import FilterScreen from "../screens/FilterScreen";
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
 const Stack = createStackNavigator();
 
@@ -45,18 +45,31 @@ const HomeStackScreen = ({ navigation }) => (
             ),
             headerRight: () => (
                 <Icon2.Button name="dots-vertical" size={25} backgroundColor="#3a3838"
-                onPress={() =>
-                    //  {return(<View><Text>oooo</Text></View>);}
-                     navigation.navigate("FilterOptions")
-            } />)
+                    onPress={() =>
+                        //  {return(<View><Text>oooo</Text></View>);}
+                        navigation.navigate("FilterOptions")
+                    } />)
         }} />
-        <Stack.Screen name="Pending" component={PendingCases} options={{
+        <Stack.Screen name="Case" component={Case} options={{
+            title: 'Record Case',
+            headerLeft: () => (
+                <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+            ),
+        }} />
+        <Stack.Screen name="Profile" component={ProfileScreen} options={{
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
                     onPress={() => navigation.openDrawer()} />
             ),
-            // headerShown: false,
+            headerShown: false,
         }} />
+        {/* <Stack.Screen name="Pending" component={PendingCases} options={{
+            headerLeft: () => (
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                    onPress={() => navigation.openDrawer()} />
+            ),
+        }} /> */}
         {/* <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
             title: 'Case Record',
             headerLeft: () => (
@@ -64,13 +77,13 @@ const HomeStackScreen = ({ navigation }) => (
                     onPress={() => navigation.openDrawer()} />
             ),
         }} /> */}
-        <Stack.Screen name="FilterOptions" component={FilterScreen} options={{
+        {/* <Stack.Screen name="FilterOptions" component={FilterScreen} options={{
             title: 'Select Period',
             headerLeft: () => (
                 <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
                     onPress={() => navigation.goBack()} style={{paddingLeft: 20}}/>
             ),
-        }} />
+        }} /> */}
     </Stack.Navigator>
 );
 
@@ -85,13 +98,7 @@ const DepositStackScreen = ({ navigation }) => (
         },
         safeAreaInsets: { top: 0, bottom: 0 }
     }}>
-        <Stack.Screen name="Case" component={Case} options={{
-            title: 'Record Case',
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                    onPress={() => navigation.openDrawer()} />
-            )
-        }} />
+
     </Stack.Navigator>
 );
 
@@ -107,10 +114,6 @@ const ProfileStackScreen = ({ navigation }) => (
         safeAreaInsets: { top: 0, bottom: 0 }
     }}>
         <Stack.Screen name="Profile" component={ProfileScreen} options={{
-            headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
-                    onPress={() => navigation.openDrawer()} />
-            ),
             headerShown: false,
         }} />
     </Stack.Navigator>
@@ -159,4 +162,3 @@ const DownloadStackScreen = ({ navigation }) => (
 );
 
 export { HomeStackScreen, DepositStackScreen, ProfileStackScreen, DownloadStackScreen, AddNewStackScreen };
-
