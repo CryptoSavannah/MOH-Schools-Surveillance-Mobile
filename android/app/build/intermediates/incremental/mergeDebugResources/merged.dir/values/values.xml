@@ -3022,10 +3022,10 @@
         <item name="android:datePickerMode">spinner</item>
     </style>
     <style name="SpinnerTimePickerDialog" ns2:targetApi="lollipop" parent="Theme.AppCompat.Light.Dialog">
-      <item name="android:timePickerStyle">@style/SpinnerTimePickerStyle</item>
+        <item name="android:timePickerStyle">@style/SpinnerTimePickerStyle</item>
     </style>
     <style name="SpinnerTimePickerStyle" ns2:targetApi="lollipop" parent="android:Widget.Material.Light.TimePicker">
-      <item name="android:timePickerMode">spinner</item>
+        <item name="android:timePickerMode">spinner</item>
     </style>
     <style name="Test.ShapeAppearanceOverlay.MaterialComponents.MaterialCalendar.Day" parent="">
     <item name="cornerFamily">rounded</item>

@@ -8,6 +8,8 @@ target 'schoolmoh' do
 
   use_react_native!(:path => config["reactNativePath"])
 
+  pod 'RealmJS', :path => '../node_modules/realm'
+
   target 'schoolmohTests' do
     inherit! :complete
     # Pods for testing
