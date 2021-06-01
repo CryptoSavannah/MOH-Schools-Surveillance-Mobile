@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Wizard from 'react-native-wizard';
-import { View, StyleSheet, TextInput, FlatList, Text, SafeAreaView, ActivityIndicator, Button, Dimensions } from 'react-native';
+import { View, StyleSheet, TextInput, FlatList, Text, SafeAreaView, ActivityIndicator, Button } from 'react-native';
 import {
   FormInput,
 } from "@99xt/first-born";
@@ -9,7 +9,7 @@ import {
 import { RadioButton } from 'react-native-paper';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { StackActions, useFocusEffect } from '@react-navigation/native';
-import { Checkbox, Divider } from 'react-native-paper';
+import { Checkbox, Divider, Avatar } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { JSHash, JSHmac, CONSTANTS } from "react-native-hash";
 import { CREATE_PATIENT_KEY } from '../../env.json';
@@ -21,6 +21,11 @@ import PrevButton from '../components/PrevButton';
 import FinishButton from '../components/FinishButton';
 import LoadingButton from '../components/LoadingButton';
 import filter from 'lodash.filter';
+import { fetchPatients } from '../model/data';
+import logo from '../assets/logo.png';
+import Icon from "react-native-vector-icons/Fontisto";
+import IconF from "react-native-vector-icons/FontAwesome5";
+import SearchableDropdown from 'react-native-searchable-dropdown';
 
 const CaseForm = (props) => {
 
@@ -30,19 +35,124 @@ const CaseForm = (props) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [userId, setUserId] = useState('');
 
-  const [loading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
-  const [seed, setSeed] = useState(1);
-  const [error, setError] = useState(null);
-  const [query, setQuery] = useState('');
-  const [fullData, setFullData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  // const [data, setData] = useState([]);
+  // const [page, setPage] = useState(1);
+  // const [seed, setSeed] = useState(1);
+  // const [error, setError] = useState(null);
+  // const [query, setQuery] = useState('');
+  // const [fullData, setFullData] = useState([]);
+
+  // const[url, setUrl] = useState('');
+
+  const searchableDrpDwn = useRef();
+  const stdRef = useRef(null);
+  const [patients, setPatients] = useState([]);
+  const [conditions, setConditions] = useState([]);
+
+  const [selectedPatients, setSelectedPatients] = useState([]);
+  const [selectedPatient2, setSelectedPatient2] = useState([]);
+  const [pname, setPName] = useState("");
+  const [idNum, setIDNum] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+
 
   useEffect(() => {
-    makeRemoteRequest()
-  })
+
+    // console.log(fetchPatients().then(res =>))
+    fetchPatients().then(res => {
+      // console.log(res)
+      let pats = [];
+
+      res.data.map(x => {
+        let date = new Date(x.dob);
+        pats.push({
+          id: x.patient_id,
+          nin: x.nin,
+          nin_hash: x.nin_hash,
+          name: x.fname + ' ' + x.lname,
+          dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+          gender: x.gender
+        });
+      });
+
+      setPatients(pats);
+      // setData(pats);
+      // setFullData(pats)
+
+      // setData([...data, res.])
+      // console.log(data)
+    })
+
+    // makeRemoteRequest()
+
+    // const source = axios.CancelToken.source()
+    // setUrl(`https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`);
+
+
+    // let mounted = true;
+
+    // const loadData = async () => {
+    //   const response = await axios.get(url)
+
+    //     if (mounted && url !== '') {
+    //       console.log(response.results)
+    //       setData(page === 1 ? response.results : [...data, ...response.results])
+    //     }
+    // }
+    // loadData();
+
+
+    // const fetchUsers = async () => {
+    //   try {
+    //     await axios.get(url, {
+    //       cancelToken: source.token,
+    //     }).then(res => {
+    //       console.log(' first Res2: \n')
+    //       console.log(res.json().results)
+    //       res.json()})
+    //     .then(res => {
+    //       console.log(res)
+    //       setData(page === 1 ? res.results : [...data, ...res.results])
+    //       setError(res.error || null);
+    //       setIsLoading(false)
+    //       setFullData(res.results)
+    //     })
+    //     .catch(error => {
+    //       setError(false);
+    //       setIsLoading(false)
+    //     })
+    //     // ...
+    //   } catch (error) {
+    //     if (axios.isCancel(error)) {
+    //     } else {
+    //       throw error
+    //     }
+    //   }
+    // }
+
+    // fetchUsers()
+
+    // return () => {
+    //   source.cancel()
+    // }
+  }, [])
+
+  const showSearch = () => {
+    setSearchFocused(!searchFocused)
+    searchFocused ? focusSearch : null
+  }
+
+  const clearSearch = () => {
+    pname === '' ? showSearch() : setPName('')
+  }
+
+  const focusSearch = () => {
+    stdRef.current.focus()
+  }
 
   const makeRemoteRequest = () => {
+
     const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
     setIsLoading(true);
 
@@ -60,81 +170,40 @@ const CaseForm = (props) => {
       })
   }
 
-  const contains = ({ name, email }, query) => {
-    const { first, last } = name
+  const contains = ({ name, nin }, query) => {
     if (
-      first.includes(query) ||
-      last.includes(query) ||
-      email.includes(query)
+      name.includes(query) ||
+      nin.includes(query)
     ) {
       return true
     }
     return false
   }
 
-  const handleSearch = text => {
+  const handleSearch = (text, item) => {
     const formattedQuery = text.toLowerCase()
-    const data = filter(fullData, user => {
-      return contains(user, formattedQuery)
+    const data = filter(fullData, item => {
+      return contains(item, formattedQuery)
     })
     setData(data)
     setQuery(text)
   }
 
-  const renderHeader = () => (
-      <TextInput
-        autoCapitalize='none'
-        autoCorrect={false}
-        onChangeText={handleSearch}
-        placeholder='Search'
-        style={{
-          borderRadius: 25,
-          borderColor: '#333',
-          backgroundColor: '#fff',
-          width: '90%'
-        }}
-        textStyle={{ color: '#000' }}
-        clearButtonMode='always'
-      />
-
-    // <View
-    //   style={{
-    //     backgroundColor: '#fff',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     width
-    //   }}>
-    //   <Input
-    //     autoCapitalize='none'
-    //     autoCorrect={false}
-    //     onChangeText={handleSearch}
-    //     status='info'
-    //     placeholder='Search'
-    //     style={{
-    //       borderRadius: 25,
-    //       borderColor: '#333',
-    //       backgroundColor: '#fff'
-    //     }}
-    //     textStyle={{ color: '#000' }}
-    //     clearButtonMode='always'
-    //   />
-    //   <TextInput
-    //     autoCapitalize='none'
-    //     autoCorrect={false}
-    //     onChangeText={handleSearch}
-    //     placeholder='Search'
-    //     style={{
-    //       borderRadius: 25,
-    //       borderColor: '#333',
-    //       backgroundColor: '#fff',
-    //       width: '90%'
-    //     }}
-    //     textStyle={{ color: '#000' }}
-    //     clearButtonMode='always'
-    //   ></TextInput>
-
-    // </View>
-  )
+  const renderHeader = (item) => (
+    <TextInput
+      autoCapitalize='none'
+      autoCorrect={false}
+      onChangeText={(text) => handleSearch(text, item)}
+      placeholder='Search'
+      style={{
+        borderRadius: 25,
+        borderColor: '#333',
+        backgroundColor: '#fff',
+        width: '90%'
+      }}
+      textStyle={{ color: '#000' }}
+      clearButtonMode='always'
+    />)
 
   const renderSeparator = () => {
     return (
@@ -209,8 +278,13 @@ const CaseForm = (props) => {
     // navigation.goBack();
   };
 
-  const goToNext = () => {
+  const goToNext = (valid, error) => {
     // console.log('next clicked')
+    if (!valid) {
+      alert(error)
+      return
+    }
+
     wizard.current.next();
   };
 
@@ -233,7 +307,7 @@ const CaseForm = (props) => {
               {"Please give us information about the patient's condition"}
             </Text>
           </View>
-          <NextButton goToNext={goToNext} disable={false} />
+          <NextButton goToNext={() => goToNext(true, '')} disable={false} />
         </View>,
     },
     {
@@ -245,7 +319,130 @@ const CaseForm = (props) => {
             paddingVertical: 20,
             marginTop: 40
           }}>
-          <FlatList
+
+          {/* <View style={styles.container} > */}
+          <View style={[{ paddingTop: 0 }]}>
+            {searchFocused ?
+              <View style={{ borderWidth: 0.5, borderColor: '#ccc', borderRadius: 2, }}>
+                <TouchableOpacity style={{ padding: 10, position: 'absolute', right: 10, zIndex: 999 }} onPress={clearSearch}>
+                  <Icon name='close-a' size={20} color="#b3b3b3" style={{ alignSelf: 'center' }} />
+                </TouchableOpacity>
+                <Fragment >
+                  <SearchableDropdown
+                    ref={stdRef}
+                    onTextChange={text => {
+                      const items = selectedPatients.filter((sitem) => sitem.name.includes(text));
+                      console.log('possible ', items.length)
+                    }}
+                    onItemSelect={(item) => {
+                      var items = [];
+                      items.push(item);
+                      // console.log(item.id)
+                      setSelectedPatients(selectedPatients => items);
+                      setIDNum(item.nin);
+                      setPName(item.name);
+                      showSearch()
+                    }}
+                    containerStyle={{ padding: 0 }}
+                    onRemoveItem={(item, index) => {
+                      const items = selectedPatients.filter((sitem) => sitem.patient_id !== item.patient_id);
+                      setSelectedPatients(selectedPatients => items);
+                    }}
+                    itemStyle={{
+                      padding: 10,
+                      marginTop: 2,
+                      backgroundColor: '#ddd',
+                      borderColor: '#bbb',
+                      borderWidth: 0.5,
+                      borderRadius: 2,
+                    }}
+                    itemTextStyle={{ color: '#222' }}
+                    itemsContainerStyle={{
+                      // maxHeight: 140
+                    }}
+                    items={patients}
+                    // defaultIndex={2}
+                    resetValue={false}
+                    textInputProps={
+                      {
+                        placeholder: pname === '' ? "Search Name" : pname,
+                        underlineColorAndroid: "transparent",
+                        style: {
+                          padding: 8,
+                          // borderWidth: 0.5,
+                          // borderColor: '#ccc',
+                          // borderRadius: 2,
+                        },
+                      }
+                    }
+                    textInputStyle={{
+                      color: '#000'
+                    }}
+                    listProps={
+                      {
+                        nestedScrollEnabled: true,
+                      }
+                    }
+                  />
+                </Fragment>
+              </View>
+              :
+              <View>
+                <View style={styles.action3}>
+                  <TextInput style={{ width: '100%', fontSize: 15 }} onFocus={showSearch}
+                    onKeyPress={showSearch} label="Patient's Name"
+                    placeholder="Search Patient's Name"
+                    value={pname} />
+                </View>
+
+                {pname === '' ? <View style={{ alignItems: 'flex-end' }}>
+                  <View style={{ marginTop: 30 }}>
+                    <Button
+                      rounded
+                      block
+                      // style={styles.btn}
+                      color="#1A5276" title="Add a Patient" onPress={() => createPatient()}>
+                    </Button>
+                  </View>
+                </View> :
+                  <View>
+                    <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
+
+                      <TouchableOpacity style={{
+                        alignSelf: 'flex-end', flexDirection: 'row',
+                        paddingVertical: 5, paddingHorizontal: 10, marginTop: 10, borderRadius: 5
+                      }}>
+                        <IconF name='user-edit' size={20} color="#1A5276" style={{ marginRight: 2 }} />
+                        <Text style={{ color: "#1A5276", fontWeight: 'bold', textDecorationLine: 'underline', alignSelf: 'flex-end' }}>UPDATE</Text>
+                      </TouchableOpacity>
+
+                      <View style={{ alignSelf: 'flex-end' }}>
+                        {/* <Text>{pname + "'s Details"}</Text> */}
+                        <Text style={{ fontSize: 15, fontWeight: '300' }}>{"Details"}</Text>
+                      </View>
+
+                    </View>
+
+                    <Divider style={{ backgroundColor: '#ddd', marginVertical: 10 }} />
+
+                  </View>
+                }
+                <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
+                  <PrevButton goToPrev={goToPrev} />
+                  {pname === '' || idNum === '' ?
+                    <NextButton goToNext={() => goToNext(false, 'Select Patient to continue')} />
+                    :
+                    <NextButton goToNext={() => goToNext(true, '')} />
+                  }
+                </View>
+              </View>
+            }
+          </View>
+
+          {/* <View style={{flex: 2}}></View> */}
+          {/* </View>, */}
+
+          {/* <FlatList
             data={data}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => alert('Item pressed!')}>
@@ -255,26 +452,76 @@ const CaseForm = (props) => {
                     padding: 16,
                     alignItems: 'center'
                   }}>
-                  {/* <Avatar
-                    source={{ uri: item.picture.thumbnail }}
-                    size='giant'
-                    style={{ marginRight: 16 }}
-                  /> */}
+                  <Avatar.Image
+                    source={logo}
+                    size={26}
+                    backgroundColor={'#dacdc9'}
+                    style={{ borderRadius: 50, marginRight: 7 }}
+                  /> 
+                  <Icon
+                  name='person' size={20} color="#b3b3b3"
+                  style={{ marginRight: 7 }}
+                />
                   <Text
                     category='s1'
                     style={{
                       color: '#000'
-                    }}>{`${item.name.first} ${item.name.last}`}</Text>
+                    }}>{`${item.name}`}</Text>
                 </View>
               </TouchableOpacity>
             )}
-            keyExtractor={item => item.email.toString()}
+            keyExtractor={item => {item.id}}
             ItemSeparatorComponent={renderSeparator}
-            ListHeaderComponent={renderHeader}
+            ListHeaderComponent={item => renderHeader(item)}
             ListFooterComponent={renderFooter}
-          />
+          /> */}
         </View>
-    }]
+    },
+    {
+      content:
+        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
+          <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
+            <Text style={styles.textSize}>
+              {"Select the noticable conditions"}
+            </Text>
+          </View>
+          <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
+            <PrevButton goToPrev={goToPrev} />
+            {true ?
+              // <NextButton goToNext={() => goToNext(false, 'Select atleast one condition to continue.')} />
+              <NextButton goToNext={() => goToNext(true, '')} />
+
+              :
+              <NextButton goToNext={() => goToNext(true, '')} />
+            }
+          </View>
+        </View>,
+    },
+    {
+      content:
+        <View style={[styles.content, { paddingTop: 0 }]}>
+          <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
+            <Text style={styles.textSize}>
+              That's all, Thanks!
+                  </Text>
+          </View>
+
+          <View style={{
+            flexDirection: 'row',
+            marginVertical: 10,
+            justifyContent: 'space-between',
+            paddingTop: 10,
+            alignContent: 'center',
+          }}>
+            <PrevButton goToPrev={goToPrev} />
+            {isLoading ?
+              <LoadingButton isLoading={isLoading} />
+              :
+              <FinishButton goToFinish={goToFinish} />}
+
+          </View>
+        </View>,
+    },]
 
   return (
     // wizard setup
@@ -353,7 +600,7 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     borderBottomColor: '#dedede',
     borderBottomWidth: 1,
-    paddingBottom: 10,
+    // paddingBottom: 5,
   },
   action4: {
     // flexDirection: 'row',

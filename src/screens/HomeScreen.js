@@ -36,17 +36,6 @@ const HomeScreen = ({ route, navigation }) => {
   const [center_no, setCenter_no] = useState('');
   const [school_id, setSchool_id] = useState('');
 
-  const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#F3F6F9",
-    backgroundGradientToOpacity: 0.2,
-    color: (opacity = 1) => `rgba(19, 19, 19, ${opacity})`,
-    strokeWidth: 1, // optional, default 3
-    barPercentage: 0.6,
-    useShadowColorFromDataset: false // optional
-  };
-
   const DATA = [
     {
       id: '1',
@@ -79,22 +68,6 @@ const HomeScreen = ({ route, navigation }) => {
       number: 0
     },
   ];
-
-  function Item({ title, number }) {
-    return (
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Pending')}
-        style={[styles.item, { alignItems: 'center', justifyContent: 'center' }]}
-      >
-        {/* <View style={[styles.item, {alignItems: 'center', justifyContent: 'center'}]}> */}
-        {/* <Text style={styles.title}>{title}</Text> */}
-        <Icon distance />
-        <Text h3 style={{ marginTop: 17 }}>{number}</Text>
-        <Text paragraph color="gray">{title}</Text>
-        {/* </View> */}
-      </TouchableOpacity>
-    );
-  }
 
   useEffect(() => {
     console.log('...starting...: ');
@@ -129,73 +102,32 @@ const HomeScreen = ({ route, navigation }) => {
     }
   }, [userToken, fromDate, toDate]);
 
-  const chartData = {
-    labels: ["25/06", "30/06"],
-    datasets: [
-      {
-        data: [20, 5, 10, 18, 10, 8, 11, 15, 11, 22, 7, 9, 10, 8, 11, 15, 11, 22, 7, 9],
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-        strokeWidth: 2 // optional
-      }
-    ],
-    legend: ["Cases"] // optional
-  };
-
   const openMenu = (pageName) => {
     // opening survey screen
     // console.log('Navigating: '+pageName)
-    navigation.navigate(pageName);
+    // navigation.navigate(pageName);
+    alert(pageName)
   };
 
   const slides = [
-    { id: 1, title: 'Option 1', },
-    { id: 2, title: 'Option 2', },
-    { id: 3, title: 'Option 3', },
-    { id: 4, title: 'Option 4', },
-    { id: 5, title: 'Option 5', },
+    { id: 1, title: 'Option 1', url: require('../assets/logo.png') },
+    { id: 2, title: 'Option 2', url: require('../assets/logo.png') },
+    // { id: 3, title: 'Option 3', url: require('../assets/logo.png') },
+    // { id: 4, title: 'Option 4', url: require('../assets/logo.png') },
+    // { id: 5, title: 'Option 5', url: require('../assets/logo.png') },
   ];
   const menulist = [
     { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen', items: DATA.slice(0, 5) },
-    { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: DATA.slice(0, 4)},
+    { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: DATA.slice(0, 4) },
   ];
 
   const [banners, setBanners] = useState(slides);
   const [data, setData] = useState(menulist);
 
-  //   return (
-  //     <SafeAreaView style={styles.overview}>
-
-  //       <ScrollView contentContainerStyle={{ paddingVertical: 25 }}>
-  //         <FlatList
-  //           horizontal
-  //           pagingEnabled={true}
-  //           showsHorizontalScrollIndicator={false}
-  //           legacyImplementation={false}
-  //           data={DATA}
-  //           renderItem={({ item }) => <Item title={item.title} number={item.number} />}
-  //           keyExtractor={item => item.id}
-  //           style={{ width: SCREEN_WIDTH + 5, height: '50%', marginHorizontal: 5, flex: 1 }}
-  //         />
-
-  //         <ScrollView horizontal={true}>
-  //           <LineChart
-  //             data={chartData}
-  //             width={SCREEN_WIDTH + 50}
-  //             height={220}
-  //             chartConfig={chartConfig}
-  //             style={{ flex: 1, marginVertical: 15 }}
-  //           />
-  //         </ScrollView>
-  //       </ScrollView>
-  //     </SafeAreaView>
-  //   );
-  // };
-
   return (
     <>
-    <View style={styles.container}>
-      <View style={styles.header}>
-        {
+      <View style={styles.container}>
+        <View style={styles.header}>
           <Swiper
             autoplay
             showsPagination={false}
@@ -206,63 +138,39 @@ const HomeScreen = ({ route, navigation }) => {
               <Image key={banner.id} source={banner.url} style={styles.banner} />
             ))}
           </Swiper>
-        }
+        </View>
+
+        <View style={[styles.footer, { backgroundColor: '#ebebeb', }]}>
+        <SafeAreaView style={{flex: 1}}>
+            <FlatList
+              data={data}
+              numColumns={1}
+              keyExtractor={(item) => {
+                return item.id.toString();
+              }}
+              renderItem={({ item }) => {
+                return (
+                  <MenuCard
+                    menutab={item}
+                    // image={item.image}
+                    onOpen={() => openMenu(item.page)}
+                    navigation={navigation}
+                  />
+                );
+              }} />
+          </SafeAreaView>
+        </View>
+
       </View>
 
-      <View
-        style={[styles.footer, {
-          backgroundColor: '#ebebeb',
-        }]}
-      >
-        <ScrollView>
-
-          <FlatList
-            // contentContainerStyle={styles.listContainer}
-            data={data}
-            // horizontal={false}
-            numColumns={1}
-            keyExtractor={(item) => {
-              return item.id;
-            }}
-            renderItem={({ item }) => {
-              return (
-                <MenuCard
-                  menutab={item}
-                  // image={item.image}
-                  onOpen={() => openMenu(item.page)}
-                  navigation={navigation}
-                />
-              );
-            }} />
-
-          {/* <FlatList
-            contentContainerStyle={styles.listContainer}
-            data={data}
-            // horizontal={false}
-            numColumns={1}
-            keyExtractor={(item) => {
-              return item.id;
-            }}
-            renderItem={({ item }) => {
-              return (
-                <MenuCard
-                  menutab={item}
-                  // image={item.image}
-                  onOpen={() => openMenu(item.page)}
-                />
-              );
-            }} /> */}
-
-        </ScrollView>
-      </View>
-    </View>
-    <TouchableOpacity
+      <TouchableOpacity
         style={styles.floatingActionButton}
         onPress={() => { navigation.navigate('NewCase'); }}>
         <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
           <Icon name="plus" size={25} color={'#fff'} />
         </Animatable.View>
       </TouchableOpacity>
+
     </>
   );
 };
@@ -343,7 +251,6 @@ const styles = StyleSheet.create({
     color: '#eec971',
     fontWeight: 'bold',
     textAlign: 'center',
-    // fontSize: 10
   },
   text_footer: {
     color: '#05375a',
@@ -377,7 +284,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     color: '#01579B',
     borderColor: '#fff',
-    // marginTop: 10
   },
   signIn: {
     width: '100%',
