@@ -106,6 +106,13 @@ const HomeStackScreen = ({ navigation }) => (
       ),
       headerShown: false,
     }} />
+    <Stack.Screen name="AddNew" component={AddNew} options={{
+      title: 'Add Patient',
+      headerLeft: () => (
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+          onPress={() => navigation.openDrawer()} />
+      )
+    }} />
     {/* <Stack.Screen name="Pending" component={PendingCases} options={{
             headerLeft: () => (
                 <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"

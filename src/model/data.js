@@ -19,7 +19,16 @@ var servConditions = {
   "status": 200, "data": [
     { "condition_id": 2, "condition": "headache", "date_added": "2020-10-27T00:55:53.746Z" },
     { "condition_id": 3, "condition": "fever", "date_added": "2020-10-27T00:56:05.479Z" },
-    { "condition_id": 4, "condition": "dysentry", "date_added": "2020-10-27T01:48:22.268Z" }
+    { "condition_id": 4, "condition": "dysentry", "date_added": "2020-10-27T01:48:22.268Z" },
+    { "condition_id": 5, "condition": "abdonimal pain", "date_added": "2020-10-27T00:55:53.746Z" },
+    { "condition_id": 6, "condition": "cough", "date_added": "2020-10-27T00:56:05.479Z" },
+    { "condition_id": 7, "condition": "flue", "date_added": "2020-10-27T01:48:22.268Z" },
+    { "condition_id": 12, "condition": "vomiting", "date_added": "2020-10-27T00:55:53.746Z" },
+    { "condition_id": 13, "condition": "weakness", "date_added": "2020-10-27T00:56:05.479Z" },
+    { "condition_id": 14, "condition": "chest pain", "date_added": "2020-10-27T01:48:22.268Z" },
+    { "condition_id": 15, "condition": "muscle pain", "date_added": "2020-10-27T00:55:53.746Z" },
+    { "condition_id": 16, "condition": "drousiness", "date_added": "2020-10-27T00:56:05.479Z" },
+    { "condition_id": 17, "condition": "forgetfullness", "date_added": "2020-10-27T01:48:22.268Z" }
   ]
 }
 
@@ -81,14 +90,14 @@ export const fetchPatients = async () => {
 };
 
 export const fetchConditions = async () => {
-  let conds = [];
+  // let conds = [];
 
-  servConditions.data.map(x => {
-    conds.push({
-      id: x.condition_id,
-      name: x.condition,
-    });
-  });
+  // servConditions.data.map(x => {
+  //   conds.push({
+  //     id: x.condition_id,
+  //     name: x.condition,
+  //   });
+  // });
 
 //   setConditions(conds);
 
@@ -120,5 +129,5 @@ export const fetchConditions = async () => {
   //     console.error("Fetching Conditions: " + error);
   //   });
 
-  return conds;
+  return servConditions;
 };

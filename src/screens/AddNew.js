@@ -20,8 +20,43 @@ const AddNew = ({ route, navigation }) => {
 
   const [userToken, setUserToken] = useState(null);
   const [center_no, setCenter_no] = useState('');
+  const [patient_id, setPatientID] = useState(null);
+  
+  const [fname, setFName] = useState('');
+  const [lname, setLName] = useState('');
+  const [gender, setGender] = useState('');
+  const [dob, setDob] = useState('');
+  const [idNum, setIDNum] = useState('');
+
+  const { nin } = route.params ?? {};
+  const { fnameR } = route.params ?? {};
+  const { lnameR } = route.params ?? {};
+  const { genderR } = route.params ?? {};
+  const { dobR } = route.params ?? {};
 
   useEffect(() => {
+    if (typeof fnameR !== 'undefined') {
+      setFName(fnameR)
+    }
+    if (typeof lnameR !== 'undefined') {
+      setLName(lnameR)
+    }
+    if (typeof dobR !== 'undefined') {
+      setDob(dobR)
+    }
+    if (typeof genderR !== 'undefined') {
+      setGender(genderR)
+    }
+
+    if (typeof nin !== 'undefined') {
+      setIDNum(nin)
+      //get server patient_id
+      // fetchPatient(nin).then(res =>{
+      //fetch patient from server or realm or async
+      // setPatientID(res.data.patient_id)
+      // })
+
+    }
 
     AsyncStorage.getItem('user')
       .then(user => {
@@ -48,12 +83,6 @@ const AddNew = ({ route, navigation }) => {
   // );
 
 
-
-  const [fname, setFName] = useState('');
-  const [lname, setLName] = useState('');
-  const [gender, setGender] = useState('');
-  const [dob, setDob] = useState('');
-  const [idNum, setIDNum] = useState('');
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -101,7 +130,7 @@ const AddNew = ({ route, navigation }) => {
     return string.split(' ').join('');
   };
 
-  const saveCase = () => {
+  const savePatient = () => {
 
     // if (isNINAvailable) {
     //   data.isValidNIN = !(removeSpaces(idNum) === "");
@@ -156,25 +185,37 @@ const AddNew = ({ route, navigation }) => {
             data: data
           };
 
-          if (userToken === null) {
-            alert("Login to continue");
-          } else {
-            axios(config)
-              .then(function (response) {
+          // if (userToken === null) {
+          //   alert("Login to continue");
+          // } else {
+          //   axios(config)
+          //     .then(function (response) {
 
-                if (response.status === 201) {
-                  alert("Patient has been Recorded");
+          //       if (response.status === 201) {
+          //         alert("Patient has been Recorded");
 
-                  clearState();
-                } else {
-                  alert("Error failed to record patient\n Try again.")
-                  console.log(JSON.stringify(response.data));
-                }
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-          }
+          //         clearState();
+
+          //then reroute to the new case, with std object (nin, name) 
+          //to get serverId for the case in the next screen
+          navigation.navigate("NewCase", {
+            nin: idNum,
+            name: `${fname} ${lname}`,
+            genderR: gender,
+            dobR: dob
+          })
+
+          //store other patient in storage eg async storage or realm
+
+          //       } else {
+          //         alert("Error failed to record patient\n Try again.")
+          //         console.log(JSON.stringify(response.data));
+          //       }
+          //     })
+          //     .catch(function (error) {
+          //       console.log(error);
+          //     });
+          // }
         })
         .catch(
           e => console.log("Hashing Catch: " + e)
@@ -193,8 +234,7 @@ const AddNew = ({ route, navigation }) => {
   };
 
   const clearState = () => {
-    setFName(''); setLName(''); setDob(''); setIDNum('');
-    setIDType(''); setGender('');
+    setFName(''); setLName(''); setDob(''); setIDNum(''); setGender('');
     data.isValidNIN = data.isValidLName = data.isValidFName = data.isValidGender = data.isValidDob = true;
   };
 
@@ -218,15 +258,15 @@ const AddNew = ({ route, navigation }) => {
             <TextInput style={{ fontSize: 16, width: '100%' }} label="Last name" placeholder="Last name" onChangeText={(val) => { setLName(val); }}
               value={lname} />
           </View>
-          <View style={[styles.view, { paddingTop: 20, paddingBottom: 5}]}>
+          <View style={[styles.view, { paddingTop: 20, paddingBottom: 5 }]}>
             <Text style={{ fontSize: 16, color: '#808080', marginRight: '2%' }}>Gender : </Text>
-            <TouchableOpacity onPress={() => setGender('M')} style={[styles.view, {paddingHorizontal: "4%"}]}>
-            <Text style={{fontSize: 15.5}}>Male</Text>
-            <RadioButton value="M" status={gender === 'M' ? 'checked' : 'unchecked'} color="purple" onPress={() => setGender('M')} />
+            <TouchableOpacity onPress={() => setGender('M')} style={[styles.view, { paddingHorizontal: "4%" }]}>
+              <Text style={{ fontSize: 15.5 }}>Male</Text>
+              <RadioButton value="M" status={gender === 'M' ? 'checked' : 'unchecked'} color="purple" onPress={() => setGender('M')} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setGender('F')} style={[styles.view, {paddingHorizontal: "4%"}]}>
-            <Text style={{fontSize: 15.5}}>Female</Text>
-            <RadioButton value="F" color="purple" status={gender === 'F' ? 'checked' : 'unchecked'} onPress={() => setGender('F')} />
+            <TouchableOpacity onPress={() => setGender('F')} style={[styles.view, { paddingHorizontal: "4%" }]}>
+              <Text style={{ fontSize: 15.5 }}>Female</Text>
+              <RadioButton value="F" color="purple" status={gender === 'F' ? 'checked' : 'unchecked'} onPress={() => setGender('F')} />
             </TouchableOpacity>
           </View>
 
@@ -260,7 +300,7 @@ const AddNew = ({ route, navigation }) => {
                 block
                 style={styles.btn}
                 color="#FFB236"
-                onPress={() => { saveCase() }}
+                onPress={() => { savePatient() }}
               >
               </Button>
             </View>

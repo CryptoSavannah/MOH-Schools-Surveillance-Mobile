@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Wizard from 'react-native-wizard';
-import { View, StyleSheet, TextInput, FlatList, Text, SafeAreaView, ActivityIndicator, Button } from 'react-native';
+import { View, StyleSheet, TextInput, FlatList, Text, SafeAreaView, ActivityIndicator, Button, Dimensions } from 'react-native';
 import {
   FormInput,
 } from "@99xt/first-born";
@@ -21,18 +21,29 @@ import PrevButton from '../components/PrevButton';
 import FinishButton from '../components/FinishButton';
 import LoadingButton from '../components/LoadingButton';
 import filter from 'lodash.filter';
-import { fetchPatients } from '../model/data';
+import { fetchPatients, fetchConditions } from '../model/data';
 import logo from '../assets/logo.png';
 import Icon from "react-native-vector-icons/Fontisto";
 import IconF from "react-native-vector-icons/FontAwesome5";
 import SearchableDropdown from 'react-native-searchable-dropdown';
+import Patient from '../components/Patient';
+import IconC from "react-native-vector-icons/FontAwesome";
+import * as Animatable from 'react-native-animatable';
 
-const CaseForm = (props) => {
+
+const CaseForm = ({ route, navigation }) => {
+
+  const { nin } = route.params ?? {};
+  const { name } = route.params ?? {};
+  const { genderR } = route.params ?? {};
+  const { dobR } = route.params ?? {};
 
   const wizard = useRef(null);
   const [isFirstStep, setIsFirstStep] = useState(true);
   const [isLastStep, setIsLastStep] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const SCREEN_WIDTH = Dimensions.get("window").width;
+
   const [userId, setUserId] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
@@ -51,15 +62,59 @@ const CaseForm = (props) => {
   const [conditions, setConditions] = useState([]);
 
   const [selectedPatients, setSelectedPatients] = useState([]);
-  const [selectedPatient2, setSelectedPatient2] = useState([]);
+  const [selectedConditions, setSelectedConditions] = useState([]);
   const [pname, setPName] = useState("");
   const [idNum, setIDNum] = useState('');
+  const [gender, setGender] = useState("");
+  const [dob, setDob] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
 
+  function Item({ item }) {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          // setSelectedConditions( selectedConditions.filter(x => x!== item));
+        }}
+        style={[styles.item, { alignItems: 'center', justifyContent: 'center' }]}
+      >
+        <Text paragraph style={{
+          marginHorizontal: 1,
+          alignSelf: 'center', borderWidth: 1, borderRadius: 5, padding: 5, borderColor: '#f5f5f5', fontSize: 16
+        }}>
+          {item.name}</Text>
+      </TouchableOpacity>
+    );
+  }
 
   useEffect(() => {
 
-    // console.log(fetchPatients().then(res =>))
+
+    if (typeof name !== 'undefined') {
+      setPName(name)
+      console.log('new patient: ', name);
+    }
+    if (typeof dobR !== 'undefined') {
+      setDob(dobR)
+    }
+    if (typeof genderR !== 'undefined') {
+      setGender(genderR)
+    }
+    if (typeof nin !== 'undefined') {
+      setIDNum(nin)
+      console.log(nin)
+      //get server patient_id
+      // fetchPatient(nin).then(res =>{
+      //fetch patient from server or realm or async
+      AsyncStorage.multiGet(['gender', 'dob'], (err, items) => {
+
+        //load details of patient in viewPatient component 
+        setGender(items.gender)
+        setDob(items.dob)
+      });
+      // })
+
+    }
+
     fetchPatients().then(res => {
       // console.log(res)
       let pats = [];
@@ -77,11 +132,22 @@ const CaseForm = (props) => {
       });
 
       setPatients(pats);
-      // setData(pats);
-      // setFullData(pats)
 
-      // setData([...data, res.])
-      // console.log(data)
+    })
+
+    fetchConditions().then(res => {
+      // console.log(res)
+      let conds = [];
+
+      res.data.map(x => {
+        conds.push({
+          id: x.condition_id,
+          name: x.condition,
+        });
+      });
+
+      setConditions(conds)
+
     })
 
     // makeRemoteRequest()
@@ -136,7 +202,7 @@ const CaseForm = (props) => {
     // return () => {
     //   source.cancel()
     // }
-  }, [])
+  }, [name, nin, gender, dob])
 
   const showSearch = () => {
     setSearchFocused(!searchFocused)
@@ -170,66 +236,8 @@ const CaseForm = (props) => {
       })
   }
 
-  const contains = ({ name, nin }, query) => {
-    if (
-      name.includes(query) ||
-      nin.includes(query)
-    ) {
-      return true
-    }
-    return false
-  }
-
-  const handleSearch = (text, item) => {
-    const formattedQuery = text.toLowerCase()
-    const data = filter(fullData, item => {
-      return contains(item, formattedQuery)
-    })
-    setData(data)
-    setQuery(text)
-  }
-
-  const renderHeader = (item) => (
-    <TextInput
-      autoCapitalize='none'
-      autoCorrect={false}
-      onChangeText={(text) => handleSearch(text, item)}
-      placeholder='Search'
-      style={{
-        borderRadius: 25,
-        borderColor: '#333',
-        backgroundColor: '#fff',
-        width: '90%'
-      }}
-      textStyle={{ color: '#000' }}
-      clearButtonMode='always'
-    />)
-
-  const renderSeparator = () => {
-    return (
-      <View
-        style={{
-          height: 1,
-          width: '86%',
-          backgroundColor: '#CED0CE',
-          marginLeft: '5%'
-        }}
-      />
-    )
-  }
-
-  const renderFooter = () => {
-    if (!loading) return null
-    return (
-      <View
-        style={{
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          borderColor: '#CED0CE'
-        }}>
-        <ActivityIndicator animating size='large' />
-      </View>
-    )
+  const createPatient = () => {
+    navigation.navigate('AddNew');
   }
 
   const onSubmit = async () => {
@@ -294,7 +302,12 @@ const CaseForm = (props) => {
 
   const goToFinish = () => {
     setIsLoading(true);
-    onSubmit();
+    // onSubmit();
+    setTimeout(() => {
+      setIsLoading(false)
+      alert("Case has been Recorded");
+      cancel()
+    }, 1000);
   };
 
 
@@ -312,15 +325,8 @@ const CaseForm = (props) => {
     },
     {
       content:
-        <View
-          style={{
-            // flex: 1,
-            paddingHorizontal: 20,
-            paddingVertical: 20,
-            marginTop: 40
-          }}>
+        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
 
-          {/* <View style={styles.container} > */}
           <View style={[{ paddingTop: 0 }]}>
             {searchFocused ?
               <View style={{ borderWidth: 0.5, borderColor: '#ccc', borderRadius: 2, }}>
@@ -335,12 +341,14 @@ const CaseForm = (props) => {
                       console.log('possible ', items.length)
                     }}
                     onItemSelect={(item) => {
+                      console.log(item)
                       var items = [];
                       items.push(item);
-                      // console.log(item.id)
                       setSelectedPatients(selectedPatients => items);
                       setIDNum(item.nin);
                       setPName(item.name);
+                      setDob(item.dob)
+                      setGender(item.gender)
                       showSearch()
                     }}
                     containerStyle={{ padding: 0 }}
@@ -356,12 +364,10 @@ const CaseForm = (props) => {
                       borderWidth: 0.5,
                       borderRadius: 2,
                     }}
-                    itemTextStyle={{ color: '#222' }}
+                    itemTextStyle={{ color: '#222', fontSize: 16 }}
                     itemsContainerStyle={{
-                      // maxHeight: 140
                     }}
                     items={patients}
-                    // defaultIndex={2}
                     resetValue={false}
                     textInputProps={
                       {
@@ -369,10 +375,8 @@ const CaseForm = (props) => {
                         underlineColorAndroid: "transparent",
                         style: {
                           padding: 8,
-                          // borderWidth: 0.5,
-                          // borderColor: '#ccc',
-                          // borderRadius: 2,
                         },
+                        fontSize: 16
                       }
                     }
                     textInputStyle={{
@@ -389,7 +393,7 @@ const CaseForm = (props) => {
               :
               <View>
                 <View style={styles.action3}>
-                  <TextInput style={{ width: '100%', fontSize: 15 }} onFocus={showSearch}
+                  <TextInput style={{ width: '100%', fontSize: 16 }} onFocus={showSearch}
                     onKeyPress={showSearch} label="Patient's Name"
                     placeholder="Search Patient's Name"
                     value={pname} />
@@ -400,35 +404,33 @@ const CaseForm = (props) => {
                     <Button
                       rounded
                       block
-                      // style={styles.btn}
                       color="#1A5276" title="Add a Patient" onPress={() => createPatient()}>
                     </Button>
                   </View>
                 </View> :
-                  <View>
-                    <View style={{ flexDirection: 'row-reverse', justifyContent: 'space-between' }}>
-
-                      <TouchableOpacity style={{
-                        alignSelf: 'flex-end', flexDirection: 'row',
-                        paddingVertical: 5, paddingHorizontal: 10, marginTop: 10, borderRadius: 5
-                      }}>
-                        <IconF name='user-edit' size={20} color="#1A5276" style={{ marginRight: 2 }} />
-                        <Text style={{ color: "#1A5276", fontWeight: 'bold', textDecorationLine: 'underline', alignSelf: 'flex-end' }}>UPDATE</Text>
-                      </TouchableOpacity>
-
-                      <View style={{ alignSelf: 'flex-end' }}>
-                        {/* <Text>{pname + "'s Details"}</Text> */}
-                        <Text style={{ fontSize: 15, fontWeight: '300' }}>{"Details"}</Text>
-                      </View>
-
-                    </View>
-
-                    <Divider style={{ backgroundColor: '#ddd', marginVertical: 10 }} />
-
+                  <View style={{ justifyContent: 'space-between', paddingVertical: 20 }}>
+                    <TouchableOpacity style={{
+                      alignSelf: 'flex-end', flexDirection: 'row',
+                      paddingVertical: 5, paddingHorizontal: 10, marginTop: 10, borderRadius: 5
+                    }} onPress={() => {
+                      console.log('dob: ', dob)
+                      navigation.navigate("AddNew", {
+                        fnameR: pname.split(' ')[0],
+                        nin: idNum,
+                        lnameR: pname.split(' ')[1],
+                        dobR: dob,
+                        genderR: gender
+                      })
+                    }}>
+                      <Text style={{ color: "#1A5276", fontWeight: 'bold', textDecorationLine: 'underline', alignSelf: 'flex-end' }}>UPDATE</Text>
+                    </TouchableOpacity>
+                    <Patient name={pname} nin={idNum} gender={gender} dob={dob} />
                   </View>
                 }
                 <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
-                  <PrevButton goToPrev={goToPrev} />
+                  <PrevButton goToPrev={() => {
+                    pname === '' ? goToPrev() : setPName('')
+                  }} />
                   {pname === '' || idNum === '' ?
                     <NextButton goToNext={() => goToNext(false, 'Select Patient to continue')} />
                     :
@@ -438,58 +440,90 @@ const CaseForm = (props) => {
               </View>
             }
           </View>
-
-          {/* <View style={{flex: 2}}></View> */}
-          {/* </View>, */}
-
-          {/* <FlatList
-            data={data}
-            renderItem={({ item }) => (
-              <TouchableOpacity onPress={() => alert('Item pressed!')}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    padding: 16,
-                    alignItems: 'center'
-                  }}>
-                  <Avatar.Image
-                    source={logo}
-                    size={26}
-                    backgroundColor={'#dacdc9'}
-                    style={{ borderRadius: 50, marginRight: 7 }}
-                  /> 
-                  <Icon
-                  name='person' size={20} color="#b3b3b3"
-                  style={{ marginRight: 7 }}
-                />
-                  <Text
-                    category='s1'
-                    style={{
-                      color: '#000'
-                    }}>{`${item.name}`}</Text>
-                </View>
-              </TouchableOpacity>
-            )}
-            keyExtractor={item => {item.id}}
-            ItemSeparatorComponent={renderSeparator}
-            ListHeaderComponent={item => renderHeader(item)}
-            ListFooterComponent={renderFooter}
-          /> */}
         </View>
     },
     {
       content:
-        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
-          <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
-            <Text style={styles.textSize}>
+        <View style={{ padding: 10, margin: 10, height: '95%', }}>
+          {selectedConditions.length >= 5 ?
+            <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite"
+              style={{ position: 'absolute', right: 1, top: '9%', zIndex: 999 }}>
+              <IconC name="long-arrow-right" size={25} color={'#1A5276'} />
+            </Animatable.View> : null}
+          <View style={{ paddingTop: 20 }}>
+            <Text style={[styles.textSize, { alignSelf: 'center' }]}>
               {"Select the noticable conditions"}
             </Text>
           </View>
+
+          {/* conditons */}
+
+          <FlatList
+            horizontal
+            pagingEnabled={true}
+            showsHorizontalScrollIndicator={false}
+            legacyImplementation={false}
+            data={selectedConditions.length < 5 ? selectedConditions
+              : [...selectedConditions, { id: "none", name: " ..." }]}
+            renderItem={({ item }) =>
+              <Item item={item} />}
+            keyExtractor={item => (item.id.toString())}
+            style={{ width: SCREEN_WIDTH + 5, flex: 1, height: '0.5%', backgroundColor: '#fff' }}
+          />
+
+          <View style={{ flex: 5 }}>
+            <SearchableDropdown
+              ref={searchableDrpDwn}
+              multi={true}
+              selectedItems={selectedConditions}
+              onItemSelect={(item) => {
+                setSelectedConditions(selectedConditions => [...selectedConditions, item]);
+              }}
+              containerStyle={{ padding: 5 }}
+              onRemoveItem={(item, index) => {
+                const items = selectedConditions.filter((sitem) => sitem.id !== item.id);
+                setSelectedConditions(selectedConditions => items);
+              }}
+              itemStyle={{
+                padding: 10,
+                marginTop: 2,
+                backgroundColor: '#ddd',
+                borderColor: '#bbb',
+                borderWidth: 1,
+                borderRadius: 5,
+              }}
+              itemTextStyle={{ color: '#222', fontSize: 16 }}
+              itemsContainerStyle={{ maxHeight: "85%" }}
+              items={conditions}
+              // chip={true}
+              resetValue={false}
+              textInputProps={
+                {
+                  placeholder: "Search Condition",
+                  underlineColorAndroid: "transparent",
+                  style: {
+                    padding: 12,
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    borderRadius: 5,
+                    fontSize: 16
+                  },
+                  onTextChange: text => { }
+                }
+              }
+              listProps={
+                {
+                  nestedScrollEnabled: true,
+                }
+              }
+            />
+          </View>
+
           <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
             <PrevButton goToPrev={goToPrev} />
-            {true ?
-              // <NextButton goToNext={() => goToNext(false, 'Select atleast one condition to continue.')} />
-              <NextButton goToNext={() => goToNext(true, '')} />
+            {selectedConditions.length === 0 ?
+              <NextButton goToNext={() => goToNext(false, 'Select atleast one condition to continue.')} />
+              // <NextButton goToNext={() => goToNext(true, '')} />
 
               :
               <NextButton goToNext={() => goToNext(true, '')} />
@@ -500,7 +534,7 @@ const CaseForm = (props) => {
     {
       content:
         <View style={[styles.content, { paddingTop: 0 }]}>
-          <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
+          <View style={{ alignSelf: 'center', paddingVertical: 40 }}>
             <Text style={styles.textSize}>
               That's all, Thanks!
                   </Text>

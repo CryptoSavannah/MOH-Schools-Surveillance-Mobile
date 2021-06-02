@@ -43,7 +43,7 @@ const MenuCard = (props) => {
     <Card containerStyle={styles.card}>
       <View style={styles.container}>
         <View style={styles.titleView}>
-          <Text style={styles.sector}>{menutab.title}</Text>
+          <Text style={styles.sector}>{`${menutab.title} (${menutab.length})`}</Text>
         </View>
         <View>
           <FlatList
@@ -91,7 +91,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: 'bold',
     color: '#000',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    alignSelf: 'center'
   },
   item: {
     backgroundColor: '#fff',

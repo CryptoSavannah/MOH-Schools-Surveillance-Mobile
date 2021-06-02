@@ -15,7 +15,7 @@ import { useTheme } from '@react-navigation/native';
 import { Button as ButtonF, Icon as IconF, Text as TextF } from "@99xt/first-born";
 import Block from "../components/Block";
 import Card from "../components/Card";
-import Icon from "../components/Icon";
+import Icon from "react-native-vector-icons/Fontisto";
 import * as theme from '../constants/theme';
 import {
   LineChart
@@ -117,8 +117,8 @@ const HomeScreen = ({ route, navigation }) => {
     // { id: 5, title: 'Option 5', url: require('../assets/logo.png') },
   ];
   const menulist = [
-    { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen', items: DATA.slice(0, 5) },
-    { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: DATA.slice(0, 4) },
+    { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen', items: DATA.slice(0, 5), length: DATA.length },
+    { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: DATA.slice(0, 4), length: DATA.length - 1 },
   ];
 
   const [banners, setBanners] = useState(slides);
@@ -167,7 +167,7 @@ const HomeScreen = ({ route, navigation }) => {
         style={styles.floatingActionButton}
         onPress={() => { navigation.navigate('NewCase'); }}>
         <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
-          <Icon name="plus" size={25} color={'#fff'} />
+          <Icon name="plus-a" size={25} color={'#fff'} />
         </Animatable.View>
       </TouchableOpacity>
 
