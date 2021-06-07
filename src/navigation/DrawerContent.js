@@ -84,7 +84,7 @@ export function DrawerContent(props) {
               )}
               label="Enter Case"
               onPress={() => {
-                props.navigation.navigate('Case')
+                props.navigation.navigate('NewCase')
               }}
             />
 

@@ -44,12 +44,12 @@ const HomeStackScreen = ({ navigation }) => (
         <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
           onPress={() => navigation.openDrawer()} />
       ),
-      headerRight: () => (
-        <Icon2.Button name="dots-vertical" size={25} backgroundColor="#3a3838"
-          onPress={() =>
-            //  {return(<View><Text>oooo</Text></View>);}
-            navigation.navigate("FilterOptions")
-          } />)
+      // headerRight: () => (
+      //   <Icon2.Button name="dots-vertical" size={25} backgroundColor="#3a3838"
+      //     onPress={() =>
+      //       //  {return(<View><Text>oooo</Text></View>);}
+      //       navigation.navigate("FilterOptions")
+      //     } />)
     }} />
     {/* <Stack.Screen name="Case" component={Case} options={{
       title: 'Record Case',
@@ -59,7 +59,7 @@ const HomeStackScreen = ({ navigation }) => (
       ),
     }} /> */}
 
-    <Stack.Screen name="Case" component={Case}
+    {/* <Stack.Screen name="Case" component={Case}
     // component={() => (
     //   <Case 
     //   patient={navigation.state.params.patient} 
@@ -71,14 +71,14 @@ const HomeStackScreen = ({ navigation }) => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
-    }} />
+    }} /> */}
 
     <Stack.Screen name="NewCase" component={CaseForm}
     // component={() => (
     //   <CaseForm navigation={navigation} />
     // )} 
     options={{
-      title: 'New Case',
+      title: 'Record Case',
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
@@ -93,6 +93,7 @@ const HomeStackScreen = ({ navigation }) => (
     // )}
      options={{
       // title: `Edit "${navigation.state.params.patient.name}"`,
+      title: 'Update Case',
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />

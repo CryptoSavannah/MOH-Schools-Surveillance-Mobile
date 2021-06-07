@@ -1,13 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { FlatList } from 'react-native';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
 import { Card, Divider } from 'react-native-elements';
 import * as theme from '../constants/theme';
-
+import { fetchConditions } from '../model/data';
 
 const MenuCard = (props) => {
+  const [conditions, setConditions] = useState([]);
 
-  const { menutab, onOpen } = props
+  const { menutab, onOpen, navigation } = props
+
+  useEffect(() => {
+
+    fetchConditions().then(res => {
+      // console.log(res)
+      let conds = [];
+
+      res.data.map(x => {
+        conds.push({
+          id: x.condition_id,
+          name: x.condition,
+        });
+      });
+
+      setConditions(conds)
+      // console.log(conditions)
+
+    })
+
+  }, [])
 
   function Item({ title, number }) {
     return (
@@ -15,7 +36,7 @@ const MenuCard = (props) => {
         onPress={() => {
 
           Alert.alert(
-            title, 'View this Case?',
+            title, 'View this Row?',
             [
               {
                 text: "Cancel",
@@ -41,16 +62,16 @@ const MenuCard = (props) => {
   return (
 
     <Card containerStyle={styles.card}>
-      <View style={styles.container}>
+      <View style={styles.cardContainer}>
         <View style={styles.titleView}>
-          <Text style={styles.sector}>{`${menutab.title} (${menutab.length})`}</Text>
+          <Text style={styles.sector}>{`${menutab.title} (${conditions.length})`}</Text>
         </View>
         <View>
           <FlatList
             pagingEnabled={true}
             legacyImplementation={true}
-            data={menutab.items}
-            renderItem={({ item }) => <Item title={item.title} number={item.number} />}
+            data={conditions.splice(0, 5)}
+            renderItem={({ item }) => <Item title={item.name} number={item.id} />}
             keyExtractor={item => item.id}
           />
         </View>
