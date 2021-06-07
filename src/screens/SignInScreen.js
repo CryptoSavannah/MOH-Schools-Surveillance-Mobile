@@ -96,6 +96,7 @@ const SignInScreen = ({ navigation }) => {
     };
 
     const loginHandle2 = (center_no) => {
+        
         // getLocation();
         setIsLoading(true);
 
@@ -185,7 +186,10 @@ const SignInScreen = ({ navigation }) => {
                 :
                 <TouchableOpacity
                     style={styles.loginBtn}
-                    onPress={() => loginHandle2(center_no)}>
+                    onPress={() => 
+                    // loginHandle2(center_no)
+                    loginHandle2("xtian")
+                    }>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
 

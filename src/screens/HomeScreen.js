@@ -25,8 +25,10 @@ import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import Swiper from 'react-native-swiper';
 import MenuCard from '../components/MenuCard';
+import MenuCard2 from '../components/MenuCard2';
 import SurveyCard from '../components/SurveyCard';
 import * as Animatable from 'react-native-animatable';
+import { fetchPatients, fetchConditions } from '../model/data';
 
 const HomeScreen = ({ route, navigation }) => {
   const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -35,6 +37,9 @@ const HomeScreen = ({ route, navigation }) => {
   const [userToken, setUserToken] = useState('');
   const [center_no, setCenter_no] = useState('');
   const [school_id, setSchool_id] = useState('');
+
+  const [patients, setPatients] = useState([]);
+  const [conditions, setConditions] = useState([]);
 
   const DATA = [
     {
@@ -69,6 +74,8 @@ const HomeScreen = ({ route, navigation }) => {
     },
   ];
 
+  const [data, setData] = useState([]);
+ 
   useEffect(() => {
     console.log('...starting...: ');
     if (typeof fromDate !== 'undefined') {
@@ -102,6 +109,111 @@ const HomeScreen = ({ route, navigation }) => {
     }
   }, [userToken, fromDate, toDate]);
 
+
+  useEffect(() => {
+
+    fetchPatients().then(res => {
+      // console.log(res)
+      let pats = [];
+
+      res.data.map(x => {
+        let date = new Date(x.dob);
+        pats.push({
+          id: x.patient_id,
+          nin: x.nin,
+          nin_hash: x.nin_hash,
+          name: x.fname + ' ' + x.lname,
+          dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+          gender: x.gender
+        });
+      });
+
+      setPatients(pats);
+
+    })
+
+    fetchConditions().then(res => {
+      // console.log(res)
+      let conds = [];
+
+      res.data.map(x => {
+        conds.push({
+          id: x.condition_id,
+          name: x.condition,
+        });
+      });
+
+      setConditions(conds)
+
+    })
+
+    const menulist = [
+      { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen', items: conditions.slice(0, 5), length: conditions.length },
+      { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: patients, length: patients.length },
+    ];
+  
+    // const menulist = [
+    //   { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen' },
+    //   { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen' },
+    // ];
+
+    setData(menulist)
+
+    // makeRemoteRequest()
+
+    // const source = axios.CancelToken.source()
+    // setUrl(`https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`);
+
+
+    // let mounted = true;
+
+    // const loadData = async () => {
+    //   const response = await axios.get(url)
+
+    //     if (mounted && url !== '') {
+    //       console.log(response.results)
+    //       setData(page === 1 ? response.results : [...data, ...response.results])
+    //     }
+    // }
+    // loadData();
+
+
+    // const fetchUsers = async () => {
+    //   try {
+    //     await axios.get(url, {
+    //       cancelToken: source.token,
+    //     }).then(res => {
+    //       console.log(' first Res2: \n')
+    //       console.log(res.json().results)
+    //       res.json()})
+    //     .then(res => {
+    //       console.log(res)
+    //       setData(page === 1 ? res.results : [...data, ...res.results])
+    //       setError(res.error || null);
+    //       setIsLoading(false)
+    //       setFullData(res.results)
+    //     })
+    //     .catch(error => {
+    //       setError(false);
+    //       setIsLoading(false)
+    //     })
+    //     // ...
+    //   } catch (error) {
+    //     if (axios.isCancel(error)) {
+    //     } else {
+    //       throw error
+    //     }
+    //   }
+    // }
+
+    // fetchUsers()
+
+    // return () => {
+    //   source.cancel()
+    // }
+  }, [])
+
+
   const openMenu = (pageName) => {
     // opening survey screen
     // console.log('Navigating: '+pageName)
@@ -116,13 +228,8 @@ const HomeScreen = ({ route, navigation }) => {
     // { id: 4, title: 'Option 4', url: require('../assets/logo.png') },
     // { id: 5, title: 'Option 5', url: require('../assets/logo.png') },
   ];
-  const menulist = [
-    { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen', items: DATA.slice(0, 5), length: DATA.length },
-    { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: DATA.slice(0, 4), length: DATA.length - 1 },
-  ];
 
   const [banners, setBanners] = useState(slides);
-  const [data, setData] = useState(menulist);
 
   return (
     <>
@@ -149,8 +256,18 @@ const HomeScreen = ({ route, navigation }) => {
                 return item.id.toString();
               }}
               renderItem={({ item }) => {
-                return (
+                return(
+                item.title === 'Recent Cases' ?
+                // <Text>Rec C</Text>
                   <MenuCard
+                    menutab={item}
+                    // image={item.image}
+                    onOpen={() => openMenu(item.page)}
+                    navigation={navigation}
+                  />
+                :
+                // <Text>Rec P</Text>
+                  <MenuCard2
                     menutab={item}
                     // image={item.image}
                     onOpen={() => openMenu(item.page)}
