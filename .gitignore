@@ -59,6 +59,7 @@ buck-out/
 *.jks
 !debug.keystore
 android/gradle.properties
+*.apk
 
 
 # fastlane

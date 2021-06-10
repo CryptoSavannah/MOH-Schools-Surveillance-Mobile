@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
+import { View, StyleSheet, Linking, Image } from 'react-native';
 import {
   useTheme,
   Avatar,
@@ -17,6 +17,9 @@ import Iconf from 'react-native-vector-icons/FontAwesome';
 
 import { AuthContext } from '../components/context';
 import logo from '../assets/logo.png';
+// import aggregation from '../assets/logo.png';
+import aggregation from '../assets/aggregation.png';
+
 
 export function DrawerContent(props) {
 
@@ -60,20 +63,20 @@ export function DrawerContent(props) {
                 props.navigation.navigate('Home')
               }}
             />
-            {/* <DrawerItem
-                            icon={({ color, size }) => (
-                                <Icon
-                                    name="account-check-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Add Patient"
-                            onPress={() => {
-                                props.navigation.navigate('AddNew');
-
-                            }}
-                        /> */}
+            <DrawerItem
+              icon={({ color, size }) => (
+                // <Icon
+                //   name="folder-outline"
+                //   color={color}
+                //   size={size}
+                // />
+                <Image source={aggregation} color={color}  style={{width: size, height: size}}/>
+              )}
+              label="Record Summary"
+              onPress={() => {
+                props.navigation.navigate('NewAggregate')
+              }}
+            />
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon
@@ -89,24 +92,6 @@ export function DrawerContent(props) {
             />
 
           </Drawer.Section>
-          {/* <DrawerItem
-                            icon={({color, size}) => (
-                                <Icon
-                                    name="download-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                                // <Icon
-                                //     name="download"
-                                //     color={color}
-                                //     size={size}
-                                // />
-                            )}
-                            label="Download"
-                            onPress={() => {
-                                props.navigation.navigate('Download')
-                            }}
-                        /> */}
           <Drawer.Section title="Contacts">
             <DrawerItem
               icon={({ color, size }) => (
