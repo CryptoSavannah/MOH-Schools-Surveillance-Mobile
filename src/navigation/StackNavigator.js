@@ -4,6 +4,8 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
+import AggregateForm from "../screens/AggregateForm";
+import AggregatesScreen from "../screens/AggregatesScreen";
 import Icon from "react-native-vector-icons/Ionicons";
 import Case from "../screens/Case";
 import CaseForm from "../screens/CaseForm";
@@ -38,7 +40,7 @@ const HomeStackScreen = ({ navigation }) => (
     },
     safeAreaInsets: { top: 0, bottom: 0 }
   }}>
-    <Stack.Screen name="Home" component={HomeScreen} options={{
+    <Stack.Screen name="Home" component={AggregatesScreen} options={{
       title: 'Overview',
       headerLeft: () => (
         <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
@@ -72,6 +74,17 @@ const HomeStackScreen = ({ navigation }) => (
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} /> */}
+    <Stack.Screen name="NewAggregate" component={AggregateForm}
+    // component={() => (
+    //   <CaseForm navigation={navigation} />
+    // )} 
+    options={{
+      title: 'Record Summary',
+      headerLeft: () => (
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+      ),
+    }} />
 
     <Stack.Screen name="NewCase" component={CaseForm}
     // component={() => (
