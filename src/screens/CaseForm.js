@@ -452,7 +452,7 @@ const CaseForm = ({ route, navigation }) => {
             </Animatable.View> : null}
           <View style={{ paddingTop: 20 }}>
             <Text style={[styles.textSize, { alignSelf: 'center' }]}>
-              {"Select the noticable conditions"}
+              {"Select all the noticable conditions"}
             </Text>
           </View>
 
