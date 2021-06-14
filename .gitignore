@@ -8,6 +8,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+android/app/build/outputs/*
+android/.gradle/6.2/executionHistory/*
 
 # macOS
 .DS_Store

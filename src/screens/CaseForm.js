@@ -243,8 +243,6 @@ const CaseForm = ({ route, navigation }) => {
   const onSubmit = async () => {
     //setting values for feilds
     values['userId'] = userId;
-    values['district'] = district;
-
 
     // console.log(values);
 
