@@ -16,6 +16,7 @@ import { Button as ButtonF, Icon as IconF, Text as TextF } from "@99xt/first-bor
 import Block from "../components/Block";
 import Card from "../components/Card";
 import Icon from "react-native-vector-icons/Fontisto";
+import Iconm from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as theme from '../constants/theme';
 import {
   LineChart
@@ -29,22 +30,65 @@ import MenuCard2 from '../components/MenuCard2';
 import SurveyCard from '../components/SurveyCard';
 import * as Animatable from 'react-native-animatable';
 import { fetchPatients, fetchConditions } from '../model/data';
+import { Divider } from 'react-native-elements';
 
 const AggregatesScreen = ({ route, navigation }) => {
 
   const [userToken, setUserToken] = useState('');
   const [center_no, setCenter_no] = useState('');
   const [school_id, setSchool_id] = useState('');
- 
+
   useEffect(() => {
 
   }, []);
 
+  const keyExtractor = (item, index) => item.id.toString();
+
+  const renderItem = ({ item }) => (
+    < View style={{ paddingVertical: 4 }}>
+      {
+        item.type === 'case' ?
+          <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
+            <Iconm
+              name="folder-outline"
+              color="#000"
+              size={30}
+              style={{ paddingRight: 15 }}
+            />
+            <View style={{ width: '70%'}}>
+              <Text style={{ fontWeight: '400', fontSize: 18 }}>{`${item.type}`}</Text>
+              <Text style={{ color: 'grey' }}>{`24644795f0cf23f7 \n date posted, time`}</Text></View>
+            <TouchableOpacity><Text style={{ alignSelf: 'center' }}>{`Edit case`}</Text></TouchableOpacity></View>
+          :
+          <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
+            <Iconm
+              name="file-outline"
+              color="#000"
+              size={30}
+              style={{ paddingRight: 15 }}
+            />
+            <View style={{ width: '70%'}}>
+              <Text style={{ fontWeight: '400', fontSize: 18 }}>{`${item.type} record`}</Text>
+              <Text style={{ color: 'grey' }}>{`date posted, time`}</Text></View>
+            <TouchableOpacity><Text style={{ alignSelf: 'center' }}>{`View`}</Text></TouchableOpacity></View>
+      }
+    </View>
+  );
+
+  const dataList = [{ "id": 1, "type": "case" }, { "id": 2, "type": "aggregate" }]
+
   return (
     <>
       <View style={styles.container}>
-        <View style={{paddingTop: 20, left: 10}}>
-         <Text style={{fontSize: 18}}> List of Entries</Text>
+        <View style={{ paddingTop: 10 }}>
+          {/* <Text style={{ fontSize: 18, left: 10 }}> List of Entries</Text> */}
+
+          <FlatList
+            data={dataList}
+            keyExtractor={keyExtractor}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => (<Divider style={{ backgroundColor: '#dfe6e9', marginVertical: 10 }} />)}
+          />
         </View>
 
       </View>
