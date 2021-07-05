@@ -15,6 +15,7 @@ import { CREATE_PATIENT_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
 import { TouchableOpacity } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 
 const AddNew = ({ route, navigation }) => {
 
@@ -27,12 +28,16 @@ const AddNew = ({ route, navigation }) => {
   const [gender, setGender] = useState('');
   const [dob, setDob] = useState('');
   const [idNum, setIDNum] = useState('');
+  const [selectedImmunizationStatus, setSelectedImmunizationStatus] = useState('');
+  const [selectedDisability, setSelectedDisability] = useState('');
 
   const { nin } = route.params ?? {};
   const { fnameR } = route.params ?? {};
   const { lnameR } = route.params ?? {};
   const { genderR } = route.params ?? {};
   const { dobR } = route.params ?? {};
+  const { immunizationStatusR } = route.params ?? {};
+  const { disabilityR } = route.params ?? {};
 
   useEffect(() => {
     if (typeof fnameR !== 'undefined') {
@@ -47,7 +52,11 @@ const AddNew = ({ route, navigation }) => {
     if (typeof genderR !== 'undefined') {
       setGender(genderR)
     }
-
+    if (typeof immunizationStatusR !== 'undefined') {
+      setImmunizationStatus(immunizationStatusR)
+    }if (typeof disabilityR !== 'undefined') {
+      setDisability(disabilityR)
+    }
     if (typeof nin !== 'undefined') {
       setIDNum(nin)
       //get server patient_id
@@ -282,6 +291,39 @@ const AddNew = ({ route, navigation }) => {
           />
           <View style={styles.action}>
             <TextInput style={{ fontSize: 16, width: '100%' }} label="NIN" placeholder="NIN" onChangeText={(val) => setIDNum(val)} value={idNum} />
+          </View>
+          <View style={[styles.action2, { height: 50, marginVertical: 10, width: '100%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedImmunizationStatus === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }} selectedValue={selectedImmunizationStatus}
+              onValueChange={(itemValue, itemIndex) => setSelectedImmunizationStatus(itemValue)} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value="" label="Immunization Status:" />
+              <Picker.Item value="F" label="Fully Immunized" />
+              <Picker.Item value="P" label="Partially Immunized" />
+              <Picker.Item value="N" label="Not Immunized" />
+            </Picker>
+          </View>
+          <View style={[styles.action2, { height: 50, marginVertical: 10, width: '100%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedDisability === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }} selectedValue={selectedDisability}
+              onValueChange={(itemValue, itemIndex) => setSelectedDisability(itemValue)} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value="" label="Disability:" />
+              <Picker.Item value="0" label="None" />
+              <Picker.Item value="1" label="Difficulty in seeing" />
+              <Picker.Item value="2" label="Albinism" />
+              <Picker.Item value="3" label="Difficulty in hearing" />
+              <Picker.Item value="4" label="Delayed age specific motor development" />
+              <Picker.Item value="5" label="Delayed age specific height for age (dwarfism)" />
+              <Picker.Item value="6" label="Difficulty understanding" />
+              <Picker.Item value="7" label="Difficulty in remembering" />
+              <Picker.Item value="8" label="Difficulty in writing" />
+              <Picker.Item value="9" label="Difficulty washing all over or dressing" />
+              <Picker.Item value="10" label="Mentally impared" />
+              <Picker.Item value="11" label="Emotionally impared" />
+            </Picker>
           </View>
           <View style={{
             flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5,

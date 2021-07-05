@@ -21,7 +21,7 @@ import PrevButton from '../components/PrevButton';
 import FinishButton from '../components/FinishButton';
 import LoadingButton from '../components/LoadingButton';
 import filter from 'lodash.filter';
-import { fetchPatients, fetchConditions } from '../model/data';
+import { fetchPatients, fetchConditions, fetchChronicConditions } from '../model/data';
 import logo from '../assets/logo.png';
 import Icon from "react-native-vector-icons/Fontisto";
 import IconF from "react-native-vector-icons/FontAwesome5";
@@ -29,7 +29,8 @@ import SearchableDropdown from 'react-native-searchable-dropdown';
 import Patient from '../components/Patient';
 import IconC from "react-native-vector-icons/FontAwesome";
 import * as Animatable from 'react-native-animatable';
-
+import { Picker } from '@react-native-picker/picker';
+import { colors } from '../constants/theme';
 
 const CaseForm = ({ route, navigation }) => {
 
@@ -37,6 +38,8 @@ const CaseForm = ({ route, navigation }) => {
   const { name } = route.params ?? {};
   const { genderR } = route.params ?? {};
   const { dobR } = route.params ?? {};
+  const { immunizationStatusR } = route.params ?? {};
+  const { disabilityR } = route.params ?? {};
 
   const wizard = useRef(null);
   const [isFirstStep, setIsFirstStep] = useState(true);
@@ -45,6 +48,11 @@ const CaseForm = ({ route, navigation }) => {
   const SCREEN_WIDTH = Dimensions.get("window").width;
 
   const [userId, setUserId] = useState('');
+  const [userToken, setUserToken] = useState('');
+  const [center_no, setCenter_no] = useState('');
+  const [school_id, setSchool_id] = useState('');
+  const [case_stats, setCase_Stats] = useState('');
+  const [summaries_stats, setSummaries_Stats] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
   // const [data, setData] = useState([]);
@@ -67,7 +75,14 @@ const CaseForm = ({ route, navigation }) => {
   const [idNum, setIDNum] = useState('');
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState('');
+  const [immunizationStatus, setImmunizationStatus] = useState('');
+  const [disability, setDisability] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
+
+  const [selectedIllness, setSelectedIllness] = useState('');
+  const [selectedIllnessName, setSelectedIllnessName] = useState('');
+  const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
+  const [allIllnesses, setAllIllnesses] = useState([])
 
   function Item({ item }) {
     return (
@@ -91,7 +106,7 @@ const CaseForm = ({ route, navigation }) => {
 
     if (typeof name !== 'undefined') {
       setPName(name)
-      console.log('new patient: ', name);
+      // console.log('new patient: ', name);
     }
     if (typeof dobR !== 'undefined') {
       setDob(dobR)
@@ -99,18 +114,23 @@ const CaseForm = ({ route, navigation }) => {
     if (typeof genderR !== 'undefined') {
       setGender(genderR)
     }
+    if (typeof immunizationStatusR !== 'undefined') {
+      setImmunizationStatus(immunizationStatusR)
+    } if (typeof disabilityR !== 'undefined') {
+      setDisability(disabilityR)
+    }
     if (typeof nin !== 'undefined') {
       setIDNum(nin)
-      console.log(nin)
+      // console.log(nin)
       //get server patient_id
       // fetchPatient(nin).then(res =>{
       //fetch patient from server or realm or async
-      AsyncStorage.multiGet(['gender', 'dob'], (err, items) => {
-
-        //load details of patient in viewPatient component 
-        setGender(items.gender)
-        setDob(items.dob)
-      });
+      // AsyncStorage.multiGet(['gender', 'dob'], (err, items) => {
+      //   console.log(items)
+      //   //load details of patient in viewPatient component 
+      //   setGender(items.gender)
+      //   setDob(items.dob)
+      // });
       // })
 
     }
@@ -127,7 +147,9 @@ const CaseForm = ({ route, navigation }) => {
           nin_hash: x.nin_hash,
           name: x.fname + ' ' + x.lname,
           dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
-          gender: x.gender
+          gender: x.gender,
+          // immunizationStatus: x.immunizationStatus,
+          // disability: x.disability
         });
       });
 
@@ -149,6 +171,41 @@ const CaseForm = ({ route, navigation }) => {
       setConditions(conds)
 
     })
+
+    fetchChronicConditions().then(res => {
+      // console.log(res)
+      let conds = [];
+
+      res.data.map(x => {
+        conds.push({
+          id: x.id,
+          name: x.condition_name,
+        });
+      });
+
+      setAllIllnesses(conds)
+      // console.log(allIllnesses)
+
+    })
+
+    AsyncStorage.getItem('user')
+      .then(user => {
+        if (user === null) {
+        } else {
+          let usr = JSON.parse(user);
+          setUserToken(usr.token);
+          setCenter_no(usr.center_no);
+        }
+      })
+      .catch(err => console.log(err));
+
+      AsyncStorage.getItem('case_stats')
+      .then(the_case_stats => {
+        if (the_case_stats !== null) {
+          setCase_Stats(the_case_stats);
+        }
+      })
+      .catch(err => console.log(`case_stats error just: `, err));
 
     // makeRemoteRequest()
 
@@ -202,7 +259,12 @@ const CaseForm = ({ route, navigation }) => {
     // return () => {
     //   source.cancel()
     // }
-  }, [name, nin, gender, dob])
+
+    if (selectedIllness !== '') {
+      let the_name = allIllnesses.find(x => x.id.toString() === selectedIllness).name;
+      setSelectedIllnessName(the_name)
+    }
+  }, [name, nin, gender, dob, immunizationStatus, disability, selectedIllness, selectedIllnessName])
 
   const showSearch = () => {
     setSearchFocused(!searchFocused)
@@ -242,40 +304,44 @@ const CaseForm = ({ route, navigation }) => {
 
   const onSubmit = async () => {
     //setting values for feilds
-    values['userId'] = userId;
-    values['district'] = district;
+    // values['userId'] = userId;
 
+     // console.log('original summ: ', summaries_stats)
+     var the_case_stats = (parseInt(case_stats) + 1);
+
+    //  console.log('the_case_stats to post: ' + the_case_stats);
+     AsyncStorage.setItem('case_stats', (the_case_stats).toString());
 
     // console.log(values);
 
-    await axios.post(baseUrl + 'farmings', {
-      values,
-    })
-      .then(function (response) {
-        if (response.status === 200) {
+    // await axios.post(baseUrl + 'farmings', {
+    //   values,
+    // })
+    //   .then(function (response) {
+    //     if (response.status === 200) {
 
-          alert('Success!', 'Farming Sector Information saved.', [{
-            text: 'Okay', onPress: () => cancel(),
-          }]);
-          cancel();
+    //       alert('Success!', 'Farming Sector Information saved.', [{
+    //         text: 'Okay', onPress: () => cancel(),
+    //       }]);
+    //       cancel();
 
-        } else {
+    //     } else {
 
-          console.log(response.status);
-          alert('Failed to save Farming Sector Information.', 'Please try again.', [{
-            text: 'Okay', onPress: () => setCurrentStep(0),
-          }]);
-          setCurrentStep(0);
-        }
+    //       console.log(response.status);
+    //       alert('Failed to save Farming Sector Information.', 'Please try again.', [{
+    //         text: 'Okay', onPress: () => setCurrentStep(0),
+    //       }]);
+    //       setCurrentStep(0);
+    //     }
 
-      })
-      .catch(function (error) {
-        console.log(error);
-        alert('Failed to save Farming Sector Information.', error + '\nPlease try again.', [{
-          text: 'Okay', onPress: () => cancel(),
-        }]);
-        cancel()
-      }).finally(() => { setIsLoading(false) })
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //     alert('Failed to save Farming Sector Information.', error + '\nPlease try again.', [{
+    //       text: 'Okay', onPress: () => cancel(),
+    //     }]);
+    //     cancel()
+    //   }).finally(() => { setIsLoading(false) })
   }
 
   const cancel = () => {
@@ -302,7 +368,7 @@ const CaseForm = ({ route, navigation }) => {
 
   const goToFinish = () => {
     setIsLoading(true);
-    // onSubmit();
+    onSubmit();
     setTimeout(() => {
       setIsLoading(false)
       alert("Case has been Recorded");
@@ -338,10 +404,10 @@ const CaseForm = ({ route, navigation }) => {
                     ref={stdRef}
                     onTextChange={text => {
                       const items = selectedPatients.filter((sitem) => sitem.name.includes(text));
-                      console.log('possible ', items.length)
+                      // console.log('possible ', items.length)
                     }}
                     onItemSelect={(item) => {
-                      console.log(item)
+                      // console.log(item)
                       var items = [];
                       items.push(item);
                       setSelectedPatients(selectedPatients => items);
@@ -349,6 +415,8 @@ const CaseForm = ({ route, navigation }) => {
                       setPName(item.name);
                       setDob(item.dob)
                       setGender(item.gender)
+                      // setImmunizationStatus(item.immunizationStatus)
+                      // setDisability(item.disability)
                       showSearch()
                     }}
                     containerStyle={{ padding: 0 }}
@@ -413,7 +481,7 @@ const CaseForm = ({ route, navigation }) => {
                       alignSelf: 'flex-end', flexDirection: 'row',
                       paddingVertical: 5, paddingHorizontal: 10, marginTop: 10, borderRadius: 5
                     }} onPress={() => {
-                      console.log('dob: ', dob)
+                      // console.log('dob: ', dob)
                       navigation.navigate("AddNew", {
                         fnameR: pname.split(' ')[0],
                         nin: idNum,
@@ -445,20 +513,54 @@ const CaseForm = ({ route, navigation }) => {
     {
       content:
         <View style={{ padding: 10, margin: 10, height: '95%', }}>
-          {selectedConditions.length >= 5 ?
-            <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite"
-              style={{ position: 'absolute', right: 1, top: '9%', zIndex: 999 }}>
-              <IconC name="long-arrow-right" size={25} color={'#1A5276'} />
-            </Animatable.View> : null}
-          <View style={{ paddingTop: 20 }}>
-            <Text style={[styles.textSize, { alignSelf: 'center' }]}>
-              {"Select the noticable conditions"}
-            </Text>
+
+          <View style={[styles.action2, { height: 50, width: '100%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedIllness === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }} selectedValue={selectedIllness}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedIllness(itemValue);
+              }} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value="" label="Chronic medical condition/allergies:" />
+              {/* {conditions.map(x => {
+                <Picker.Item value={x.id} label={x.name} key={x.id}/>
+              })
+              } */}
+              <Picker.Item value="1" label="Asthma" />
+              <Picker.Item value="2" label="Sickle cell disease" />
+              <Picker.Item value="3" label="TB on treatment" />
+              <Picker.Item value="4" label="Cancer" />
+              <Picker.Item value="5" label="Epilepsy" />
+              <Picker.Item value="6" label="Chronic / congenital heart disease" />
+              <Picker.Item value="7" label="Mental disorder" />
+              <Picker.Item value="8" label="Diabetes" />
+              <Picker.Item value="9" label="HIV/AIDS" />
+              <Picker.Item value="10" label="Food/ medicine allergies" />
+              <Picker.Item value="11" label="Other medical conditions/ allergies" />
+              <Picker.Item value="12" label="Covid" />
+            </Picker>
           </View>
 
-          {/* conditons */}
+          {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
+            <TextInput style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
+              onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
+          </View> : null}
 
-          <FlatList
+          {selectedConditions.length >= 5 ?
+            <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite"
+              style={{ position: 'absolute', right: 1, top: '30%', zIndex: 999 }}>
+              <IconC name="long-arrow-right" size={25} color={'#1A5276'} />
+            </Animatable.View> :
+            <View style={{ paddingTop: 20, paddingBottom: selectedConditions.length > 0 ? 0 : 10 }}>
+              <Text style={[styles.textSize]}>
+                {"Select all the noticable symptoms"}
+              </Text>
+            </View>}
+
+          {/* symptoms */}
+
+          {selectedConditions.length > 0 ? <FlatList
             horizontal
             pagingEnabled={true}
             showsHorizontalScrollIndicator={false}
@@ -469,7 +571,7 @@ const CaseForm = ({ route, navigation }) => {
               <Item item={item} />}
             keyExtractor={item => (item.id.toString())}
             style={{ width: SCREEN_WIDTH + 5, flex: 1, height: '0.5%', backgroundColor: '#fff' }}
-          />
+          /> : null}
 
           <View style={{ flex: 5 }}>
             <SearchableDropdown
@@ -499,7 +601,7 @@ const CaseForm = ({ route, navigation }) => {
               resetValue={false}
               textInputProps={
                 {
-                  placeholder: "Search Condition",
+                  placeholder: "Search Symptom",
                   underlineColorAndroid: "transparent",
                   style: {
                     padding: 12,
@@ -519,7 +621,7 @@ const CaseForm = ({ route, navigation }) => {
             />
           </View>
 
-          <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
+          <View style={{ flexDirection: 'row', marginBottom: 5, justifyContent: 'space-between' }}>
             <PrevButton goToPrev={goToPrev} />
             {selectedConditions.length === 0 ?
               <NextButton goToNext={() => goToNext(false, 'Select atleast one condition to continue.')} />
@@ -535,9 +637,37 @@ const CaseForm = ({ route, navigation }) => {
       content:
         <View style={[styles.content, { paddingTop: 0 }]}>
           <View style={{ alignSelf: 'center', paddingVertical: 40 }}>
+            <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#fff', backgroundColor: colors.caption, borderRadius: 20}]}>
+              Preview
+            </Text>
+          </View>
+
+          <View style={[styles.action, { paddingVertical: 8 }]}>
+            <Text style={[styles.textSize, {fontWeight: 'bold'}]}>
+              {`Name: ${pname}`}
+            </Text>
+          </View>
+
+          <View style={[styles.action, { paddingVertical: 8 }]}>
             <Text style={styles.textSize}>
-              That's all, Thanks!
-                  </Text>
+              {`Medical Condition: ${selectedIllnessName}`}
+            </Text>
+          </View>
+
+          <View style={[styles.action, { paddingVertical: 8 }]}>
+            <Text style={[styles.textSize, { marginBottom: 5 }]}>
+              {`Symptoms (${selectedConditions.length}):`}
+            </Text>
+            <FlatList
+              style={{ marginLeft: 5 }}
+              data={selectedConditions}
+              renderItem={({ item }) =>
+                <Text paragraph style={{
+                  marginHorizontal: 2, borderTopWidth: 1, padding: 5, borderColor: '#f5f5f5', fontSize: 16
+                }}>
+                  {item.name}</Text>}
+              keyExtractor={item => (item.id.toString())}
+            />
           </View>
 
           <View style={{
@@ -629,7 +759,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingBottom: 10,
   },
-
+  action2: {
+    paddingTop: 5,
+    borderBottomColor: "#dedede",
+    borderBottomWidth: 1,
+  },
   action3: {
     paddingTop: 5,
     borderBottomColor: '#dedede',

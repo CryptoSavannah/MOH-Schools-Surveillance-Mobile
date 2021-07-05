@@ -8,6 +8,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+android/app/build/outputs/*
+android/.gradle/6.2/executionHistory/*
 
 # macOS
 .DS_Store
@@ -59,6 +61,7 @@ buck-out/
 *.jks
 !debug.keystore
 android/gradle.properties
+*.apk
 
 
 # fastlane

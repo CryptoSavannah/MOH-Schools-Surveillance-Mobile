@@ -91,7 +91,9 @@ const MenuCard = (props) => {
       </View>
 
       <Divider style={{ backgroundColor: '#fff', marginVertical: 10 }} />
-      <TouchableOpacity onPress={() => onOpen(menutab.page)} >
+      <TouchableOpacity onPress={() => {
+        // onOpen(menutab.page)
+      }} >
         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
           <Text style={styles.notes}>{'View more'}</Text>
         </View>
