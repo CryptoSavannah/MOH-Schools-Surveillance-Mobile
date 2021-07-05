@@ -1,28 +1,42 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Wizard from 'react-native-wizard';
-import { View, StyleSheet, TextInput, Text, ActivityIndicator, Button, TouchableOpacity, LogBox } from 'react-native';
+import { View, StyleSheet, TextInput, Text, ActivityIndicator, Button, TouchableOpacity, LogBox, StatusBar } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScrollView } from 'react-native-gesture-handler';
 import { CREATE_AGGREGATE_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
+import { fetchChronicConditions } from '../model/data';
 import axios from "axios";
 import { Picker } from '@react-native-picker/picker';
+// import SearchableDropdown from 'react-native-searchable-dropdown';
 
 const AggregateForm = ({ route, navigation }) => {
 
   const [userId, setUserId] = useState('');
+  const [userToken, setUserToken] = useState('');
+  const [center_no, setCenter_no] = useState('');
+  const [school_id, setSchool_id] = useState('');
+  const [case_stats, setCase_Stats] = useState('');
+  const [summaries_stats, setSummaries_Stats] = useState('');
+  // const stdRef = useRef(null);
 
   let values = {};
   const [isLoading, setIsLoading] = useState(false);
 
   const [conditions, setConditions] = useState([]);
   const [selectedIllness, setSelectedIllness] = useState('');
+  const [selectedConditions, setSelectedConditions] = useState([]);
 
-  const [suspectedNo, setSuspectedNo] = useState('');
-  const [testedNo, setTestedNo] = useState('');
-  const [confirmedNo, setConfirmedNo] = useState('');
-
+  // const [suspectedNo, setSuspectedNo] = useState('');
+  // const [testedNo, setTestedNo] = useState('');
+  // const [confirmedNo, setConfirmedNo] = useState('');
+  const [casesNo, setCasesNo] = useState('');
+  const [treatedNo, setTreatedNo] = useState('');
+  const [deceasedNo, setDeceasedNo] = useState('');
+  const [healedNo, setHealedNo] = useState('');
+  const [selectedItemIndex, updateSelectedItem] = useState('');
   const [toDate, setToDate] = useState('');
+  const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
 
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
 
@@ -84,7 +98,7 @@ const AggregateForm = ({ route, navigation }) => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
     //fetch diseases
-    // fetchConditions().then(res => {
+    // fetchChronicConditions().then(res => {
     //   // console.log(res)
     //   let conds = [];
 
@@ -98,6 +112,24 @@ const AggregateForm = ({ route, navigation }) => {
     //   setConditions(conds)
 
     // })
+    AsyncStorage.getItem('user')
+      .then(user => {
+        if (user === null) {
+        } else {
+          let usr = JSON.parse(user);
+          setUserToken(usr.token);
+          setCenter_no(usr.center_no);
+        }
+      })
+      .catch(err => console.log(err));
+
+    AsyncStorage.getItem('summaries_stats')
+      .then(the_summaries_stats => {
+        if (the_summaries_stats !== null) {
+          setSummaries_Stats(the_summaries_stats);
+        }
+      })
+      .catch(err => console.log(`summaries_stats error just: `, err));
 
   }, [])
 
@@ -110,9 +142,9 @@ const AggregateForm = ({ route, navigation }) => {
     //setting values for feilds
     values['userId'] = userId;
 
-    // console.log(values);
+    console.log(values);
 
-    if (toDate === '' || fromDate === '' || selectedIllness === '' || ![suspectedNo, testedNo, confirmedNo].some((x) => { return x !== '' })) {
+    if (toDate === '' || fromDate === '' || selectedIllness === '' || ![casesNo, treatedNo, healedNo, deceasedNo].some((x) => { return x !== '' })) {
       alert("Fill in all the relevant information");
       return
     }
@@ -123,7 +155,13 @@ const AggregateForm = ({ route, navigation }) => {
     }
 
     setIsLoading(true);
-    // onSubmit();
+
+    // console.log('original summ: ', summaries_stats)
+    var the_summaries_stats = (parseInt(summaries_stats) + 1);
+
+    console.log('the_summaries_stats to post: ' + the_summaries_stats);
+    AsyncStorage.setItem('summaries_stats', (the_summaries_stats).toString());
+
     setTimeout(() => {
       setIsLoading(false)
       alert("Case Summary Information saved.");
@@ -189,100 +227,126 @@ const AggregateForm = ({ route, navigation }) => {
   //-------------------------------------------------------------------------
 
   return (
-    <View style={{ alignSelf: 'stretch' }}>
-      <ScrollView>
-        <Text style={{ fontSize: 20, fontWeight: "bold", paddingTop: 20, left: 10, paddingBottom: 10 }}>
-          Aggregates:  </Text>
-        <View style={{ flexDirection: 'row', justifyContent: "space-around", marginBottom: 10 }}>
-          <View style={{ width: '40%' }}>
-            <View style={styles.action}>
-              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="Date of Birth" placeholder="From Date:"
-                value={fromDate == '' ? '' : `From:  ${fromDate}`}
-                showSoftInputOnFocus={false} />
+    <>
+      <StatusBar backgroundColor='rgba(0,0,0,0.8)' barStyle="light-content" />
+      <View style={{ alignSelf: 'stretch' }}>
+        <ScrollView>
+          <Text style={{ fontSize: 20, fontWeight: "bold", paddingTop: 20, left: 10, paddingBottom: 10 }}>
+            Aggregates:  </Text>
+          <View style={{ flexDirection: 'row', justifyContent: "space-around", marginBottom: 10 }}>
+            <View style={{ width: '40%' }}>
+              <View style={styles.action}>
+                <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="Date of Birth" placeholder="From Date:"
+                  value={fromDate == '' ? '' : `From:  ${fromDate}`}
+                  showSoftInputOnFocus={false} />
+              </View>
+              <DateTimePickerModal
+                isVisible={isFromDatePickerVisible}
+                mode="date"
+                onConfirm={handleFromConfirm}
+                onCancel={hideFromDatePicker}
+              />
             </View>
-            <DateTimePickerModal
-              isVisible={isFromDatePickerVisible}
-              mode="date"
-              onConfirm={handleFromConfirm}
-              onCancel={hideFromDatePicker}
-            />
-          </View>
-          <View style={{ width: '40%' }}>
-            <View style={styles.action}>
-              <TextInput style={{ fontSize: 16 }}
-                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
-                value={toDate == '' ? '' : `To:  ${toDate}`}
-                showSoftInputOnFocus={false} />
+            <View style={{ width: '40%' }}>
+              <View style={styles.action}>
+                <TextInput style={{ fontSize: 16 }}
+                  onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
+                  value={toDate == '' ? '' : `To:  ${toDate}`}
+                  showSoftInputOnFocus={false} />
+              </View>
+              <DateTimePickerModal
+                isVisible={isToDatePickerVisible}
+                mode="date"
+                onConfirm={handleToConfirm}
+                onCancel={hideToDatePicker}
+              />
             </View>
-            <DateTimePickerModal
-              isVisible={isToDatePickerVisible}
-              mode="date"
-              onConfirm={handleToConfirm}
-              onCancel={hideToDatePicker}
-            />
           </View>
-        </View>
 
-        <View style={[styles.action2, { height: 50, marginVertical: 10, width: '90%', alignSelf: 'center' }]} >
-          <Picker style={{
-            color: selectedIllness === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
-            transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
-          }} selectedValue={selectedIllness}
-            onValueChange={(itemValue, itemIndex) => setSelectedIllness(itemValue)} itemStyle={{ fontSize: 18 }} >
-            <Picker.Item value="" label="Select Medical Illness" />
-            <Picker.Item value="Malaria" label="Malaria" />
-            <Picker.Item value="Covid" label="Covid" />
-          </Picker>
-        </View>
-
-        <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-          <TextInput style={{ fontSize: 18, width: '80%' }} label="Suspected Infections" placeholder="Suspected Infections:"
-            onChangeText={(val) => { setSuspectedNo(val); }} value={suspectedNo} keyboardType="numeric" />
-        </View>
-
-        <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-          <TextInput style={{ fontSize: 18, width: '80%' }} label="Tested Cases" placeholder="Tested Cases:"
-            onChangeText={(val) => { setTestedNo(val); }} value={testedNo} keyboardType="numeric" />
-        </View>
-
-        <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-          <TextInput style={{ fontSize: 18, width: '80%' }} label="Confirmed" placeholder="Confirmed:"
-            onChangeText={(val) => { setConfirmedNo(val); }} value={confirmedNo} keyboardType="numeric" />
-        </View>
-
-        <View style={{
-          flexDirection: 'row', justifyContent: 'space-between', padding: 5,
-          paddingTop: 30, marginBottom: 10
-        }}>
-          <View style={{ width: 80, marginBottom: 10 }}>
-            <Button rounded
-              block
-              style={styles.btn}
-              color="red" title="Cancel" onPress={() => { cancel() }} />
-
+          <View style={[styles.action2, { height: 50, marginVertical: 10, width: '90%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedIllness === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }} selectedValue={selectedIllness}
+              onValueChange={(itemValue, itemIndex) => setSelectedIllness(itemValue)} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value="" label="Chronic medical condition/allergies:" />
+              {/* {conditions.map(x => {
+                <Picker.Item value={x.id} label={x.name} key={x.id}/>
+              })
+              } */}
+              <Picker.Item value="1" label="Asthma" />
+              <Picker.Item value="2" label="Sickle cell disease" />
+              <Picker.Item value="3" label="TB on treatment" />
+              <Picker.Item value="4" label="Cancer" />
+              <Picker.Item value="5" label="Epilepsy" />
+              <Picker.Item value="6" label="Chronic / congenital heart disease" />
+              <Picker.Item value="7" label="Mental disorder" />
+              <Picker.Item value="8" label="Diabetes" />
+              <Picker.Item value="9" label="HIV/AIDS" />
+              <Picker.Item value="10" label="Food/ medicine allergies" />
+              <Picker.Item value="11" label="Other medical conditions/ allergies" />
+            </Picker>
           </View>
-          <View style={{ width: 80, marginBottom: 10 }}>
-            {!isLoading ? <Button title="Save"
-              rounded
-              block
-              style={styles.btn}
-              color="#FFB236"
-              onPress={() => { onSubmit() }}
-            >
-            </Button>
-              :
-              <TouchableOpacity
-                style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "#FFB236" }]}
-                underlayColor='#FFB236'
+
+          {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
+            <TextInput style={{ fontSize: 18, width: '80%' }} label="Specify medical condition" placeholder="Specify medical condition:"
+              onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
+          </View> : null}
+
+          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
+            <TextInput style={{ fontSize: 18, width: '80%' }} label="Cases" placeholder="Cases:"
+              onChangeText={(val) => { setCasesNo(val); }} value={casesNo} keyboardType="numeric" />
+          </View>
+
+          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
+            <TextInput style={{ fontSize: 18, width: '80%' }} label="Treated" placeholder="Treated:"
+              onChangeText={(val) => { setTreatedNo(val); }} value={treatedNo} keyboardType="numeric" />
+          </View>
+
+          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
+            <TextInput style={{ fontSize: 18, width: '80%' }} label="Healed" placeholder="Healed:"
+              onChangeText={(val) => { setHealedNo(val); }} value={healedNo} keyboardType="numeric" />
+          </View>
+
+          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
+            <TextInput style={{ fontSize: 18, width: '80%' }} label="Deceased" placeholder="Deceased:"
+              onChangeText={(val) => { setDeceasedNo(val); }} value={deceasedNo} keyboardType="numeric" />
+          </View>
+
+          <View style={{
+            flexDirection: 'row', justifyContent: 'space-between', padding: 5,
+            paddingTop: 30, marginBottom: 10
+          }}>
+            <View style={{ width: 80, marginBottom: 10 }}>
+              <Button rounded
+                block
+                style={styles.btn}
+                color="red" title="Cancel" onPress={() => { cancel() }} />
+
+            </View>
+            <View style={{ width: 80, marginBottom: 10 }}>
+              {!isLoading ? <Button title="Save"
+                rounded
+                block
+                style={styles.btn}
+                color="#FFB236"
+                onPress={() => { onSubmit() }}
               >
-                <ActivityIndicator animating={isLoading} color="#fff" />
-              </TouchableOpacity>}
+              </Button>
+                :
+                <TouchableOpacity
+                  style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "#FFB236" }]}
+                  underlayColor='#FFB236'
+                >
+                  <ActivityIndicator animating={isLoading} color="#fff" />
+                </TouchableOpacity>}
+            </View>
           </View>
-        </View>
 
 
-      </ScrollView>
-    </View>
+        </ScrollView>
+      </View>
+    </>
   );
 
 };

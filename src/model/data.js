@@ -89,6 +89,59 @@ export const fetchPatients = async () => {
   return servPatients
 };
 
+export const fetchChronicConditions = async () => {
+  // let conds = [];
+
+  // servConditions.data.map(x => {
+  //   conds.push({
+  //     id: x.condition_id,
+  //     name: x.condition,
+  //   });
+  // });
+
+//   setConditions(conds);
+
+//   var config = {
+//     method: 'get',
+//     url: CONDITIONS_KEY,
+//     headers: {
+//       'Authorization': `Bearer ${userToken}`
+//     }
+//   };
+
+  // console.log(JSON.stringify(config));
+
+  // await axios(config)
+  //   .then(res => {
+  //     let ps = [];
+  //     ps = res.data;
+  //     let conds = [];
+  //     console.log("Conditions: " + JSON.stringify(ps));
+  //     ps.data.map(x => {
+  //       conds.push({
+  //         id: x.condition_id,
+  //         name: x.condition,
+  //       });
+  //     });
+  //     setConditions(conds);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Fetching Conditions: " + error);
+  //   });
+
+  return {"status": 200, "data": [{ "id":1,"condition_name": "Asthma"},
+  {"id":2, "condition_name":"Sickle cell disease"},
+  {"id":3, "condition_name":"TB on treatment"},
+  {"id":4, "condition_name":"Cancer"},
+  {"id":5, "condition_name":"Epilepsy"},
+  {"id":6, "condition_name":"Chronic / congenital heart disease"},
+  {"id":7, "condition_name":"Mental disorder"},
+  {"id":8, "condition_name":"Diabetes"},
+  {"id":9, "condition_name":"HIV/AIDS"},
+  {"id":10, "condition_name":"Food/ medicine allergies"},
+  {"id":11, "condition_name":"Other medical conditions/ allergies"}]};
+};
+
 export const fetchConditions = async () => {
   // let conds = [];
 
