@@ -4,6 +4,9 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "../screens/HomeScreen";
+import AggregatesScreen from "../screens/AggregatesScreen";
+import OverViewScreen from "../screens/OverViewScreen";
+import AggregateForm from "../screens/AggregateForm";
 import Icon from "react-native-vector-icons/Ionicons";
 import Case from "../screens/Case";
 import CaseForm from "../screens/CaseForm";
@@ -38,8 +41,8 @@ const HomeStackScreen = ({ navigation }) => (
     },
     safeAreaInsets: { top: 0, bottom: 0 }
   }}>
-    <Stack.Screen name="Home" component={HomeScreen} options={{
-      title: 'Overview',
+    <Stack.Screen name="Home" component={OverViewScreen} options={{
+      title: '',
       headerLeft: () => (
         <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
           onPress={() => navigation.openDrawer()} />
@@ -72,6 +75,17 @@ const HomeStackScreen = ({ navigation }) => (
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} /> */}
+    <Stack.Screen name="NewAggregate" component={AggregateForm}
+    // component={() => (
+    //   <CaseForm navigation={navigation} />
+    // )} 
+    options={{
+      title: 'Record Summary',
+      headerLeft: () => (
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+      ),
+    }} />
 
     <Stack.Screen name="NewCase" component={CaseForm}
     // component={() => (
@@ -108,7 +122,7 @@ const HomeStackScreen = ({ navigation }) => (
       headerShown: false,
     }} />
     <Stack.Screen name="AddNew" component={AddNew} options={{
-      title: 'Add Patient',
+      title: 'Patient Record',
       headerLeft: () => (
         <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
           onPress={() => navigation.openDrawer()} />
