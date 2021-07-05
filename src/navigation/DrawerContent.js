@@ -65,11 +65,6 @@ export function DrawerContent(props) {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                // <Icon
-                //   name="folder-outline"
-                //   color={color}
-                //   size={size}
-                // />
                 <Image source={aggregation} color={color}  style={{width: size, height: size}}/>
               )}
               label="Record Summary"
