@@ -538,6 +538,7 @@ const CaseForm = ({ route, navigation }) => {
               <Picker.Item value="9" label="HIV/AIDS" />
               <Picker.Item value="10" label="Food/ medicine allergies" />
               <Picker.Item value="11" label="Other medical conditions/ allergies" />
+              <Picker.Item value="12" label="Covid" />
             </Picker>
           </View>
 

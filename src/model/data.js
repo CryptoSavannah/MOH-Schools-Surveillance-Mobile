@@ -139,7 +139,9 @@ export const fetchChronicConditions = async () => {
   {"id":8, "condition_name":"Diabetes"},
   {"id":9, "condition_name":"HIV/AIDS"},
   {"id":10, "condition_name":"Food/ medicine allergies"},
-  {"id":11, "condition_name":"Other medical conditions/ allergies"}]};
+  {"id":11, "condition_name":"Other medical conditions/ allergies"},
+  {"id":12, "condition_name":"Covid"},
+]};
 };
 
 export const fetchConditions = async () => {
