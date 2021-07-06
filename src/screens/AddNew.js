@@ -22,7 +22,7 @@ const AddNew = ({ route, navigation }) => {
   const [userToken, setUserToken] = useState(null);
   const [center_no, setCenter_no] = useState('');
   const [patient_id, setPatientID] = useState(null);
-  
+
   const [fname, setFName] = useState('');
   const [lname, setLName] = useState('');
   const [gender, setGender] = useState('');
@@ -30,6 +30,8 @@ const AddNew = ({ route, navigation }) => {
   const [idNum, setIDNum] = useState('');
   const [selectedImmunizationStatus, setSelectedImmunizationStatus] = useState('');
   const [selectedDisability, setSelectedDisability] = useState('');
+  const [selectedIllness, setSelectedIllness] = useState('');
+  const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
 
   const { nin } = route.params ?? {};
   const { fnameR } = route.params ?? {};
@@ -54,7 +56,7 @@ const AddNew = ({ route, navigation }) => {
     }
     if (typeof immunizationStatusR !== 'undefined') {
       setImmunizationStatus(immunizationStatusR)
-    }if (typeof disabilityR !== 'undefined') {
+    } if (typeof disabilityR !== 'undefined') {
       setDisability(disabilityR)
     }
     if (typeof nin !== 'undefined') {
@@ -251,36 +253,36 @@ const AddNew = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <View style={{ alignSelf: "center" }}>
-          <Text style={{ paddingHorizontal: 20, fontWeight: "bold" }}>
+        <View style={{position: 'absolute', top: '-5%', alignSelf: 'center'}}>
+          <Text style={{ paddingVertical: 20, fontWeight: "bold" }}>
             {"Enter The Patient's Details:".toUpperCase()}
-          </Text></View>
+          </Text>
+          {/* <Divider style={{ marginVertical: 5 }} /> */}
+        </View>
 
-        <Divider style={{ marginVertical: 5 }} />
-
-        <ScrollView>
-          <View style={styles.action}>
-            <TextInput style={{ fontSize: 16, width: '100%' }} label="First name" placeholder="First name" onChangeText={(val) => { setFName(val) }}
+        <ScrollView style={{paddingTop:20}}>
+          <View style={[styles.action, {paddingTop: 3}]}>
+            <TextInput style={{ fontSize: 18, width: '100%' }} label="First name" placeholder="First name" onChangeText={(val) => { setFName(val) }}
               value={fname} />
           </View>
-          <View style={styles.action}>
-            <TextInput style={{ fontSize: 16, width: '100%' }} label="Last name" placeholder="Last name" onChangeText={(val) => { setLName(val); }}
+          <View style={[styles.action, {paddingTop: 3}]}>
+            <TextInput style={{ fontSize: 18, width: '100%' }} label="Last name" placeholder="Last name" onChangeText={(val) => { setLName(val); }}
               value={lname} />
           </View>
-          <View style={[styles.view, { paddingTop: 20, paddingBottom: 5 }]}>
-            <Text style={{ fontSize: 16, color: '#808080', marginRight: '2%' }}>Gender : </Text>
+          <View style={[styles.view, { paddingTop: 10, paddingBottom: 3 }]}>
+            <Text style={{ fontSize: 18, color: '#808080', marginRight: '2%' }}>Gender : </Text>
             <TouchableOpacity onPress={() => setGender('M')} style={[styles.view, { paddingHorizontal: "4%" }]}>
-              <Text style={{ fontSize: 15.5 }}>Male</Text>
+              <Text style={{ fontSize: 17 }}>Male</Text>
               <RadioButton value="M" status={gender === 'M' ? 'checked' : 'unchecked'} color="purple" onPress={() => setGender('M')} />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setGender('F')} style={[styles.view, { paddingHorizontal: "4%" }]}>
-              <Text style={{ fontSize: 15.5 }}>Female</Text>
+              <Text style={{ fontSize: 17 }}>Female</Text>
               <RadioButton value="F" color="purple" status={gender === 'F' ? 'checked' : 'unchecked'} onPress={() => setGender('F')} />
             </TouchableOpacity>
           </View>
 
-          <View style={styles.action}>
-            <TextInput style={{ fontSize: 16, width: '100%' }} onFocus={showDatePicker} onKeyPress={showDatePicker} label="Date of Birth" placeholder="Enter Date of Birth"
+          <View style={[styles.action, {}]}>
+            <TextInput style={{ fontSize: 18, width: '100%' }} onFocus={showDatePicker} onKeyPress={showDatePicker} label="Date of Birth" placeholder="Enter Date of Birth"
               value={dob == '' ? '' : `Date of Birth:  ${dob}`} showSoftInputOnFocus={false} />
           </View>
           <DateTimePickerModal
@@ -289,10 +291,10 @@ const AddNew = ({ route, navigation }) => {
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
           />
-          <View style={styles.action}>
-            <TextInput style={{ fontSize: 16, width: '100%' }} label="NIN" placeholder="NIN" onChangeText={(val) => setIDNum(val)} value={idNum} />
+          <View style={[styles.action, {}]}>
+            <TextInput style={{ fontSize: 18, width: '100%', paddingTop: 0 }} label="NIN" placeholder="NIN" onChangeText={(val) => setIDNum(val)} value={idNum} />
           </View>
-          <View style={[styles.action2, { height: 50, marginVertical: 10, width: '100%', alignSelf: 'center' }]} >
+          <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
             <Picker style={{
               color: selectedImmunizationStatus === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
               transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
@@ -304,7 +306,7 @@ const AddNew = ({ route, navigation }) => {
               <Picker.Item value="N" label="Not Immunized" />
             </Picker>
           </View>
-          <View style={[styles.action2, { height: 50, marginVertical: 10, width: '100%', alignSelf: 'center' }]} >
+          <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
             <Picker style={{
               color: selectedDisability === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
               transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
@@ -325,9 +327,43 @@ const AddNew = ({ route, navigation }) => {
               <Picker.Item value="11" label="Emotionally impared" />
             </Picker>
           </View>
+
+          <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedIllness === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }} selectedValue={selectedIllness}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedIllness(itemValue);
+              }} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value="" label="Chronic medical condition/allergies:" />
+              {/* {conditions.map(x => {
+                <Picker.Item value={x.id} label={x.name} key={x.id}/>
+              })
+              } */}
+              <Picker.Item value="1" label="Asthma" />
+              <Picker.Item value="2" label="Sickle cell disease" />
+              <Picker.Item value="3" label="TB on treatment" />
+              <Picker.Item value="4" label="Cancer" />
+              <Picker.Item value="5" label="Epilepsy" />
+              <Picker.Item value="6" label="Chronic / congenital heart disease" />
+              <Picker.Item value="7" label="Mental disorder" />
+              <Picker.Item value="8" label="Diabetes" />
+              <Picker.Item value="9" label="HIV/AIDS" />
+              <Picker.Item value="10" label="Food/ medicine allergies" />
+              <Picker.Item value="11" label="Other medical conditions/ allergies" />
+              <Picker.Item value="12" label="Covid" />
+            </Picker>
+          </View>
+
+          {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '100%', alignSelf: 'center' ,paddingTop: 3}]}>
+            <TextInput style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
+              onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
+          </View> : null}
+
           <View style={{
             flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5,
-            paddingTop: 30, marginBottom: 10
+            paddingTop: 25, marginBottom: 10
           }}>
             <View style={{ width: 80, marginBottom: 10 }}>
               <Button rounded
@@ -370,7 +406,7 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
-    paddingBottom: 10,
+    paddingBottom: 2,
   },
   action2: {
     paddingTop: 5,

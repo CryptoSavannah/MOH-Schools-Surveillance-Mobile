@@ -14,6 +14,7 @@ import {
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Iconf from 'react-native-vector-icons/FontAwesome';
+import Iconi from 'react-native-vector-icons/Ionicons';
 
 import { AuthContext } from '../components/context';
 import logo from '../assets/logo.png';
@@ -65,7 +66,7 @@ export function DrawerContent(props) {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                <Image source={aggregation} color={color}  style={{width: size, height: size}}/>
+                <Image source={aggregation} color={color} style={{ width: size, height: size }} />
               )}
               label="Record Summary"
               onPress={() => {
@@ -83,6 +84,20 @@ export function DrawerContent(props) {
               label="Enter Case"
               onPress={() => {
                 props.navigation.navigate('NewCase')
+              }}
+            />
+
+            <DrawerItem
+              icon={({ color, size }) => (
+                <Iconi
+                  name="ios-person-add-outline"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="New Patient"
+              onPress={() => {
+                props.navigation.navigate('AddNew')
               }}
             />
 
