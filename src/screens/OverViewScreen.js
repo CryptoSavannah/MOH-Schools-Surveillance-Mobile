@@ -78,7 +78,7 @@ const OverViewScreen = ({ route, navigation }) => {
 
     AsyncStorage.getItem('case_stats')
       .then(the_case_stats => {
-        if (the_case_stats !== null) {
+        if (the_case_stats !== null && !isNaN(the_case_stats)) {
           setCase_Stats(the_case_stats);
         }
       })
@@ -86,13 +86,13 @@ const OverViewScreen = ({ route, navigation }) => {
 
       AsyncStorage.getItem('summaries_stats')
       .then(the_summaries_stats => {
-        if (the_summaries_stats !== null) {
+        if (the_summaries_stats !== null && !isNaN(the_summaries_stats)) {
           setSummaries_Stats(the_summaries_stats);
         }
       })
       // .catch(err => console.log(`summaries_stats error just: `, err));
 
-
+      console.log('case_stats: ', case_stats)
     if (userToken === '') {
 
     } else {
