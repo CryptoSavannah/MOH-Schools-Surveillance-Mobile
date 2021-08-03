@@ -495,7 +495,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   floatingActionButton: {
-    backgroundColor: 'orange',
+    backgroundColor: 'rgba(231,76,60,1)',
     width: 55,
     height: 55,
     position: 'absolute',

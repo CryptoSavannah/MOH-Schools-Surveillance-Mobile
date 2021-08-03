@@ -114,7 +114,7 @@ export default FilterScreen = ({ navigation }) => {
                     rounded
                     block
                     style={styles.btn}
-                    color="#FFB236" title="Load" onPress={() => navigation.navigate("Home",{
+                    color="rgba(231,76,60,1)" title="Load" onPress={() => navigation.navigate("Home",{
                         fromDate : fromDate,
                         toDate : toDate
                     })}

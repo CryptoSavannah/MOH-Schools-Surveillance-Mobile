@@ -1,6 +1,7 @@
 import {StyleSheet, View} from 'react-native';
 import {Button, Input, Text} from '@99xt/first-born';
 import React from 'react';
+import { colors } from '../constants/theme';
 
 const PrevButton = ({goToPrev}) => {
 
@@ -11,8 +12,8 @@ const PrevButton = ({goToPrev}) => {
                     rounded
                     block
                     // style={styles.btn}
-                    color="#F39C12" title="Prev" onPress={() => goToPrev()}>
-                    {/*color="#F39C12" title="Next" onPress={() => wizard.current.next()}>*/}
+                    color={colors.caption} title="Prev" onPress={() => goToPrev()}>
+                    {/*color="rgba(231,76,60,1)" title="Next" onPress={() => wizard.current.next()}>*/}
                     <Text>Back</Text>
                 </Button>
             </View>

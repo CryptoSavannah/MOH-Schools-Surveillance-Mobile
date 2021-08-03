@@ -257,7 +257,6 @@ const AddNew = ({ route, navigation }) => {
           <Text style={{ paddingVertical: 20, fontWeight: "bold" }}>
             {"Enter The Patient's Details:".toUpperCase()}
           </Text>
-          {/* <Divider style={{ marginVertical: 5 }} /> */}
         </View>
 
         <ScrollView style={{paddingTop:20}}>
@@ -358,7 +357,7 @@ const AddNew = ({ route, navigation }) => {
 
           {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '100%', alignSelf: 'center' ,paddingTop: 3}]}>
             <TextInput style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
-              onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
+              onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="text" />
           </View> : null}
 
           <View style={{
@@ -369,7 +368,7 @@ const AddNew = ({ route, navigation }) => {
               <Button rounded
                 block
                 style={styles.btn}
-                color="red" title="Cancel" onPress={() => { cancel() }} />
+                color="grey" title="Cancel" onPress={() => { cancel() }} />
 
             </View>
             <View style={{ width: 80, marginBottom: 10 }}>
@@ -377,7 +376,7 @@ const AddNew = ({ route, navigation }) => {
                 rounded
                 block
                 style={styles.btn}
-                color="#FFB236"
+                color="rgba(231,76,60,1)"
                 onPress={() => { savePatient() }}
               >
               </Button>

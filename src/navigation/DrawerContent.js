@@ -29,7 +29,7 @@ export function DrawerContent(props) {
   const { signOut, toggleTheme } = React.useContext(AuthContext);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#eec971' }}>
+    <View style={{ flex: 1, backgroundColor: '#fbfafa' }}>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
           <Drawer.Section style={styles.drawerSection}>
@@ -75,13 +75,13 @@ export function DrawerContent(props) {
             />
             <DrawerItem
               icon={({ color, size }) => (
-                <Icon
-                  name="folder-outline"
+                <Iconi
+                  name="ios-folder-open-outline"
                   color={color}
                   size={size}
                 />
               )}
-              label="Enter Case"
+              label="+ Covid Case"
               onPress={() => {
                 props.navigation.navigate('NewCase')
               }}
@@ -132,7 +132,7 @@ export function DrawerContent(props) {
           )}
           label="School"
           onPress={() => {
-            props.navigation.navigate('School')
+            props.navigation.navigate('Profile')
           }}
         />
         <DrawerItem
