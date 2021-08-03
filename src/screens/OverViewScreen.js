@@ -33,6 +33,10 @@ import SurveyCard from '../components/SurveyCard';
 import * as Animatable from 'react-native-animatable';
 import { fetchPatients, fetchConditions } from '../model/data';
 import { Card, Divider } from 'react-native-elements';
+import { Cache } from "react-native-cache";
+import ActionButton from 'react-native-action-button';
+import Iconf from 'react-native-vector-icons/Ionicons';
+import aggregation from '../assets/aggregation2.png';
 
 const OverViewScreen = ({ route, navigation }) => {
   const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -82,17 +86,17 @@ const OverViewScreen = ({ route, navigation }) => {
           setCase_Stats(the_case_stats);
         }
       })
-      // .catch(err => console.log(`case_stats error just: `, err));
+    // .catch(err => console.log(`case_stats error just: `, err));
 
-      AsyncStorage.getItem('summaries_stats')
+    AsyncStorage.getItem('summaries_stats')
       .then(the_summaries_stats => {
         if (the_summaries_stats !== null && !isNaN(the_summaries_stats)) {
           setSummaries_Stats(the_summaries_stats);
         }
       })
-      // .catch(err => console.log(`summaries_stats error just: `, err));
+    // .catch(err => console.log(`summaries_stats error just: `, err));
 
-      console.log('case_stats: ', case_stats)
+    console.log('case_stats: ', case_stats)
     if (userToken === '') {
 
     } else {
@@ -226,42 +230,21 @@ const OverViewScreen = ({ route, navigation }) => {
   return (
     <>
       <StatusBar backgroundColor='rgba(0,0,0,0.8)' barStyle="light-content" />
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={[styles.header, { position: 'relative', justifyContent: 'center' }]}>
-          {/* <Swiper
-            autoplay
-            showsPagination={false}
-          >
-            {banners.map(banner => (
-              <Image key={banner.id} source={banner.url} style={styles.banner} />
-            ))}
-          </Swiper> */}
           <View style={{ justifyContent: 'space-around', position: 'absolute', zIndex: 90, backgroundColor: 'rgba(0,0,0,0.8)', width: '100%', height: '100%', paddingTop: 10 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignSelf: 'center', paddingTop: 10, width: '80%' }}>
               <Iconm size={30} name="view-dashboard" color={'#fff'} />
               <Text style={{ fontSize: 20, fontWeight: '500', color: '#fff', paddingLeft: 10 }}>OverView</Text>
             </View>
-            {/* <Iconm
-              name="folder-outline"
-              color={'#fff'}
-              size={26}
-              style={{alignSelf: 'center', paddingBottom: 10}}
-            /> */}
             <Image source={morganisms} color={'#fff'} style={{ width: 100, height: 100, alignSelf: 'center', paddingBottom: 10 }} />
           </View>
         </View>
-
         <View style={[styles.footer, { backgroundColor: '#ebebeb', }]}>
           <SafeAreaView style={{ flex: 1 }}>
             <ScrollView>
               <Card containerStyle={styles.card}>
                 <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
-                  {/* <Iconm
-                    name="file-outline"
-                    color="#000"
-                    size={30}
-                    style={{ paddingRight: 15 }}
-                  /> */}
                   <Text style={{ fontSize: 30, paddingRight: 15 }}>{summaries_stats === '' ? 10 : `${summaries_stats}`}</Text>
                   <View style={{ width: '60%' }}>
                     <Text style={{ fontWeight: '400', fontSize: 18 }}>{`Summaries`}</Text>
@@ -270,15 +253,9 @@ const OverViewScreen = ({ route, navigation }) => {
               </Card>
               <Card containerStyle={styles.card}>
                 <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
-                  {/* <Iconm
-                    name="file-outline"
-                    color="#000"
-                    size={30}
-                    style={{ paddingRight: 15 }}
-                  /> */}
                   <Text style={{ fontSize: 30, paddingRight: 15 }}>{case_stats === '' ? 6 : `${case_stats}`}</Text>
                   <View style={{ width: '60%' }}>
-                    <Text style={{ fontWeight: '400', fontSize: 18 }}>{`Cases`}</Text>
+                    <Text style={{ fontWeight: '400', fontSize: 18 }}>{`Covid Cases`}</Text>
                     <Text style={{ color: 'grey' }}>{defaultDate}</Text></View>
                   <TouchableOpacity><Text style={[styles.notes, { alignSelf: 'center' }]}>{`View More`}</Text></TouchableOpacity></View>
               </Card>
@@ -292,19 +269,10 @@ const OverViewScreen = ({ route, navigation }) => {
               renderItem={({ item }) => {
                 return (
                   item.title === 'Recent Cases' ?
-                    // <Text>Rec C</Text>
-                    // <MenuCard
-                    //   menutab={item}
-                    //   // image={item.image}
-                    //   onOpen={() => openMenu(item.page)}
-                    //   navigation={navigation}
-                    // />
                     null
                     :
-                    // <Text>Rec P</Text>
                     <MenuCard2
                       menutab={item}
-                      // image={item.image}
                       onOpen={() => openMenu(item.page)}
                       navigation={navigation}
                     />
@@ -312,17 +280,33 @@ const OverViewScreen = ({ route, navigation }) => {
               }} />
           </SafeAreaView>
         </View>
-
-      </View>
-
-      <TouchableOpacity
-        style={styles.floatingActionButton}
-        onPress={() => { navigation.navigate('NewAggregate'); }}>
-        <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite">
-          <Icon name="plus-a" size={25} color={'#fff'} />
-        </Animatable.View>
-      </TouchableOpacity>
-
+        <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton.Item
+            buttonColor="#9b59b6"
+            title="+ Covid Case"
+            onPress={() => { navigation.navigate('NewCase'); }}>
+            <Iconf
+              name="md-folder-open"
+              style={styles.actionButtonIcon}
+            />
+          </ActionButton.Item>
+          <ActionButton.Item
+            buttonColor="#3498db"
+            title="Record Summary"
+            onPress={() => { navigation.navigate('NewAggregate'); }}>
+            <Image source={aggregation} style={{ width: 26, height: 26 }} />
+          </ActionButton.Item>
+          <ActionButton.Item
+            buttonColor="#1abc9c"
+            title="Add Patient"
+            onPress={() => { navigation.navigate('AddNew'); }}>
+            <Iconf
+              name="md-person-add"
+              style={styles.actionButtonIcon}
+            />
+          </ActionButton.Item>
+        </ActionButton>
+      </SafeAreaView>
     </>
   );
 };
@@ -334,69 +318,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  menu: {
-    flex: 1,
-    flexDirection: 'row',
-    marginTop: 0,
-  },
-  activityIndicatorContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  emptycontainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  banrarea: {
-    // flex: 1,
-    // flexDirection: 'row'
-  },
-  banner: {
-    flex: 1,
-    height: undefined,
-    width: undefined,
-  },
-  description: {
-    fontSize: 12,
-    color: 'gray',
-    padding: 5,
-  },
   header: {
     flex: 1,
     alignItems: 'center',
-  },
-  headerLeft: {
-    flex: 2,
-  },
-  headerRight: {
-    flex: 4,
-    paddingTop: 5,
-  },
-  logo: {
-    width: 80,
-    height: 80,
-  },
-  subtitle: {
-    fontWeight: 'bold',
-    fontSize: 15,
-    color: '#fff',
-  },
-  startText: {
-    color: 'white',
-  },
-  sector: {
-    fontSize: 15,
-    marginTop: 10,
-    fontWeight: 'bold',
-    color: '#000',
-    textTransform: 'capitalize',
-    // alignSelf: 'center'
-  },
-  notes: {
-    fontSize: 15,
-    color: '#99A3A4',
   },
   footer: {
     flex: 3,
@@ -405,102 +329,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingTop: 5,
   },
-  text_header: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 15,
-    textAlign: 'center',
-  },
-  balanceTxt: {
-    color: '#eec971',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  text_footer: {
-    color: '#05375a',
-    fontSize: 18,
-  },
-  action: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
-    paddingBottom: 5,
-  },
-  actionError: {
-    flexDirection: 'row',
-    marginTop: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
-    paddingBottom: 5,
-  },
-  textInput: {
-    flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
-    paddingLeft: 10,
-    color: '#05375a',
-  },
-  errorMsg: {
-    color: '#FF0000',
-    fontSize: 14,
-  },
-  button: {
-    alignItems: 'center',
-    color: '#01579B',
-    borderColor: '#fff',
-  },
-  signIn: {
-    width: '100%',
-    height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 10,
-    backgroundColor: '#fff',
-  },
-  textSign: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  btns: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20,
-  },
-  followButton: {
-    marginTop: 5,
-    height: 35,
-    width: 100,
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: '#dcdcdc',
-  },
-  followButtonText: {
-    color: '#dcdcdc',
-    fontSize: 15,
-  },
-  list: {
-    paddingHorizontal: 5,
-    // backgroundColor:"#fff",
-  },
-  listContainer: {
-    alignItems: 'center',
-  },
-  /******** card **************/
-  floatingActionButton: {
-    backgroundColor: 'orange',
-    width: 55,
-    height: 55,
-    position: 'absolute',
-    bottom: '25%',
-    right: 10,
-    borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 10
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+    zIndex: 999
   },
 });

@@ -437,7 +437,7 @@ const Case = ({ navigation }) => {
                 <Button rounded
                   block
                   style={styles.btn}
-                  color="#FFB236" title="Next" onPress={() => {
+                  color="rgba(231,76,60,1)" title="Next" onPress={() => {
                     if (pname === '' || idNum === '') {
                       alert('Enter paient Name or NIN');
                     }
@@ -468,7 +468,7 @@ const Case = ({ navigation }) => {
 
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignContent: "center" }}>
               <View style={{ width: 90 }}>
-                <ButtonF color="#FFB236"
+                <ButtonF color="rgba(231,76,60,1)"
                   outline transparent onPress={() => wizard.current.prev()} >
                   <IconF name="arrow-back"></IconF>
                   <TextF >{'BACK'}</TextF>
@@ -479,7 +479,7 @@ const Case = ({ navigation }) => {
                   rounded
                   block
                   style={styles.btn}
-                  color="#FFB236" title="Continue" onPress={() => wizard.current.next()}
+                  color="rgba(231,76,60,1)" title="Continue" onPress={() => wizard.current.next()}
                 >
                 </Button>
               </View>
@@ -494,7 +494,7 @@ const Case = ({ navigation }) => {
 
             <View style={{ flexDirection: "row" }}>
               <View style={{ width: "30%" }}>
-                <ButtonF color="#FFB236"
+                <ButtonF color="rgba(231,76,60,1)"
                   outline transparent onPress={() => wizard.current.prev()} >
                   <IconF name="arrow-back"></IconF>
                   {/* <TextF >{'BACK'}</TextF> */}
@@ -507,7 +507,7 @@ const Case = ({ navigation }) => {
                 </Text>
                 <Badge value={selectedConditions.length}
                   badgeStyle={{
-                    backgroundColor: "#FFB236",
+                    backgroundColor: "rgba(231,76,60,1)",
                     borderRadius: 9,
                     height: 22,
                     minWidth: 0,
@@ -588,7 +588,7 @@ const Case = ({ navigation }) => {
                 <Button rounded
                   block
                   style={styles.btn}
-                  color="red" title="Cancel" onPress={() => { cancel() }} />
+                  color="grey" title="Cancel" onPress={() => { cancel() }} />
 
               </View>
               <View style={{ width: 80 }}>
@@ -596,7 +596,7 @@ const Case = ({ navigation }) => {
                   rounded
                   block
                   style={styles.btn}
-                  color="#FFB236"
+                  color="rgba(231,76,60,1)"
                   onPress={() => { saveCase() }}
                 >
                 </Button>

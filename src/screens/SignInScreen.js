@@ -210,7 +210,7 @@ export default SignInScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0ebe5',
+    backgroundColor: '#fbfafa',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '80%',
-    backgroundColor: '#FFB236',
+    backgroundColor: 'rgba(231,76,60,1)',
     justifyContent: 'center',
     borderRadius: 50,
     padding: 10,

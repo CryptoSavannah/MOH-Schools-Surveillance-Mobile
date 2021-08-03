@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         padding: 5
     },
     startBtn: {
-        backgroundColor: "#FFB236",
+        backgroundColor: "rgba(231,76,60,1)",
         borderRadius: 50,
         padding: 10,
         width: "50%",

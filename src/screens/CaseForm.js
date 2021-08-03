@@ -514,34 +514,6 @@ const CaseForm = ({ route, navigation }) => {
       content:
         <View style={{ padding: 10, margin: 10, height: '95%', }}>
 
-          <View style={[styles.action2, { height: 50, width: '100%', alignSelf: 'center' }]} >
-            <Picker style={{
-              color: selectedIllness === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
-              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
-            }} selectedValue={selectedIllness}
-              onValueChange={(itemValue, itemIndex) => {
-                setSelectedIllness(itemValue);
-              }} itemStyle={{ fontSize: 18 }} >
-              <Picker.Item value="" label="Chronic medical condition/allergies:" />
-              {/* {conditions.map(x => {
-                <Picker.Item value={x.id} label={x.name} key={x.id}/>
-              })
-              } */}
-              <Picker.Item value="1" label="Asthma" />
-              <Picker.Item value="2" label="Sickle cell disease" />
-              <Picker.Item value="3" label="TB on treatment" />
-              <Picker.Item value="4" label="Cancer" />
-              <Picker.Item value="5" label="Epilepsy" />
-              <Picker.Item value="6" label="Chronic / congenital heart disease" />
-              <Picker.Item value="7" label="Mental disorder" />
-              <Picker.Item value="8" label="Diabetes" />
-              <Picker.Item value="9" label="HIV/AIDS" />
-              <Picker.Item value="10" label="Food/ medicine allergies" />
-              <Picker.Item value="11" label="Other medical conditions/ allergies" />
-              <Picker.Item value="12" label="Covid" />
-            </Picker>
-          </View>
-
           {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
             <TextInput style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
               onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
@@ -549,7 +521,7 @@ const CaseForm = ({ route, navigation }) => {
 
           {selectedConditions.length >= 5 ?
             <Animatable.View animation="pulse" easing="ease-out" iterationCount="infinite"
-              style={{ position: 'absolute', right: 1, top: '30%', zIndex: 999 }}>
+              style={{ position: 'absolute', right: 1, top: '10%', zIndex: 999 }}>
               <IconC name="long-arrow-right" size={25} color={'#1A5276'} />
             </Animatable.View> :
             <View style={{ paddingTop: 20, paddingBottom: selectedConditions.length > 0 ? 0 : 10 }}>
@@ -637,8 +609,11 @@ const CaseForm = ({ route, navigation }) => {
       content:
         <View style={[styles.content, { paddingTop: 0 }]}>
           <View style={{ alignSelf: 'center', paddingVertical: 40 }}>
-            <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#fff', backgroundColor: colors.caption, borderRadius: 20}]}>
+            {/* <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#fff', backgroundColor: colors.caption, borderRadius: 20}]}>
               Preview
+            </Text> */}
+            <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#030303'}]}>
+              PREVIEW
             </Text>
           </View>
 
@@ -648,13 +623,13 @@ const CaseForm = ({ route, navigation }) => {
             </Text>
           </View>
 
-          <View style={[styles.action, { paddingVertical: 8 }]}>
+          {/* <View style={[styles.action, { paddingVertical: 8 }]}>
             <Text style={styles.textSize}>
               {`Medical Condition: ${selectedIllnessName}`}
             </Text>
-          </View>
+          </View> */}
 
-          <View style={[styles.action, { paddingVertical: 8 }]}>
+          <View style={[styles.action, { paddingVertical: 8, maxHeight: '60%' }]}>
             <Text style={[styles.textSize, { marginBottom: 5 }]}>
               {`Symptoms (${selectedConditions.length}):`}
             </Text>
@@ -672,9 +647,7 @@ const CaseForm = ({ route, navigation }) => {
 
           <View style={{
             flexDirection: 'row',
-            marginVertical: 10,
             justifyContent: 'space-between',
-            paddingTop: 10,
             alignContent: 'center',
           }}>
             <PrevButton goToPrev={goToPrev} />
