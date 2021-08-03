@@ -31,7 +31,7 @@ export default NextButton;
 
 const styles = StyleSheet.create({
     action: {},
-    activeBtn: {backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 20
+    activeBtn: {backgroundColor: "rgba(231,76,60,1)", alignItems: "center", padding: 10, borderRadius: 20
     , elevation:5},
     inActiveBtn: {backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 20
     , elevation:5}

@@ -321,7 +321,7 @@ const AggregateForm = ({ route, navigation }) => {
               <Button rounded
                 block
                 style={styles.btn}
-                color="red" title="Cancel" onPress={() => { cancel() }} />
+                color="grey" title="Cancel" onPress={() => { cancel() }} />
 
             </View>
             <View style={{ width: 80, marginBottom: 10 }}>
@@ -329,14 +329,14 @@ const AggregateForm = ({ route, navigation }) => {
                 rounded
                 block
                 style={styles.btn}
-                color="#FFB236"
+                color="rgba(231,76,60,1)"
                 onPress={() => { onSubmit() }}
               >
               </Button>
                 :
                 <TouchableOpacity
-                  style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "#FFB236" }]}
-                  underlayColor='#FFB236'
+                  style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "rgba(231,76,60,1)" }]}
+                  underlayColor='rgba(231,76,60,1)'
                 >
                   <ActivityIndicator animating={isLoading} color="#fff" />
                 </TouchableOpacity>}

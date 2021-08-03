@@ -19,7 +19,7 @@ var servConditions = {
   "status": 200, "data": [
     { "condition_id": 2, "condition": "headache", "date_added": "2020-10-27T00:55:53.746Z" },
     { "condition_id": 3, "condition": "fever", "date_added": "2020-10-27T00:56:05.479Z" },
-    { "condition_id": 4, "condition": "dysentry", "date_added": "2020-10-27T01:48:22.268Z" },
+    { "condition_id": 4, "condition": "diarrhea", "date_added": "2020-10-27T01:48:22.268Z" },
     { "condition_id": 5, "condition": "abdonimal pain", "date_added": "2020-10-27T00:55:53.746Z" },
     { "condition_id": 6, "condition": "cough", "date_added": "2020-10-27T00:56:05.479Z" },
     { "condition_id": 7, "condition": "flue", "date_added": "2020-10-27T01:48:22.268Z" },
@@ -28,7 +28,8 @@ var servConditions = {
     { "condition_id": 14, "condition": "chest pain", "date_added": "2020-10-27T01:48:22.268Z" },
     { "condition_id": 15, "condition": "muscle pain", "date_added": "2020-10-27T00:55:53.746Z" },
     { "condition_id": 16, "condition": "drousiness", "date_added": "2020-10-27T00:56:05.479Z" },
-    { "condition_id": 17, "condition": "forgetfullness", "date_added": "2020-10-27T01:48:22.268Z" }
+    { "condition_id": 17, "condition": "loss of taste", "date_added": "2020-10-27T01:48:22.268Z" },
+    { "condition_id": 18, "condition": "forgetfullness", "date_added": "2020-10-27T01:48:22.268Z" }
   ]
 }
 

@@ -39,7 +39,8 @@ const Patient = (props) => {
           <Text style={styles.title}>{name}</Text>
           <Text style={styles.sector}>{nin}</Text>
           <Text style={styles.notes}>{gender === 'F' ? 'Female':'Male'}</Text>
-          <Text style={styles.notes}>{`${getAge(dob)}`}</Text>
+          <Text style={styles.notes}>{dob}</Text>
+          {/* <Text style={styles.notes}>{`${getAge(dob)}`}</Text> */}
 
           </View>
       </View>
