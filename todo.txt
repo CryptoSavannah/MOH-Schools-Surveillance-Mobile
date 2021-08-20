@@ -3,3 +3,5 @@ Aug 2, 2021
 Change color to red
 Provide menu for covid reporting = multimenu on the floating action
 Dashboard - split cases card into covid and cases labels
+
+git commit -a -m "Added homescreen menu, Changed color theme n cases flow, Fixed Age error, 
