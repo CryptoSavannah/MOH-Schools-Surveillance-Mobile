@@ -55,7 +55,7 @@
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^8.1.0",
     "react-native-wizard": "^2.1.0",
-    "realm": "^10.4.1"
+    "realm": "^10.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",
