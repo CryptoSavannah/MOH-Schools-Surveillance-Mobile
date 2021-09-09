@@ -16,6 +16,9 @@ import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
 import { TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
+import realm, {
+  addPatient
+} from "../database/database";
 
 const AddNew = ({ route, navigation }) => {
 
@@ -141,7 +144,7 @@ const AddNew = ({ route, navigation }) => {
     return string.split(' ').join('');
   };
 
-  const savePatient = () => {
+  const savePatient = async() => {
 
     // if (isNINAvailable) {
     //   data.isValidNIN = !(removeSpaces(idNum) === "");
@@ -195,6 +198,28 @@ const AddNew = ({ route, navigation }) => {
             },
             data: data
           };
+
+          addPatient(fname, lname)
+          // try {
+          //   // Open up the database so we can write to it.
+          //   const realm = await Realm.open({ schema: [PatientSchema] });
+          //   realm.write(() => {
+          //     var ID = realm.objects('Patient').length + 1;
+          //     // Now it's time to add the patient to the database.
+          //     realm.create('Patient', {
+          //       pat_id: ID,
+          //       pat_first_name: fname,
+          //       pat_last_name: lname,
+          //       pat_gender: gender,
+          //       pat_dob: dob,
+          //       pat_nin: nin,
+          //       pat_nin_hash: nin_hash
+          //     });
+          //   });
+          //   console.log('Patient added!');
+          // } catch (err) {
+          //   console.warn(err);
+          // }
 
           // if (userToken === null) {
           //   alert("Login to continue");
@@ -253,18 +278,18 @@ const AddNew = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <View style={{position: 'absolute', top: '-5%', alignSelf: 'center'}}>
+        <View style={{ position: 'absolute', top: '-5%', alignSelf: 'center' }}>
           <Text style={{ paddingVertical: 20, fontWeight: "bold" }}>
             {"Enter The Patient's Details:".toUpperCase()}
           </Text>
         </View>
 
-        <ScrollView style={{paddingTop:20}}>
-          <View style={[styles.action, {paddingTop: 3}]}>
+        <ScrollView style={{ paddingTop: 20 }}>
+          <View style={[styles.action, { paddingTop: 3 }]}>
             <TextInput style={{ fontSize: 18, width: '100%' }} label="First name" placeholder="First name" onChangeText={(val) => { setFName(val) }}
               value={fname} />
           </View>
-          <View style={[styles.action, {paddingTop: 3}]}>
+          <View style={[styles.action, { paddingTop: 3 }]}>
             <TextInput style={{ fontSize: 18, width: '100%' }} label="Last name" placeholder="Last name" onChangeText={(val) => { setLName(val); }}
               value={lname} />
           </View>
@@ -355,7 +380,7 @@ const AddNew = ({ route, navigation }) => {
             </Picker>
           </View>
 
-          {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '100%', alignSelf: 'center' ,paddingTop: 3}]}>
+          {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '100%', alignSelf: 'center', paddingTop: 3 }]}>
             <TextInput style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
               onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="text" />
           </View> : null}

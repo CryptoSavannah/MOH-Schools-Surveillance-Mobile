@@ -12,31 +12,20 @@ import {
   SafeAreaView,
   StatusBar
 } from 'react-native';
-import { useTheme } from '@react-navigation/native';
-import { Button as ButtonF, Icon as IconF, Text as TextF } from "@99xt/first-born";
-import Block from "../components/Block";
-// import Card from "../components/Card";
-import Icon from "react-native-vector-icons/Fontisto";
 import Iconm from "react-native-vector-icons/MaterialCommunityIcons";
 import morganisms from '../assets/morganisms.png';
-import * as theme from '../constants/theme';
-import {
-  LineChart
-} from "react-native-chart-kit";
 import axios from "axios";
 import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
-import Swiper from 'react-native-swiper';
-import MenuCard from '../components/MenuCard';
 import MenuCard2 from '../components/MenuCard2';
-import SurveyCard from '../components/SurveyCard';
-import * as Animatable from 'react-native-animatable';
 import { fetchPatients, fetchConditions } from '../model/data';
-import { Card, Divider } from 'react-native-elements';
-import { Cache } from "react-native-cache";
+import { Card } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';
 import Iconf from 'react-native-vector-icons/Ionicons';
 import aggregation from '../assets/aggregation2.png';
+import realm, {
+  getAllPatients
+} from "../database/database";
 
 const OverViewScreen = ({ route, navigation }) => {
   const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -51,6 +40,7 @@ const OverViewScreen = ({ route, navigation }) => {
   const [defaultDate, setDefaultDate] = useState('');
 
   const [patients, setPatients] = useState([]);
+  // const [patients, setPatients] = useState(getAllPatients());
   const [conditions, setConditions] = useState([]);
   const [data, setData] = useState([]);
 
@@ -148,84 +138,9 @@ const OverViewScreen = ({ route, navigation }) => {
       { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: patients, length: patients.length },
     ];
 
-    // const menulist = [
-    //   { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen' },
-    //   { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen' },
-    // ];
-
     setData(menulist)
 
-    // makeRemoteRequest()
-
-    // const source = axios.CancelToken.source()
-    // setUrl(`https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`);
-
-
-    // let mounted = true;
-
-    // const loadData = async () => {
-    //   const response = await axios.get(url)
-
-    //     if (mounted && url !== '') {
-    //       console.log(response.results)
-    //       setData(page === 1 ? response.results : [...data, ...response.results])
-    //     }
-    // }
-    // loadData();
-
-
-    // const fetchUsers = async () => {
-    //   try {
-    //     await axios.get(url, {
-    //       cancelToken: source.token,
-    //     }).then(res => {
-    //       console.log(' first Res2: \n')
-    //       console.log(res.json().results)
-    //       res.json()})
-    //     .then(res => {
-    //       console.log(res)
-    //       setData(page === 1 ? res.results : [...data, ...res.results])
-    //       setError(res.error || null);
-    //       setIsLoading(false)
-    //       setFullData(res.results)
-    //     })
-    //     .catch(error => {
-    //       setError(false);
-    //       setIsLoading(false)
-    //     })
-    //     // ...
-    //   } catch (error) {
-    //     if (axios.isCancel(error)) {
-    //     } else {
-    //       throw error
-    //     }
-    //   }
-    // }
-
-    // fetchUsers()
-
-    // return () => {
-    //   source.cancel()
-    // }
   }, [])
-
-
-  const openMenu = (pageName) => {
-    // opening survey screen
-    // console.log('Navigating: '+pageName)
-    // navigation.navigate(pageName);
-    alert(pageName)
-  };
-
-  const slides = [
-    { id: 1, title: 'Option 1', url: require('../assets/logo.png') },
-    { id: 2, title: 'Option 2', url: require('../assets/logo.png') },
-    // { id: 3, title: 'Option 3', url: require('../assets/logo.png') },
-    // { id: 4, title: 'Option 4', url: require('../assets/logo.png') },
-    // { id: 5, title: 'Option 5', url: require('../assets/logo.png') },
-  ];
-
-  const [banners, setBanners] = useState(slides);
 
   return (
     <>
@@ -271,11 +186,22 @@ const OverViewScreen = ({ route, navigation }) => {
                   item.title === 'Recent Cases' ?
                     null
                     :
-                    <MenuCard2
-                      menutab={item}
-                      onOpen={() => openMenu(item.page)}
-                      navigation={navigation}
-                    />
+                    // <MenuCard2
+                    //   menutab={item}
+                    //   onOpen={() => openMenu(item.page)}
+                    //   navigation={navigation}
+                    // />
+                    <FlatList
+                      data={getAllPatients()}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text>{item.pat_first_name}</Text>
+                            <Text>{item.pat_last_name}</Text>
+                          </View>
+                        )
+                      }} />
                 );
               }} />
           </SafeAreaView>
