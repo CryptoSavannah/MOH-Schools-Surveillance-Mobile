@@ -228,7 +228,7 @@ const AggregateForm = ({ route, navigation }) => {
 
   return (
     <>
-      <StatusBar backgroundColor='rgba(0,0,0,0.8)' barStyle="light-content" />
+      <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
       <View style={{ alignSelf: 'stretch' }}>
         <ScrollView>
           <Text style={{ fontSize: 20, fontWeight: "bold", paddingTop: 20, left: 10, paddingBottom: 10 }}>
@@ -329,14 +329,14 @@ const AggregateForm = ({ route, navigation }) => {
                 rounded
                 block
                 style={styles.btn}
-                color="rgba(231,76,60,1)"
+                color="rgba(3, 136, 229, 1)"
                 onPress={() => { onSubmit() }}
               >
               </Button>
                 :
                 <TouchableOpacity
-                  style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "rgba(231,76,60,1)" }]}
-                  underlayColor='rgba(231,76,60,1)'
+                  style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "rgba(3, 136, 229, 1)" }]}
+                  underlayColor='rgba(3, 136, 229, 1)'
                 >
                   <ActivityIndicator animating={isLoading} color="#fff" />
                 </TouchableOpacity>}
