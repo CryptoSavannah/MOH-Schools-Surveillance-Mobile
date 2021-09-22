@@ -11,7 +11,10 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
     return (
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
+        <Drawer.Navigator drawerContentOptions={{
+            activeTintColor: '#e91e63',
+            inactiveTintColor: '#ffffff',
+          }} drawerContent={props => <DrawerContent {...props} />}>
             <Drawer.Screen name="HomeDrawer" component={HomeStackScreen}/>
                         {/* <Drawer.Screen name="PatientRecord" component={PatientRecord}/> */}
             {/* <Drawer.Screen name="Download" component={DownloadScreen}/> */}

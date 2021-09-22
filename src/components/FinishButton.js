@@ -6,7 +6,7 @@ const FinishButton = ({goToFinish}) => {
 
     return (
         <View style={{ alignItems: 'flex-end' }}>
-            <View style={{ width: 80, marginTop: 30 }}>
+            <View style={{ width: 80 }}>
                 <Button
                     rounded
                     block

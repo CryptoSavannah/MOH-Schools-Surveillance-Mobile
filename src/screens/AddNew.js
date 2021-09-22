@@ -401,7 +401,7 @@ const AddNew = ({ route, navigation }) => {
                 rounded
                 block
                 style={styles.btn}
-                color="rgba(231,76,60,1)"
+                color="rgba(3, 136, 229, 1)"
                 onPress={() => { savePatient() }}
               >
               </Button>

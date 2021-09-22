@@ -4,7 +4,6 @@ import {
     TouchableOpacity,
     Dimensions,
     StyleSheet,
-    StatusBar,
     Image,
 } from 'react-native';
 import {
@@ -55,7 +54,7 @@ const styles = StyleSheet.create({
         padding: 5
     },
     startBtn: {
-        backgroundColor: "rgba(231,76,60,1)",
+        backgroundColor: "rgba(3, 136, 229, 1)",
         borderRadius: 50,
         padding: 10,
         width: "50%",

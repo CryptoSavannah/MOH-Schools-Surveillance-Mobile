@@ -26,6 +26,7 @@ import aggregation from '../assets/aggregation2.png';
 import realm, {
   getAllPatients
 } from "../database/database";
+import { Picker } from '@react-native-picker/picker';
 
 const OverViewScreen = ({ route, navigation }) => {
   const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -43,6 +44,7 @@ const OverViewScreen = ({ route, navigation }) => {
   // const [patients, setPatients] = useState(getAllPatients());
   const [conditions, setConditions] = useState([]);
   const [data, setData] = useState([]);
+  const [selectedReport, setSelectedReport] = useState('');
 
   useEffect(() => {
     console.log('...starting...: ');
@@ -144,94 +146,40 @@ const OverViewScreen = ({ route, navigation }) => {
 
   return (
     <>
-      <StatusBar backgroundColor='rgba(0,0,0,0.8)' barStyle="light-content" />
-      <SafeAreaView style={styles.container}>
-        <View style={[styles.header, { position: 'relative', justifyContent: 'center' }]}>
-          <View style={{ justifyContent: 'space-around', position: 'absolute', zIndex: 90, backgroundColor: 'rgba(0,0,0,0.8)', width: '100%', height: '100%', paddingTop: 10 }}>
-            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', alignSelf: 'center', paddingTop: 10, width: '80%' }}>
-              <Iconm size={30} name="view-dashboard" color={'#fff'} />
-              <Text style={{ fontSize: 20, fontWeight: '500', color: '#fff', paddingLeft: 10 }}>OverView</Text>
-            </View>
-            <Image source={morganisms} color={'#fff'} style={{ width: 100, height: 100, alignSelf: 'center', paddingBottom: 10 }} />
+      <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
+      <SafeAreaView >
+        <ScrollView style={{backgroundColor: '#fff'}}>
+          <Text style={styles.headingStyle}>{"Surveillance Actions:"}</Text>
+          <View style={{ width: 120, marginBottom: 40 }}>
+            <Button
+              rounded
+              block
+              // style={styles.btn}
+              color="#4d505b" title="Covid" onPress={() => goToFinish()}>
+              <Text>0388E5</Text>
+            </Button>
           </View>
-        </View>
-        <View style={[styles.footer, { backgroundColor: '#ebebeb', }]}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <ScrollView>
-              <Card containerStyle={styles.card}>
-                <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 30, paddingRight: 15 }}>{summaries_stats === '' ? 10 : `${summaries_stats}`}</Text>
-                  <View style={{ width: '60%' }}>
-                    <Text style={{ fontWeight: '400', fontSize: 18 }}>{`Summaries`}</Text>
-                    <Text style={{ color: 'grey' }}>{defaultDate}</Text></View>
-                  <TouchableOpacity><Text style={[styles.notes, { alignSelf: 'center' }]}>{`View More`}</Text></TouchableOpacity></View>
-              </Card>
-              <Card containerStyle={styles.card}>
-                <View style={{ paddingHorizontal: 10, flexDirection: 'row' }}>
-                  <Text style={{ fontSize: 30, paddingRight: 15 }}>{case_stats === '' ? 6 : `${case_stats}`}</Text>
-                  <View style={{ width: '60%' }}>
-                    <Text style={{ fontWeight: '400', fontSize: 18 }}>{`Covid Cases`}</Text>
-                    <Text style={{ color: 'grey' }}>{defaultDate}</Text></View>
-                  <TouchableOpacity><Text style={[styles.notes, { alignSelf: 'center' }]}>{`View More`}</Text></TouchableOpacity></View>
-              </Card>
-            </ScrollView>
-            <FlatList
-              data={data}
-              numColumns={1}
-              keyExtractor={(item) => {
-                return item.id.toString();
-              }}
-              renderItem={({ item }) => {
-                return (
-                  item.title === 'Recent Cases' ?
-                    null
-                    :
-                    // <MenuCard2
-                    //   menutab={item}
-                    //   onOpen={() => openMenu(item.page)}
-                    //   navigation={navigation}
-                    // />
-                    <FlatList
-                      data={getAllPatients()}
-                      keyExtractor={(item, index) => index.toString()}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text>{item.pat_first_name}</Text>
-                            <Text>{item.pat_last_name}</Text>
-                          </View>
-                        )
-                      }} />
-                );
-              }} />
-          </SafeAreaView>
-        </View>
-        <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item
-            buttonColor="#9b59b6"
-            title="+ Covid Case"
-            onPress={() => { navigation.navigate('NewCase'); }}>
-            <Iconf
-              name="md-folder-open"
-              style={styles.actionButtonIcon}
-            />
-          </ActionButton.Item>
-          <ActionButton.Item
-            buttonColor="#3498db"
-            title="Record Summary"
-            onPress={() => { navigation.navigate('NewAggregate'); }}>
-            <Image source={aggregation} style={{ width: 26, height: 26 }} />
-          </ActionButton.Item>
-          <ActionButton.Item
-            buttonColor="#1abc9c"
-            title="Add Patient"
-            onPress={() => { navigation.navigate('AddNew'); }}>
-            <Iconf
-              name="md-person-add"
-              style={styles.actionButtonIcon}
-            />
-          </ActionButton.Item>
-        </ActionButton>
+
+          <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedReport === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }}
+              selectedValue={selectedReport}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedReport(itemValue);
+              }} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value="" label="Select Report" />
+              {/* {conditions.map(x => {
+                <Picker.Item value={x.id} label={x.name} key={x.id}/>
+              })
+              } */}
+              <Picker.Item value="1" label="WASH" />
+              <Picker.Item value="11" label="Registry" />
+              <Picker.Item value="12" label="Covid" />
+            </Picker>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     </>
   );
@@ -260,5 +208,20 @@ const styles = StyleSheet.create({
     height: 22,
     color: 'white',
     zIndex: 999
+  },
+  action2: {
+    paddingTop: 5,
+    borderBottomColor: "#dedede",
+    borderBottomWidth: 1,
+  },
+  card: {
+    flex: 1,
+    justifyContent: "space-around"
+  },
+  headingStyle: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginTop: 40,
+    marginBottom: 20
   },
 });
