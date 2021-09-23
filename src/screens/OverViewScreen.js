@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useEffect, Component, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import axios from "axios";
 import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import MenuCard2 from '../components/MenuCard2';
-import { fetchPatients, fetchConditions } from '../model/data';
+import { fetchReportList } from '../model/data';
 import { Card } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';
 import Iconf from 'react-native-vector-icons/Ionicons';
@@ -27,159 +27,200 @@ import realm, {
   getAllPatients
 } from "../database/database";
 import { Picker } from '@react-native-picker/picker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import NextButton from '../components/NextButton';
 
 const OverViewScreen = ({ route, navigation }) => {
-  const SCREEN_WIDTH = Dimensions.get("window").width;
-  const { fromDate } = route.params ?? {};
-  const { toDate } = route.params ?? {};
-  const [userToken, setUserToken] = useState('');
-  const [center_no, setCenter_no] = useState('');
-  const [school_id, setSchool_id] = useState('');
-  const [case_stats, setCase_Stats] = useState('');
-  const [summaries_stats, setSummaries_Stats] = useState('');
 
-  const [defaultDate, setDefaultDate] = useState('');
+  const [selectedReport, setSelectedReport] = useState(null);
+  const [reports, setReports] = useState([]);
+  const [cookie, setUserCookie] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
 
-  const [patients, setPatients] = useState([]);
-  // const [patients, setPatients] = useState(getAllPatients());
-  const [conditions, setConditions] = useState([]);
-  const [data, setData] = useState([]);
-  const [selectedReport, setSelectedReport] = useState('');
+  const showToDatePicker = () => {
+    setToDatePickerVisibility(true);
+  };
+
+  const hideToDatePicker = () => {
+    setToDatePickerVisibility(false);
+    setToDate('');
+  };
+
+  const handleToConfirm = (e) => {
+    hideToDatePicker();
+    var date = new Date(e);
+
+    if (isNaN(date.getTime())) {
+      setToDate('')
+    }
+    else {
+      //format date
+      setToDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate()))
+
+    }
+
+  };
+
+
+  const [fromDate, setFromDate] = useState('');
+
+  const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
+
+  const showFromDatePicker = () => {
+    setFromDatePickerVisibility(true);
+  };
+
+  const hideFromDatePicker = () => {
+    setFromDatePickerVisibility(false);
+    setFromDate('');
+  };
+
+  const handleFromConfirm = (e) => {
+    hideFromDatePicker();
+    var date = new Date(e);
+
+    if (isNaN(date.getTime())) {
+      setFromDate('')
+    }
+    else {
+      //format date
+      setFromDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate()))
+
+    }
+
+  };
 
   useEffect(() => {
-    console.log('...starting...: ');
-    var date = new Date()
-    setDefaultDate(date.getDate() + '/' + date.getMonth() + '/' + (date.getFullYear()))
-    if (typeof fromDate !== 'undefined') {
-      console.log("fromDate: " + fromDate)
-    }
+    // setSelectedReport('');
 
-    if (typeof toDate !== 'undefined') {
-      console.log("toDate: " + toDate)
-    }
+    getReportList();
+
     AsyncStorage.getItem('user')
       .then(user => {
         if (user === null) {
           // this.setState({loading: false, showLoginForm: true});
         } else {
           let usr = JSON.parse(user);
-          setUserToken(usr.token);
-          setCenter_no(usr.center_no);
-          setSchool_id(usr.school_id);
+          setUserCookie(usr.cookie);
           // fetchData();
-          console.log('fetching... ' + usr.school_id);
+          console.log('fetching... ' + usr.cookie);
         }
       })
       .catch(err => console.log(err));
 
-    AsyncStorage.getItem('case_stats')
-      .then(the_case_stats => {
-        if (the_case_stats !== null && !isNaN(the_case_stats)) {
-          setCase_Stats(the_case_stats);
-        }
-      })
-    // .catch(err => console.log(`case_stats error just: `, err));
+    // global.window.addEventListener('mousemove', () => {});
 
-    AsyncStorage.getItem('summaries_stats')
-      .then(the_summaries_stats => {
-        if (the_summaries_stats !== null && !isNaN(the_summaries_stats)) {
-          setSummaries_Stats(the_summaries_stats);
-        }
-      })
-    // .catch(err => console.log(`summaries_stats error just: `, err));
-
-    console.log('case_stats: ', case_stats)
-    if (userToken === '') {
-
-    } else {
-      // loadConditions();
-      // loadCases();
+    // returned function will be called on component unmount 
+    return () => {
+      // window.removeEventListener('mousemove', () => {})
+      // setSelectedReport('');
     }
-  }, [userToken, fromDate, toDate, summaries_stats, case_stats]);
 
+  }, []);
 
-  useEffect(() => {
+  const getReportList = async () => {
 
-    fetchPatients().then(res => {
-      // console.log(res)
-      let pats = [];
-
-      res.data.map(x => {
-        let date = new Date(x.dob);
-        pats.push({
-          id: x.patient_id,
-          nin: x.nin,
-          nin_hash: x.nin_hash,
-          name: x.fname + ' ' + x.lname,
-          dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
-          gender: x.gender
-        });
-      });
-
-      setPatients(pats);
-
+    let rprts = [];
+    axios({
+      url: "https://morph.cryptosavannah.com/site/admin/api.php",
+      method: 'post',
+      headers: { "Content-Type": "application/json" },
+      cookie: cookie,
+      data: {
+        "method": "getReports"
+      }
     })
-
-    fetchConditions().then(res => {
-      // console.log(res)
-      let conds = [];
-
-      res.data.map(x => {
-        conds.push({
-          id: x.condition_id,
-          name: x.condition,
-        });
+      .then(res => {
+        setReports(res.data.data);
+      })
+      .catch(function (error) {
+        console.log("SignIn Error caught: " + error);
+        alert('Failed to find data store: Try again', [
+          { text: 'Okay' }
+        ]);
+        setIsLoading(false);
       });
+  };
 
-      setConditions(conds)
-
+  const renderReportList = () => {
+    return reports.map((report) => {
+      return <Picker.item label={report.report_name} value={report} key={report.report_id} />
     })
-
-    const menulist = [
-      { id: 1, title: 'Recent Cases', color: '#FF4500', page: 'CasesScreen', items: conditions.slice(0, 5), length: conditions.length },
-      { id: 2, title: 'Recent Patients', color: '#FF4500', page: 'PatientsScreen', items: patients, length: patients.length },
-    ];
-
-    setData(menulist)
-
-  }, [])
+  }
 
   return (
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
-      <SafeAreaView >
-        <ScrollView style={{backgroundColor: '#fff'}}>
-          <Text style={styles.headingStyle}>{"Surveillance Actions:"}</Text>
-          <View style={{ width: 120, marginBottom: 40 }}>
-            <Button
-              rounded
-              block
-              // style={styles.btn}
-              color="#4d505b" title="Covid" onPress={() => goToFinish()}>
-              <Text>0388E5</Text>
-            </Button>
+      <SafeAreaView style={{ backgroundColor: '#ffffff', padding: 10, flex: 1, justifyContent: 'space-around' }}>
+        <View style={{ width: '80%', alignSelf: 'center' }}>
+          <View style={{ width: "100%", marginTop: 15 }}>
+            <TouchableOpacity
+              activeOpacity={.5}
+              onPress={() => navigation.navigate("CovidView")}
+              style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 20, borderRadius: 4, elevation: 3 }}
+            >
+              <Text style={{ color: "white", fontSize: 18 }}>COVID</Text>
+            </TouchableOpacity>
           </View>
+        </View>
 
-          <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
-            <Picker style={{
-              color: selectedReport === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
-              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
-            }}
-              selectedValue={selectedReport}
-              onValueChange={(itemValue, itemIndex) => {
-                setSelectedReport(itemValue);
-              }} itemStyle={{ fontSize: 18 }} >
-              <Picker.Item value="" label="Select Report" />
-              {/* {conditions.map(x => {
-                <Picker.Item value={x.id} label={x.name} key={x.id}/>
-              })
-              } */}
-              <Picker.Item value="1" label="WASH" />
-              <Picker.Item value="11" label="Registry" />
-              <Picker.Item value="12" label="Covid" />
-            </Picker>
+        <View style={{ flexDirection: 'row', justifyContent: "space-between", marginBottom: 10 }}>
+          <View style={{ width: '40%' }}>
+            <View style={styles.action}>
+              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="Date of Birth" placeholder="From Date:"
+                value={fromDate == '' ? '' : `From:  ${fromDate}`}
+                showSoftInputOnFocus={false} />
+            </View>
+            <DateTimePickerModal
+              isVisible={isFromDatePickerVisible}
+              mode="date"
+              onConfirm={handleFromConfirm}
+              onCancel={hideFromDatePicker}
+            />
           </View>
-        </ScrollView>
+          <View style={{ width: '40%' }}>
+            <View style={styles.action}>
+              <TextInput style={{ fontSize: 16 }}
+                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
+                value={toDate == '' ? '' : `To:  ${toDate}`}
+                showSoftInputOnFocus={false} />
+            </View>
+            <DateTimePickerModal
+              isVisible={isToDatePickerVisible}
+              mode="date"
+              onConfirm={handleToConfirm}
+              onCancel={hideToDatePicker}
+            />
+          </View>
+        </View>
+
+        <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
+          <Picker style={{
+            color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+            transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+          }}
+            selectedValue={selectedReport}
+            onValueChange={(itemValue, itemIndex) => {
+              setSelectedReport(itemValue)
+            }} itemStyle={{ fontSize: 18 }} >
+            <Picker.Item value={null} label="Select Report" />
+            {renderReportList()}
+          </Picker>
+        </View>
+
+        <View style={{ alignItems: 'flex-end' }}>
+          <View style={{ width: 80, marginTop: 15 }}>
+            <TouchableOpacity
+              activeOpacity={.5}
+              disabled={(selectedReport === null)}
+              onPress={() => navigation.navigate("NewAggregate", { report: selectedReport })}
+              style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
+            >
+              <Text style={{ color: "white" }}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </SafeAreaView>
     </>
   );
@@ -192,10 +233,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  header: {
-    flex: 1,
-    alignItems: 'center',
-  },
   footer: {
     flex: 3,
     backgroundColor: '#fff',
@@ -203,25 +240,21 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingTop: 5,
   },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-    zIndex: 999
-  },
   action2: {
     paddingTop: 5,
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
   },
-  card: {
-    flex: 1,
-    justifyContent: "space-around"
-  },
   headingStyle: {
     fontSize: 30,
     textAlign: 'center',
     marginTop: 40,
-    marginBottom: 20
+    marginBottom: 40
   },
+  action: {
+    borderBottomColor: "#dedede",
+    borderBottomWidth: 1,
+  },
+  activeBtn: { backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 },
+  inActiveBtn: { backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }
 });

@@ -295,6 +295,7 @@ const CaseForm = ({ route, navigation }) => {
 
   const onSubmit2 = handleSubmit((data) => {
     console.log(data);
+    setPName(data.firstName + " " + data.lastName)
     goToNext(true, '');
   })
 
@@ -345,8 +346,8 @@ const CaseForm = ({ route, navigation }) => {
     //clear fields, back to home
     // clearState();
     setCurrentStep(0);
-    navigation.navigate('Home');
-    // navigation.goBack();
+    // navigation.navigate('Home');
+    navigation.goBack();
   };
 
   const goToNext = (valid, error) => {
@@ -377,56 +378,27 @@ const CaseForm = ({ route, navigation }) => {
   const stepList = [
     {
       content:
-        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
-          <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
-            <Text style={styles.textSize}>
-              {"Select Report"}
-            </Text>
-          </View>
-          <NextButton goToNext={() => goToNext(true, '')} disable={false} />
-        </View>,
-    },
-    {
-      content:
         <View style={[styles.content]}>
-          <ScrollView >
-            <Text style={styles.headingStyle}>{"Covid Report"}</Text>
+          <ScrollView style={{ paddingTop: 15 }} >
             <FormBuilder
               control={control}
               setFocus={setFocus}
               formConfigArray={[
-                [
-                  {
-                    name: 'firstName',
-                    type: 'text',
-                    textInputProps: {
-                      label: 'First Name',
-                      left: <TextInput.Icon name={'account'} />,
-                    },
-                    rules: {
-                      required: {
-                        value: true,
-                        message: 'First name is required',
-                      },
-                    },
-                    flex: 1.5,
+                {
+                  name: 'patient',
+                  type: 'autocomplete',
+                  textInputProps: {
+                    label: 'Patient',
+                    left: <TextInput.Icon name={'account'} />,
                   },
-                  {
-                    name: 'lastName',
-                    type: 'text',
-                    textInputProps: {
-                      label: 'Last Name',
-                      left: <TextInput.Icon name={'account'} />,
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Patient is required',
                     },
-                    rules: {
-                      required: {
-                        value: true,
-                        message: 'Last name is required',
-                      },
-                    },
-                    flex: 1,
                   },
-                ],
+                  options: patients
+                },
                 {
                   name: 'email',
                   type: 'email',
@@ -545,158 +517,11 @@ const CaseForm = ({ route, navigation }) => {
                   type: 'custom',
                   JSX: TermsCheckBox,
                 },
-                {
-                  name: 'patient',
-                  type: 'autocomplete',
-                  textInputProps: {
-                    label: 'Patient',
-                    left: <TextInput.Icon name={'account'} />,
-                  },
-                  rules: {
-                    required: {
-                      value: true,
-                      message: 'Patient is required',
-                    },
-                  },
-                  options: patients
-                }
               ]}
             />
-
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignContent: 'center',
-              paddingBottom: 20
-            }}>
-              <PrevButton goToPrev={goToPrev} />
-
               <NextButton goToNext={onSubmit2} disable={false} />
-
-            </View>
           </ScrollView>
         </View>,
-    },
-    {
-      content:
-        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
-
-          <View style={[{ paddingTop: 0 }]}>
-            {searchFocused ?
-              <View style={{ borderWidth: 0.5, borderColor: '#ccc', borderRadius: 2, }}>
-                <TouchableOpacity style={{ padding: 10, position: 'absolute', right: 10, zIndex: 999 }} onPress={clearSearch}>
-                  <Icon name='close-a' size={20} color="#b3b3b3" style={{ alignSelf: 'center' }} />
-                </TouchableOpacity>
-                <Fragment >
-                  <SearchableDropdown
-                    ref={stdRef}
-                    onTextChange={text => {
-                      const items = selectedPatients.filter((sitem) => sitem.name.includes(text));
-                      // console.log('possible ', items.length)
-                    }}
-                    onItemSelect={(item) => {
-                      // console.log(item)
-                      var items = [];
-                      items.push(item);
-                      setSelectedPatients(selectedPatients => items);
-                      setIDNum(item.nin);
-                      setPName(item.name);
-                      setDob(item.dob)
-                      setGender(item.gender)
-                      // setImmunizationStatus(item.immunizationStatus)
-                      // setDisability(item.disability)
-                      showSearch()
-                    }}
-                    containerStyle={{ padding: 0 }}
-                    onRemoveItem={(item, index) => {
-                      const items = selectedPatients.filter((sitem) => sitem.patient_id !== item.patient_id);
-                      setSelectedPatients(selectedPatients => items);
-                    }}
-                    itemStyle={{
-                      padding: 10,
-                      marginTop: 2,
-                      backgroundColor: '#ddd',
-                      borderColor: '#bbb',
-                      borderWidth: 0.5,
-                      borderRadius: 2,
-                    }}
-                    itemTextStyle={{ color: '#222', fontSize: 16 }}
-                    itemsContainerStyle={{
-                    }}
-                    items={patients}
-                    resetValue={false}
-                    textInputProps={
-                      {
-                        placeholder: pname === '' ? "Search Name" : pname,
-                        underlineColorAndroid: "transparent",
-                        style: {
-                          padding: 8,
-                        },
-                        fontSize: 16
-                      }
-                    }
-                    textInputStyle={{
-                      color: '#000'
-                    }}
-                    listProps={
-                      {
-                        nestedScrollEnabled: true,
-                      }
-                    }
-                  />
-                </Fragment>
-              </View>
-              :
-              <View>
-                <View style={styles.action3}>
-                  <TextInputN style={{ width: '100%', fontSize: 16 }} onFocus={showSearch}
-                    onKeyPress={showSearch} label="Patient's Name"
-                    placeholder="Search Patient's Name"
-                    value={pname} />
-                </View>
-
-                {pname === '' ? <View style={{ alignItems: 'flex-end' }}>
-                  <View style={{ marginTop: 30 }}>
-                    <Button
-                      rounded
-                      block
-                      color="#1A5276" title="Add a Patient" onPress={() => createPatient()}>
-                    </Button>
-                  </View>
-                </View> :
-                  <View style={{ justifyContent: 'space-between', paddingVertical: 20 }}>
-                    <TouchableOpacity style={{
-                      alignSelf: 'flex-end', flexDirection: 'row',
-                      paddingVertical: 5, paddingHorizontal: 10, marginTop: 10, borderRadius: 5
-                    }} onPress={() => {
-                      // console.log('dob: ', dob)
-                      navigation.navigate("AddNew", {
-                        fnameR: pname.split(' ')[0],
-                        nin: idNum,
-                        lnameR: pname.split(' ')[1],
-                        dobR: dob,
-                        genderR: gender
-                      })
-                    }}>
-                      <Text style={{ color: "#1A5276", fontWeight: 'bold', textDecorationLine: 'underline', alignSelf: 'flex-end' }}>UPDATE</Text>
-                    </TouchableOpacity>
-                    <Patient name={pname} nin={idNum} gender={gender} dob={dob} />
-                  </View>
-                }
-                <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
-                  <PrevButton goToPrev={() => {
-                    pname === '' ? goToPrev() : setPName('')
-                  }} />
-                  {pname === '' || idNum === '' ?
-                    <NextButton goToNext={() => goToNext(false, 'Select Patient to continue')} />
-                    :
-                    <NextButton goToNext={() => goToNext(true, '')} />
-                  }
-                </View>
-              </View>
-            }
-          </View>
-        </View>
     },
     {
       content:
@@ -757,7 +582,6 @@ const CaseForm = ({ route, navigation }) => {
               itemTextStyle={{ color: '#222', fontSize: 16 }}
               itemsContainerStyle={{ maxHeight: "85%" }}
               items={conditions}
-              // chip={true}
               resetValue={false}
               textInputProps={
                 {
@@ -785,8 +609,6 @@ const CaseForm = ({ route, navigation }) => {
             <PrevButton goToPrev={goToPrev} />
             {selectedConditions.length === 0 ?
               <NextButton goToNext={() => goToNext(false, 'Select atleast one condition to continue.')} />
-              // <NextButton goToNext={() => goToNext(true, '')} />
-
               :
               <NextButton goToNext={() => goToNext(true, '')} />
             }
@@ -795,11 +617,8 @@ const CaseForm = ({ route, navigation }) => {
     },
     {
       content:
-        <View style={[styles.content, { paddingTop: 0 }]}>
+        <View style={[styles.content2, { paddingTop: 0 }]}>
           <View style={{ alignSelf: 'center', paddingVertical: 40 }}>
-            {/* <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#fff', backgroundColor: colors.caption, borderRadius: 20}]}>
-              Preview
-            </Text> */}
             <Text style={[styles.textSize, { paddingHorizontal: 10, paddingVertical: 5, color: '#030303' }]}>
               PREVIEW
             </Text>
@@ -810,13 +629,6 @@ const CaseForm = ({ route, navigation }) => {
               {`Name: ${pname}`}
             </Text>
           </View>
-
-          {/* <View style={[styles.action, { paddingVertical: 8 }]}>
-            <Text style={styles.textSize}>
-              {`Medical Condition: ${selectedIllnessName}`}
-            </Text>
-          </View> */}
-
           <View style={[styles.action, { paddingVertical: 8, maxHeight: '60%' }]}>
             <Text style={[styles.textSize, { marginBottom: 5 }]}>
               {`Symptoms (${selectedConditions.length}):`}
@@ -834,10 +646,9 @@ const CaseForm = ({ route, navigation }) => {
           </View>
 
           <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignContent: 'center',
-          }}>
+              flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5,
+              marginBottom: 10
+            }}>
             <PrevButton goToPrev={goToPrev} />
             {isLoading ?
               <LoadingButton isLoading={isLoading} />
@@ -849,22 +660,16 @@ const CaseForm = ({ route, navigation }) => {
     },]
 
   return (
-    // wizard setup
     <View style={{ justifyContent: 'center' }}>
       <Wizard
         ref={wizard}
         steps={stepList}
-        // nextStepAnimation="slideRight"
-        // prevStepAnimation="slideLeft"
         duration={0}
-        // activeStep={0}
         isFirstStep={val => setIsFirstStep(val)}
         isLastStep={val => setIsLastStep(val)}
         onNext={() => {
-          // console.log("Next Step Called")
         }}
         onPrev={() => {
-          // console.log("Previous Step Called")
         }}
         currentStep={({ currentStep, isLastStep, isFirstStep }) => {
           setCurrentStep(currentStep);
@@ -879,42 +684,34 @@ export default CaseForm;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '100%',
+    justifyContent: "center",
+    width: "100%", height: "100%",
+    paddingHorizontal: 20,
   },
   content: {
-    // backgroundColor: '#fff',
-    // borderRadius: 5,
-    // elevation: 10,
-    padding: 10,
-    margin: 10,
-    // minHeight: "65%",
-    // maxHeight: "95%",
-    height: '100%',
-    // justifyContent: "space-around",
+    justifyContent: "center",
+     width: "100%", height: "100%",
+     marginTop: 10,
+     paddingHorizontal: 20,
+   },
+  content2: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+    width: "100%", height: "100%",
   },
   textSize: {
     fontSize: 18,
   },
   title: {
     fontWeight: 'bold',
-    // textAlign: 'center',
     fontSize: 18,
-    // alignSelf: "center",
     paddingTop: 10,
-    // paddingBottom: 5
-    // color: '#333',
-    // marginTop: 20,
-    // marginBottom: 10,
   },
   subtitle: {
     fontWeight: 'bold',
-    // textAlign: 'center',
     fontSize: 15,
-    // color: '#fff',
   },
   action: {
-    // flexDirection: 'row',
     paddingTop: 15,
     borderBottomColor: '#dedede',
     borderBottomWidth: 1,

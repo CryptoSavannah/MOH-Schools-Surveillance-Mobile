@@ -11,7 +11,7 @@ const NextButton = ({ goToNext, disable }) => {
 
     return (
         <View style={{ alignItems: 'flex-end' }}>
-            <View style={{ width: 80, marginTop: 20 }}>
+            <View style={{ width: 80, marginTop: 15 }}>
                 <TouchableOpacity
                     activeOpacity={.5}
                     disabled={disable}
@@ -31,8 +31,6 @@ export default NextButton;
 
 const styles = StyleSheet.create({
     action: {},
-    activeBtn: {backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 20
-    , elevation:5},
-    inActiveBtn: {backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 20
-    , elevation:5}
+    activeBtn: {backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 4, elevation:3},
+    inActiveBtn: {backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 4, elevation:3}
 });

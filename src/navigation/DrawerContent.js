@@ -28,9 +28,9 @@ export function DrawerContent(props) {
 
   const { signOut, toggleTheme } = React.useContext(AuthContext);
 
-  useEffect(() => {
-    console.log('drawer props: ', props)
-  })
+  // useEffect(() => {
+  //   console.log('drawer props: ', props)
+  // })
 
   return (
     <View style={{ flex: 1, backgroundColor: '#4d505b' }}>
@@ -73,7 +73,7 @@ export function DrawerContent(props) {
                 props.navigation.navigate('Home')
               }}
             />
-            <DrawerItem
+            {/* <DrawerItem
               icon={({ color, size }) => (
                 <Image source={aggregation} style={{ width: size, height: size }} />
               )}
@@ -85,7 +85,7 @@ export function DrawerContent(props) {
               onPress={() => {
                 props.navigation.navigate('NewAggregate')
               }}
-            />
+            /> */}
             <DrawerItem
               icon={({ color, size }) => (
                 <Iconi

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Wizard from 'react-native-wizard';
-import { View, StyleSheet, TextInput, Text, ActivityIndicator, Button, TouchableOpacity, LogBox, StatusBar } from 'react-native';
+import { View, StyleSheet, Text, ActivityIndicator, Button, TouchableOpacity, LogBox, StatusBar } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScrollView } from 'react-native-gesture-handler';
 import { CREATE_AGGREGATE_KEY } from '../../env.json';
@@ -9,8 +9,11 @@ import { fetchChronicConditions } from '../model/data';
 import axios from "axios";
 import { Picker } from '@react-native-picker/picker';
 // import SearchableDropdown from 'react-native-searchable-dropdown';
+import { useController, useForm } from 'react-hook-form';
+import { Checkbox as CheckboxP, List as ListP, TextInput } from 'react-native-paper';
+import { FormBuilder } from 'react-native-paper-form-builder';
 
-const AggregateForm = ({ route, navigation }) => {
+const AggregateForm = ({route, navigation}) => {
 
   const [userId, setUserId] = useState('');
   const [userToken, setUserToken] = useState('');
@@ -19,6 +22,8 @@ const AggregateForm = ({ route, navigation }) => {
   const [case_stats, setCase_Stats] = useState('');
   const [summaries_stats, setSummaries_Stats] = useState('');
   // const stdRef = useRef(null);
+
+  const { report } = route.params ?? {};
 
   let values = {};
   const [isLoading, setIsLoading] = useState(false);
@@ -35,83 +40,41 @@ const AggregateForm = ({ route, navigation }) => {
   const [deceasedNo, setDeceasedNo] = useState('');
   const [healedNo, setHealedNo] = useState('');
   const [selectedItemIndex, updateSelectedItem] = useState('');
-  const [toDate, setToDate] = useState('');
   const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
 
-  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
-
-  const showToDatePicker = () => {
-    setToDatePickerVisibility(true);
-  };
-
-  const hideToDatePicker = () => {
-    setToDatePickerVisibility(false);
-    setToDate('');
-  };
-
-  const handleToConfirm = (e) => {
-    hideToDatePicker();
-    var date = new Date(e);
-
-    if (isNaN(date.getTime())) {
-      setToDate('')
-    }
-    else {
-      //format date
-      setToDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate()))
-
-    }
-
-  };
-
-
-  const [fromDate, setFromDate] = useState('');
-
-  const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
-
-  const showFromDatePicker = () => {
-    setFromDatePickerVisibility(true);
-  };
-
-  const hideFromDatePicker = () => {
-    setFromDatePickerVisibility(false);
-    setFromDate('');
-  };
-
-  const handleFromConfirm = (e) => {
-    hideFromDatePicker();
-    var date = new Date(e);
-
-    if (isNaN(date.getTime())) {
-      setFromDate('')
-    }
-    else {
-      //format date
-      setFromDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate()))
-
-    }
-
-  };
+  const { control, setFocus, handleSubmit } = useForm({
+    defaultValues: {
+      chronic_condition: '',
+      cases_num: '',
+      treated_num: '',
+      healed_num: '',
+      deceased_num: '',
+    },
+    mode: 'onChange',
+  });
 
   useEffect(() => {
+    if(report){
+      console.log(report)
+    }
     // retrieveUserId();
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
     //fetch diseases
-    // fetchChronicConditions().then(res => {
-    //   // console.log(res)
-    //   let conds = [];
+    fetchChronicConditions().then(res => {
+      // console.log(res)
+      let conds = [];
 
-    //   res.data.map(x => {
-    //     conds.push({
-    //       id: x.condition_id,
-    //       name: x.condition,
-    //     });
-    //   });
+      res.data.map(x => {
+        conds.push({
+          value: x.id,
+          label: x.condition_name,
+        });
+      });
 
-    //   setConditions(conds)
+      setConditions(conds)
 
-    // })
+    })
     AsyncStorage.getItem('user')
       .then(user => {
         if (user === null) {
@@ -138,34 +101,14 @@ const AggregateForm = ({ route, navigation }) => {
     return (str2[1] + '/' + str2[2] + '/' + str2[0])
   }
 
-  const onSubmit = async () => {
-    //setting values for feilds
-    values['userId'] = userId;
-
-    console.log(values);
-
-    if (toDate === '' || fromDate === '' || selectedIllness === '' || ![casesNo, treatedNo, healedNo, deceasedNo].some((x) => { return x !== '' })) {
-      alert("Fill in all the relevant information");
-      return
-    }
-
-    if (new Date(dateReverseFormat(fromDate)) > new Date(dateReverseFormat(toDate))) {
-      alert('"From Date" should not be after "To Date"');
-      return
-    }
-
-    setIsLoading(true);
-
-    // console.log('original summ: ', summaries_stats)
-    var the_summaries_stats = (parseInt(summaries_stats) + 1);
-
-    console.log('the_summaries_stats to post: ' + the_summaries_stats);
-    AsyncStorage.setItem('summaries_stats', (the_summaries_stats).toString());
+  const onSubmit = handleSubmit(async (data) => {
+    setIsLoading(true)
+    console.log(data);
 
     setTimeout(() => {
       setIsLoading(false)
       alert("Case Summary Information saved.");
-      cancel()
+      // cancel()
     }, 1000);
 
     // var data = {
@@ -215,13 +158,13 @@ const AggregateForm = ({ route, navigation }) => {
     //     }]);
     //     cancel()
     //   }).finally(() => { setIsLoading(false) })
-  }
+  })
 
   const cancel = () => {
     //clear fields, back to home
     // clearState();
-    navigation.navigate('Home');
-    // navigation.goBack();
+    // navigation.navigate('Home');
+    navigation.goBack();
   };
 
   //-------------------------------------------------------------------------
@@ -229,92 +172,86 @@ const AggregateForm = ({ route, navigation }) => {
   return (
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
-      <View style={{ alignSelf: 'stretch' }}>
+      <View style={[styles.container]}>
         <ScrollView>
-          <Text style={{ fontSize: 20, fontWeight: "bold", paddingTop: 20, left: 10, paddingBottom: 10 }}>
-            Aggregates:  </Text>
-          <View style={{ flexDirection: 'row', justifyContent: "space-around", marginBottom: 10 }}>
-            <View style={{ width: '40%' }}>
-              <View style={styles.action}>
-                <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="Date of Birth" placeholder="From Date:"
-                  value={fromDate == '' ? '' : `From:  ${fromDate}`}
-                  showSoftInputOnFocus={false} />
-              </View>
-              <DateTimePickerModal
-                isVisible={isFromDatePickerVisible}
-                mode="date"
-                onConfirm={handleFromConfirm}
-                onCancel={hideFromDatePicker}
-              />
-            </View>
-            <View style={{ width: '40%' }}>
-              <View style={styles.action}>
-                <TextInput style={{ fontSize: 16 }}
-                  onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
-                  value={toDate == '' ? '' : `To:  ${toDate}`}
-                  showSoftInputOnFocus={false} />
-              </View>
-              <DateTimePickerModal
-                isVisible={isToDatePickerVisible}
-                mode="date"
-                onConfirm={handleToConfirm}
-                onCancel={hideToDatePicker}
-              />
-            </View>
-          </View>
+          <Text style={{ fontSize: 20, fontWeight: "bold", paddingTop: 20, paddingBottom: 10 }}>
+            {report.report_name}: 
+             </Text>
 
-          <View style={[styles.action2, { height: 50, marginVertical: 10, width: '90%', alignSelf: 'center' }]} >
-            <Picker style={{
-              color: selectedIllness === '' ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
-              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
-            }} selectedValue={selectedIllness}
-              onValueChange={(itemValue, itemIndex) => setSelectedIllness(itemValue)} itemStyle={{ fontSize: 18 }} >
-              <Picker.Item value="" label="Chronic medical condition/allergies:" />
-              {/* {conditions.map(x => {
-                <Picker.Item value={x.id} label={x.name} key={x.id}/>
-              })
-              } */}
-              <Picker.Item value="1" label="Asthma" />
-              <Picker.Item value="2" label="Sickle cell disease" />
-              <Picker.Item value="3" label="TB on treatment" />
-              <Picker.Item value="4" label="Cancer" />
-              <Picker.Item value="5" label="Epilepsy" />
-              <Picker.Item value="6" label="Chronic / congenital heart disease" />
-              <Picker.Item value="7" label="Mental disorder" />
-              <Picker.Item value="8" label="Diabetes" />
-              <Picker.Item value="9" label="HIV/AIDS" />
-              <Picker.Item value="10" label="Food/ medicine allergies" />
-              <Picker.Item value="11" label="Other medical conditions/ allergies" />
-            </Picker>
-          </View>
-
-          {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-            <TextInput style={{ fontSize: 18, width: '80%' }} label="Specify medical condition" placeholder="Specify medical condition:"
-              onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
-          </View> : null}
-
-          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-            <TextInput style={{ fontSize: 18, width: '80%' }} label="Cases" placeholder="Cases:"
-              onChangeText={(val) => { setCasesNo(val); }} value={casesNo} keyboardType="numeric" />
-          </View>
-
-          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-            <TextInput style={{ fontSize: 18, width: '80%' }} label="Treated" placeholder="Treated:"
-              onChangeText={(val) => { setTreatedNo(val); }} value={treatedNo} keyboardType="numeric" />
-          </View>
-
-          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-            <TextInput style={{ fontSize: 18, width: '80%' }} label="Healed" placeholder="Healed:"
-              onChangeText={(val) => { setHealedNo(val); }} value={healedNo} keyboardType="numeric" />
-          </View>
-
-          <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-            <TextInput style={{ fontSize: 18, width: '80%' }} label="Deceased" placeholder="Deceased:"
-              onChangeText={(val) => { setDeceasedNo(val); }} value={deceasedNo} keyboardType="numeric" />
-          </View>
-
+             <FormBuilder
+              control={control}
+              setFocus={setFocus}
+              formConfigArray={[
+                {
+                  name: 'chronic_condition',
+                  type: 'autocomplete',
+                  textInputProps: {
+                    label: 'Chronic medical condition/allergies:',
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Condition is required',
+                    },
+                  },
+                  options: conditions
+                },
+                {
+                  name: 'cases_num',
+                  type: 'text',
+                  textInputProps: {
+                    label: 'Number of Cases',
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Number of cases is required',
+                    },
+                  },
+                },
+                {
+                  name: 'treated_num',
+                  type: 'text',
+                  textInputProps: {
+                    label: 'Number of treated',
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Number of treated is required',
+                    },
+                  },
+                },
+                {
+                  name: 'healed_num',
+                  type: 'text',
+                  textInputProps: {
+                    label: 'Number of healed',
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Number of healed is required',
+                    },
+                  },
+                },
+                {
+                  name: 'deceased_num',
+                  type: 'text',
+                  textInputProps: {
+                    label: 'Number of deceased',
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Number of deceased is required',
+                    },
+                  },
+                },
+              ]}
+            />
           <View style={{
-            flexDirection: 'row', justifyContent: 'space-between', padding: 5,
+            flexDirection: 'row', justifyContent: 'space-between',
             paddingTop: 30, marginBottom: 10
           }}>
             <View style={{ width: 80, marginBottom: 10 }}>
@@ -342,8 +279,6 @@ const AggregateForm = ({ route, navigation }) => {
                 </TouchableOpacity>}
             </View>
           </View>
-
-
         </ScrollView>
       </View>
     </>
@@ -355,13 +290,12 @@ export default AggregateForm;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '100%',
-  },
-  content: {
-    padding: 10,
-    margin: 10,
-    height: '100%',
+    // flex: 1,
+    justifyContent: "center",
+    width: "100%", height: "100%",
+    // marginTop: 10,
+    paddingHorizontal: 20,
+    // backgroundColor: "#F3F6F9"
   },
   textSize: {
     fontSize: 20

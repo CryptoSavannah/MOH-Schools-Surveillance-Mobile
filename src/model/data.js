@@ -60,11 +60,26 @@ export const fetchConditions = async () => {
 };
 
 //draft
-var servReportlist = async () => {
-  return {"status": 200, "data": [
-    { "id":1,"covid": [
-      {"name": "patient", "type": "text", "rules": [{"name": "required"}, {"value": "true"}, {"message":"Patient is required"}]},
-      {"name": "patient", "type": "text", "rules": [{"name": "required"}, {"value": "true"}, {"message":"Patient is required"}]},
-    ]},
+export const fetchReportList = async () => {
+  return {"status": 200, "data": [{ "report_id":1,"report_name": "WASH"},
+  {"report_id":2, "report_name":"Registry"},
+  {"report_id":3, "report_name":"Covid"},
+ ]};
+};
+
+export const fetchDisabilities = async () => {
+  return {"status": 200, "data": [{"id":"0", "disability_name":"None"},
+  {"id":"1", "disability_name":"Difficulty in seeing"},
+  {"id":"2", "disability_name":"Albinism"},
+  {"id":"3", "disability_name":"Difficulty in hearing"},
+  {"id":"4", "disability_name":"Delayed age specific motor development"},
+  {"id":"5", "disability_name":"Delayed age specific height for age (dwarfism)"},
+  {"id":"6", "disability_name":"Difficulty understanding"},
+  {"id":"7", "disability_name":"Difficulty in remembering"},
+  {"id":"8", "disability_name":"Difficulty in writing"},
+  {"id":"9", "disability_name":"Difficulty washing all over or dressing"},
+  {"id":"10", "disability_name":"Mentally impared"},
+  {"id":"11", "disability_name":"Emotionally impared"},
 ]};
 };
+

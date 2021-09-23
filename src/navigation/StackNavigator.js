@@ -12,6 +12,7 @@ import Case from "../screens/Case";
 import CaseForm from "../screens/CaseForm";
 import AddNew from "../screens/AddNew";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import CovidView from "../screens/CovidView";
 import { TouchableOpacity } from "react-native";
 import { Block, Text } from "../components";
 import PendingCases from "../screens/PendingCases";
@@ -55,6 +56,18 @@ const HomeStackScreen = ({ navigation }) => (
       //       navigation.navigate("FilterOptions")
       //     } />)
     }} />
+    <Stack.Screen name="CovidView" component={CovidView}
+    // component={() => (
+    //   <CaseForm navigation={navigation} />
+    // )} 
+    options={{
+      title: 'Covid',
+      headerLeft: () => (
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
+          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+      ),
+    }} />
+
     {/* <Stack.Screen name="Case" component={Case} options={{
       title: 'Record Case',
       headerLeft: () => (
@@ -93,7 +106,7 @@ const HomeStackScreen = ({ navigation }) => (
     //   <CaseForm navigation={navigation} />
     // )} 
     options={{
-      title: 'Record Covid Case',
+      title: 'Covid Report',
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
