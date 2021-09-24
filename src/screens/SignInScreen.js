@@ -57,6 +57,8 @@ const SignInScreen = ({ navigation }) => {
 
           const foundUser = {
             cookie: cookie,
+            email: email,
+            password: password
           }
           AsyncStorage.setItem('user', JSON.stringify(foundUser));
           signIn(foundUser);
