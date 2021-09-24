@@ -92,8 +92,6 @@ const OverViewScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
-    // setSelectedReport('');
-
     getReportList();
 
     AsyncStorage.getItem('user')
@@ -127,19 +125,21 @@ const OverViewScreen = ({ route, navigation }) => {
       method: 'post',
       headers: { "Content-Type": "application/json" },
       cookie: cookie,
-      data: {
+      data: { 
         "method": "getReports"
       }
     })
       .then(res => {
-        setReports(res.data.data);
+        console.log(res.data)
+        if(res.data.status == "500"){
+          AsyncStorage.clear().then(() => navigation.navigate("SignInScreen"))
+        }else{
+          setReports(res.data.data);
+        }
       })
       .catch(function (error) {
-        console.log("SignIn Error caught: " + error);
-        alert('Failed to find data store: Try again', [
-          { text: 'Okay' }
-        ]);
-        setIsLoading(false);
+        console.log("Report list Error caught: " + error);
+        
       });
   };
 
