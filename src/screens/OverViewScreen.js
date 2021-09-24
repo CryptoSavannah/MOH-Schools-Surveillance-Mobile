@@ -15,7 +15,7 @@ import {
 import Iconm from "react-native-vector-icons/MaterialCommunityIcons";
 import morganisms from '../assets/morganisms.png';
 import axios from "axios";
-import { DASH_LABEL_KEY, GRAPH_KEY } from '../../env.json';
+import { REPORT_LIST_KEY, GRAPH_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import MenuCard2 from '../components/MenuCard2';
 import { fetchReportList } from '../model/data';
@@ -121,7 +121,7 @@ const OverViewScreen = ({ route, navigation }) => {
 
     let rprts = [];
     axios({
-      url: ***REMOVED***,
+      url: REPORT_LIST_KEY,
       method: 'post',
       headers: { "Content-Type": "application/json" },
       cookie: cookie,

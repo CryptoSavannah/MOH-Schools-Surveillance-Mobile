@@ -31,7 +31,7 @@ const SignInScreen = ({ navigation }) => {
     setIsLoading(true);
 
     axios({
-      url: ***REMOVED***,
+      url: SIGNIN_KEY,
       method: 'post',
       headers: { "Content-Type": "application/json" },
       data: {
