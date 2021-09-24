@@ -23,6 +23,8 @@ LogBox.ignoreLogs(['Require cycles...']);
 const App = () => {
   // LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   // LogBox.ignoreLogs(['Require cycle: ...']);
+  LogBox.ignoreLogs(['React.createElement: type is invalid']);
+
   LogBox.ignoreAllLogs();
   
   // const [isLoading, setIsLoading] = React.useState(true);

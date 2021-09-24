@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Alert, Text, View, TextInput, TouchableOpacity, BackHandler, Image, ActivityIndicator } from 'react-native';
 import logo from '../assets/logo.png';
-// import {FormInput, Button, Icon, Text} from "@99xt/first-born";
 import Users from '../model/users';
 import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../components/context';
-// import * as Location from 'expo-location';
 import { SIGNIN_KEY } from '../../env.json';
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
@@ -13,11 +11,10 @@ import AsyncStorage from "@react-native-community/async-storage";
 const SignInScreen = ({ navigation }) => {
 
   const [center_no, setcenter_no] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [location, setLocation] = useState(null);
-  // const {colors} = useTheme();
 
   const { signIn } = React.useContext(AuthContext);
 
@@ -30,157 +27,73 @@ const SignInScreen = ({ navigation }) => {
     text = JSON.stringify(location);
   }
 
-  useEffect(() => {
-    // getLocation();
-
-  }, []);
-
-  // const getLocation = () => {
-  //     (async () => {
-  //         try {
-  //             let { status } = await Location.requestPermissionsAsync();
-  //             let location = await Location.getCurrentPositionAsync({});
-  //             setLocation(location);
-  //             // console.log(location.coords.latitude, location.coords.longitude)
-  //         }
-  //         catch (e) {
-  //             // if (status !== 'granted') {
-  //             setErrorMsg('Permission to access location was denied');
-  //             // navigation.goBack()
-  //             // }
-  //         }
-
-
-  //     })();
-  // }
-
-  const loginHandle = (center_no) => {
-    // getLocation();
+  const loginHandle = () => {
     setIsLoading(true);
 
-    axios.post(SIGNIN_KEY.toString(), {
-      "center_no": center_no.toString()
+    axios({
+      url: ***REMOVED***,
+      method: 'post',
+      headers: { "Content-Type": "application/json" },
+      data: {
+        "uname": email,
+        "passwd": password,
+        "mm_api": "123456"
+      }
     })
-      .then(function (response) {
-        // console.log(JSON.stringify(response));
-        if (response.data.status == 200) {
-
-          let theToken = response.data.token ? theToken = response.data.token : '';
-          let theSchoolId = response.data.data.school_id;
-          let theCenterNo = center_no;
-          let theSubCounty = response.data.data.subcounty;
-          const foundUser = {
-            center_no: theCenterNo,
-            token: theToken,
-            school_id: theSchoolId,
-            subcounty: theSubCounty,
-          }
-          // console.log('token: ' + theToken);
-          AsyncStorage.setItem('user', JSON.stringify(foundUser));
-          signIn(foundUser);
-        } else {
-          alert('Invalid Center Number!', [
+      .then(res => {
+        if (res.status !== 200) {
+          alert('Server Error!', [
             { text: 'Okay' }
           ]);
-          console.log("SignIn Error: " + result.error);
         }
-        // console.log(response.status);
-        setIsLoading(false);
+        if (res.data.status == 500) {
+          alert('Invalid Credentials!', [
+            { text: 'Okay' }
+          ]);
+          console.log("SignIn Error: " + JSON.stringify(res));
+        }
+        else {
+          let cookie = res.headers["set-cookie"]
 
+          const foundUser = {
+            cookie: cookie,
+            email: email,
+            password: password
+          }
+          AsyncStorage.setItem('user', JSON.stringify(foundUser));
+          signIn(foundUser);
+        }
+        setIsLoading(false);
       })
       .catch(function (error) {
         console.log("SignIn Error caught: " + error);
+        alert('Failed to find data store: Try again', [
+          { text: 'Okay' }
+        ]);
         setIsLoading(false);
       });
-
   };
-
-  const loginHandle2 = (center_no) => {
-
-    // getLocation();
-    setIsLoading(true);
-
-    const foundUser = Users.filter(item => {
-      return center_no == item.username
-    });
-
-    if (center_no.length === 0) {
-      Alert.alert('Wrong Input!', 'center_no field cannot be empty.', [
-        { text: 'Okay' }
-      ]);
-      return;
-    }
-
-    // if (location === null) {
-    //     Alert.alert('Enable Location!', 'Turn on your location to continue.', [
-    //         { text: 'Okay' }
-    //     ]);
-    //     return;
-    // }
-
-    if (foundUser.length === 0) {
-      Alert.alert('Invalid User!', 'center_no is incorrect.', [
-        { text: 'Okay' }
-      ]);
-      return;
-    }
-    setIsLoading(true)
-    signIn(foundUser);
-
-  };
-
-  const onLogin = () => {
-
-    // fetch(api, data)
-    //     .then(response => response.json())  // promise
-    //     .then(json => {
-    //         if (json.error) {
-    //             alert(json.error);
-    //         } else {
-    //             // alert(json.user._id);
-    //             AsyncStorage.setItem('user', JSON.stringify(json.user))
-    //                 .then(() => {
-    //                     // this.setState({ userId: user._id, showLoginForm: true });
-    //                 });
-    //             let usr = json.user;
-    //             this.setState({
-    //                 loading: false,
-    //                 showLoginForm: false,
-    //                 userId: usr._id,
-    //                 email: usr.email,
-    //                 phone: usr.phone,
-    //                 center_no: usr.name,
-    //             });
-    //         }
-    //     }).catch(function (err) {
-    //     alert('There was an error');
-    //     alert('Thanks');
-    //     console.log(err);
-    // });
-  }
-
-  const onSignup = () => {
-    navigation.navigate('SignUpScreen');
-  }
 
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={logo} />
       <Text style={styles.header}>Login</Text>
       <View style={styles.inputView}>
-        {/* <TextInput
+        <TextInput
           style={styles.inputText}
-          placeholder="School Number"
+          placeholder="Email Address"
           placeholderTextColor="#003f5c"
           name="email"
-          onChangeText={(text) => setcenter_no(text)} /> */}
-          <TextInput
+          onChangeText={(text) => setEmail(text)} />
+      </View>
+      <View style={styles.inputView}>
+        <TextInput
           style={styles.inputText}
-          placeholder="Press Login to Continue"
+          placeholder="Password"
           placeholderTextColor="#003f5c"
-          name="email"
-          // keyboardType="phone-pad"
-          onChangeText={(text) => setcenter_no(text)} />
+          name="password"
+          keyboardType="password"
+          onChangeText={(text) => setPassword(text)} />
       </View>
 
       {isLoading ?
@@ -193,8 +106,7 @@ const SignInScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.loginBtn}
           onPress={() =>
-            // loginHandle2(center_no)
-            loginHandle2("xtian")
+            loginHandle()
           }>
           <Text style={styles.loginText}>LOGIN</Text>
         </TouchableOpacity>
@@ -243,7 +155,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '80%',
-    backgroundColor: 'rgba(231,76,60,1)',
+    backgroundColor: 'rgba(3, 136, 229, 1)',
     justifyContent: 'center',
     borderRadius: 50,
     padding: 10,
@@ -261,9 +173,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     // marginTop: 40,
     marginBottom: 10,
-  },
-  // logo: {
-  //     width: "80%",
-  //     height: "30%"
-  // }
+  }
 });

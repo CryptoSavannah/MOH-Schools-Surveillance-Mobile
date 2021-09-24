@@ -35,7 +35,7 @@ const SignInScreen = ({navigation}) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#3a3838' barStyle="light-content"/>
+            <StatusBar backgroundColor='#4d505b' barStyle="Light-content"/>
             <View style={styles.header}>
                 <Text style={styles.text_header}>Register!</Text>
             </View>
@@ -114,7 +114,7 @@ export default SignInScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#3a3838'
+        backgroundColor: '#0388E5'
     },
     header: {
         flex: 1,

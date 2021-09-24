@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
 import Wizard from 'react-native-wizard';
-import { View, StyleSheet, TextInput, FlatList, Text, SafeAreaView, ActivityIndicator, Button, Dimensions } from 'react-native';
+import { View, StyleSheet, TextInput as TextInputN, FlatList, Text, SafeAreaView, ActivityIndicator, Button, Dimensions } from 'react-native';
 import {
   FormInput,
 } from "@99xt/first-born";
@@ -31,6 +31,10 @@ import IconC from "react-native-vector-icons/FontAwesome";
 import * as Animatable from 'react-native-animatable';
 import { Picker } from '@react-native-picker/picker';
 import { colors } from '../constants/theme';
+import { useController, useForm } from 'react-hook-form';
+import { Checkbox as CheckboxP, List as ListP, TextInput } from 'react-native-paper';
+import { FormBuilder } from 'react-native-paper-form-builder';
+import { LogicProps } from 'react-native-paper-form-builder/dist/Types/Types';
 
 const CaseForm = ({ route, navigation }) => {
 
@@ -55,14 +59,6 @@ const CaseForm = ({ route, navigation }) => {
   const [summaries_stats, setSummaries_Stats] = useState('');
 
   const [isLoading, setIsLoading] = useState(false);
-  // const [data, setData] = useState([]);
-  // const [page, setPage] = useState(1);
-  // const [seed, setSeed] = useState(1);
-  // const [error, setError] = useState(null);
-  // const [query, setQuery] = useState('');
-  // const [fullData, setFullData] = useState([]);
-
-  // const[url, setUrl] = useState('');
 
   const searchableDrpDwn = useRef();
   const stdRef = useRef(null);
@@ -83,6 +79,20 @@ const CaseForm = ({ route, navigation }) => {
   const [selectedIllnessName, setSelectedIllnessName] = useState('');
   const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
   const [allIllnesses, setAllIllnesses] = useState([])
+
+  const { control, setFocus, handleSubmit } = useForm({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      city: '',
+      gender: '',
+      rememberMe: 'checked',
+      patient: ''
+    },
+    mode: 'onChange',
+  });
 
   function Item({ item }) {
     return (
@@ -142,12 +152,12 @@ const CaseForm = ({ route, navigation }) => {
       res.data.map(x => {
         let date = new Date(x.dob);
         pats.push({
-          id: x.patient_id,
-          nin: x.nin,
-          nin_hash: x.nin_hash,
-          name: x.fname + ' ' + x.lname,
-          dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
-          gender: x.gender,
+          value: x.patient_id,
+          // nin: x.nin,
+          // nin_hash: x.nin_hash,
+          label: x.fname + ' ' + x.lname,
+          // dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
+          // gender: x.gender,
           // immunizationStatus: x.immunizationStatus,
           // disability: x.disability
         });
@@ -199,7 +209,7 @@ const CaseForm = ({ route, navigation }) => {
       })
       .catch(err => console.log(err));
 
-      AsyncStorage.getItem('case_stats')
+    AsyncStorage.getItem('case_stats')
       .then(the_case_stats => {
         if (the_case_stats !== null) {
           setCase_Stats(the_case_stats);
@@ -279,38 +289,26 @@ const CaseForm = ({ route, navigation }) => {
     stdRef.current.focus()
   }
 
-  const makeRemoteRequest = () => {
-
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
-    setIsLoading(true);
-
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        setData(page === 1 ? res.results : [...data, ...res.results])
-        setError(res.error || null);
-        setIsLoading(false)
-        setFullData(res.results)
-      })
-      .catch(error => {
-        setError(false);
-        setIsLoading(false)
-      })
-  }
-
   const createPatient = () => {
     navigation.navigate('AddNew');
   }
+
+  const onSubmit2 = handleSubmit((data) => {
+    console.log(data);
+    setPName(data.firstName + " " + data.lastName)
+    goToNext(true, '');
+  })
+
 
   const onSubmit = async () => {
     //setting values for feilds
     // values['userId'] = userId;
 
-     // console.log('original summ: ', summaries_stats)
-     var the_case_stats = (parseInt(case_stats) + 1);
+    // console.log('original summ: ', summaries_stats)
+    var the_case_stats = (parseInt(case_stats) + 1);
 
     //  console.log('the_case_stats to post: ' + the_case_stats);
-     AsyncStorage.setItem('case_stats', (the_case_stats).toString());
+    AsyncStorage.setItem('case_stats', (the_case_stats).toString());
 
     // console.log(values);
 
@@ -348,8 +346,8 @@ const CaseForm = ({ route, navigation }) => {
     //clear fields, back to home
     // clearState();
     setCurrentStep(0);
-    navigation.navigate('Home');
-    // navigation.goBack();
+    // navigation.navigate('Home');
+    navigation.goBack();
   };
 
   const goToNext = (valid, error) => {
@@ -380,142 +378,157 @@ const CaseForm = ({ route, navigation }) => {
   const stepList = [
     {
       content:
-        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
-          <View style={{ alignSelf: 'center', paddingVertical: 20 }}>
-            <Text style={styles.textSize}>
-              {"Please give us information about the patient's condition"}
-            </Text>
-          </View>
-          <NextButton goToNext={() => goToNext(true, '')} disable={false} />
+        <View style={[styles.content]}>
+          <ScrollView style={{ paddingTop: 15 }} >
+            <FormBuilder
+              control={control}
+              setFocus={setFocus}
+              formConfigArray={[
+                {
+                  name: 'patient',
+                  type: 'autocomplete',
+                  textInputProps: {
+                    label: 'Patient',
+                    left: <TextInput.Icon name={'account'} />,
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Patient is required',
+                    },
+                  },
+                  options: patients
+                },
+                {
+                  name: 'email',
+                  type: 'email',
+                  textInputProps: {
+                    label: 'Email',
+                    left: <TextInput.Icon name={'email'} />,
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Email is required',
+                    },
+                    pattern: {
+                      value:
+                        /[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})/,
+                      message: 'Email is invalid',
+                    },
+                  },
+                },
+                {
+                  name: 'password',
+                  type: 'password',
+                  textInputProps: {
+                    label: 'Password',
+                    left: <TextInput.Icon name={'lock'} />,
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Password is required',
+                    },
+                    minLength: {
+                      value: 8,
+                      message: 'Password should be atleast 8 characters',
+                    },
+                    maxLength: {
+                      value: 30,
+                      message: 'Password should be between 8 and 30 characters',
+                    },
+                  },
+                },
+                {
+                  name: 'city',
+                  type: 'autocomplete',
+                  textInputProps: {
+                    label: 'City',
+                    left: <TextInput.Icon name={'office-building'} />,
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'City is required',
+                    },
+                  },
+                  options: [
+                    {
+                      label: 'Lucknow',
+                      value: 1,
+                    },
+                    {
+                      label: 'Noida',
+                      value: 2,
+                    },
+                    {
+                      label: 'Delhi',
+                      value: 3,
+                    },
+                    {
+                      label: 'Bangalore',
+                      value: 4,
+                    },
+                    {
+                      label: 'Pune',
+                      value: 5,
+                    },
+                    {
+                      label: 'Mumbai',
+                      value: 6,
+                    },
+                    {
+                      label: 'Ahmedabad',
+                      value: 7,
+                    },
+                    {
+                      label: 'Patna',
+                      value: 8,
+                    },
+                  ],
+                },
+                {
+                  name: 'gender',
+                  type: 'select',
+                  textInputProps: {
+                    label: 'Gender',
+                    left: <TextInput.Icon name={'account'} />,
+                  },
+                  rules: {
+                    required: {
+                      value: true,
+                      message: 'Gender is required',
+                    },
+                  },
+                  options: [
+                    {
+                      value: 0,
+                      label: 'Female',
+                    },
+                    {
+                      value: 1,
+                      label: 'Male',
+                    },
+                  ],
+                },
+                {
+                  name: 'rememberMe',
+                  type: 'custom',
+                  JSX: TermsCheckBox,
+                },
+              ]}
+            />
+              <NextButton goToNext={onSubmit2} disable={false} />
+          </ScrollView>
         </View>,
-    },
-    {
-      content:
-        <View style={[styles.content, { paddingTop: 0, justifyContent: 'space-around' }]}>
-
-          <View style={[{ paddingTop: 0 }]}>
-            {searchFocused ?
-              <View style={{ borderWidth: 0.5, borderColor: '#ccc', borderRadius: 2, }}>
-                <TouchableOpacity style={{ padding: 10, position: 'absolute', right: 10, zIndex: 999 }} onPress={clearSearch}>
-                  <Icon name='close-a' size={20} color="#b3b3b3" style={{ alignSelf: 'center' }} />
-                </TouchableOpacity>
-                <Fragment >
-                  <SearchableDropdown
-                    ref={stdRef}
-                    onTextChange={text => {
-                      const items = selectedPatients.filter((sitem) => sitem.name.includes(text));
-                      // console.log('possible ', items.length)
-                    }}
-                    onItemSelect={(item) => {
-                      // console.log(item)
-                      var items = [];
-                      items.push(item);
-                      setSelectedPatients(selectedPatients => items);
-                      setIDNum(item.nin);
-                      setPName(item.name);
-                      setDob(item.dob)
-                      setGender(item.gender)
-                      // setImmunizationStatus(item.immunizationStatus)
-                      // setDisability(item.disability)
-                      showSearch()
-                    }}
-                    containerStyle={{ padding: 0 }}
-                    onRemoveItem={(item, index) => {
-                      const items = selectedPatients.filter((sitem) => sitem.patient_id !== item.patient_id);
-                      setSelectedPatients(selectedPatients => items);
-                    }}
-                    itemStyle={{
-                      padding: 10,
-                      marginTop: 2,
-                      backgroundColor: '#ddd',
-                      borderColor: '#bbb',
-                      borderWidth: 0.5,
-                      borderRadius: 2,
-                    }}
-                    itemTextStyle={{ color: '#222', fontSize: 16 }}
-                    itemsContainerStyle={{
-                    }}
-                    items={patients}
-                    resetValue={false}
-                    textInputProps={
-                      {
-                        placeholder: pname === '' ? "Search Name" : pname,
-                        underlineColorAndroid: "transparent",
-                        style: {
-                          padding: 8,
-                        },
-                        fontSize: 16
-                      }
-                    }
-                    textInputStyle={{
-                      color: '#000'
-                    }}
-                    listProps={
-                      {
-                        nestedScrollEnabled: true,
-                      }
-                    }
-                  />
-                </Fragment>
-              </View>
-              :
-              <View>
-                <View style={styles.action3}>
-                  <TextInput style={{ width: '100%', fontSize: 16 }} onFocus={showSearch}
-                    onKeyPress={showSearch} label="Patient's Name"
-                    placeholder="Search Patient's Name"
-                    value={pname} />
-                </View>
-
-                {pname === '' ? <View style={{ alignItems: 'flex-end' }}>
-                  <View style={{ marginTop: 30 }}>
-                    <Button
-                      rounded
-                      block
-                      color="#1A5276" title="Add a Patient" onPress={() => createPatient()}>
-                    </Button>
-                  </View>
-                </View> :
-                  <View style={{ justifyContent: 'space-between', paddingVertical: 20 }}>
-                    <TouchableOpacity style={{
-                      alignSelf: 'flex-end', flexDirection: 'row',
-                      paddingVertical: 5, paddingHorizontal: 10, marginTop: 10, borderRadius: 5
-                    }} onPress={() => {
-                      // console.log('dob: ', dob)
-                      navigation.navigate("AddNew", {
-                        fnameR: pname.split(' ')[0],
-                        nin: idNum,
-                        lnameR: pname.split(' ')[1],
-                        dobR: dob,
-                        genderR: gender
-                      })
-                    }}>
-                      <Text style={{ color: "#1A5276", fontWeight: 'bold', textDecorationLine: 'underline', alignSelf: 'flex-end' }}>UPDATE</Text>
-                    </TouchableOpacity>
-                    <Patient name={pname} nin={idNum} gender={gender} dob={dob} />
-                  </View>
-                }
-                <View style={{ flexDirection: 'row', marginBottom: 30, justifyContent: 'space-between' }}>
-                  <PrevButton goToPrev={() => {
-                    pname === '' ? goToPrev() : setPName('')
-                  }} />
-                  {pname === '' || idNum === '' ?
-                    <NextButton goToNext={() => goToNext(false, 'Select Patient to continue')} />
-                    :
-                    <NextButton goToNext={() => goToNext(true, '')} />
-                  }
-                </View>
-              </View>
-            }
-          </View>
-        </View>
     },
     {
       content:
         <View style={{ padding: 10, margin: 10, height: '95%', }}>
 
           {(selectedIllness === "10" || selectedIllness === "11") ? <View style={[styles.action, { marginBottom: 10, width: '90%', alignSelf: 'center' }]}>
-            <TextInput style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
+            <TextInputN style={{ fontSize: 18, width: '100%' }} label="Specify medical condition" placeholder="Specify medical condition:"
               onChangeText={(val) => { setOtherMedicalCondition(val); }} value={otherMedicalCondition} keyboardType="numeric" />
           </View> : null}
 
@@ -569,7 +582,6 @@ const CaseForm = ({ route, navigation }) => {
               itemTextStyle={{ color: '#222', fontSize: 16 }}
               itemsContainerStyle={{ maxHeight: "85%" }}
               items={conditions}
-              // chip={true}
               resetValue={false}
               textInputProps={
                 {
@@ -597,8 +609,6 @@ const CaseForm = ({ route, navigation }) => {
             <PrevButton goToPrev={goToPrev} />
             {selectedConditions.length === 0 ?
               <NextButton goToNext={() => goToNext(false, 'Select atleast one condition to continue.')} />
-              // <NextButton goToNext={() => goToNext(true, '')} />
-
               :
               <NextButton goToNext={() => goToNext(true, '')} />
             }
@@ -607,28 +617,18 @@ const CaseForm = ({ route, navigation }) => {
     },
     {
       content:
-        <View style={[styles.content, { paddingTop: 0 }]}>
+        <View style={[styles.content2, { paddingTop: 0 }]}>
           <View style={{ alignSelf: 'center', paddingVertical: 40 }}>
-            {/* <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#fff', backgroundColor: colors.caption, borderRadius: 20}]}>
-              Preview
-            </Text> */}
-            <Text style={[styles.textSize, {paddingHorizontal: 10, paddingVertical: 5, color: '#030303'}]}>
+            <Text style={[styles.textSize, { paddingHorizontal: 10, paddingVertical: 5, color: '#030303' }]}>
               PREVIEW
             </Text>
           </View>
 
           <View style={[styles.action, { paddingVertical: 8 }]}>
-            <Text style={[styles.textSize, {fontWeight: 'bold'}]}>
+            <Text style={[styles.textSize, { fontWeight: 'bold' }]}>
               {`Name: ${pname}`}
             </Text>
           </View>
-
-          {/* <View style={[styles.action, { paddingVertical: 8 }]}>
-            <Text style={styles.textSize}>
-              {`Medical Condition: ${selectedIllnessName}`}
-            </Text>
-          </View> */}
-
           <View style={[styles.action, { paddingVertical: 8, maxHeight: '60%' }]}>
             <Text style={[styles.textSize, { marginBottom: 5 }]}>
               {`Symptoms (${selectedConditions.length}):`}
@@ -646,10 +646,9 @@ const CaseForm = ({ route, navigation }) => {
           </View>
 
           <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignContent: 'center',
-          }}>
+              flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5,
+              marginBottom: 10
+            }}>
             <PrevButton goToPrev={goToPrev} />
             {isLoading ?
               <LoadingButton isLoading={isLoading} />
@@ -661,22 +660,16 @@ const CaseForm = ({ route, navigation }) => {
     },]
 
   return (
-    // wizard setup
     <View style={{ justifyContent: 'center' }}>
       <Wizard
         ref={wizard}
         steps={stepList}
-        // nextStepAnimation="slideRight"
-        // prevStepAnimation="slideLeft"
         duration={0}
-        // activeStep={0}
         isFirstStep={val => setIsFirstStep(val)}
         isLastStep={val => setIsLastStep(val)}
         onNext={() => {
-          // console.log("Next Step Called")
         }}
         onPrev={() => {
-          // console.log("Previous Step Called")
         }}
         currentStep={({ currentStep, isLastStep, isFirstStep }) => {
           setCurrentStep(currentStep);
@@ -691,42 +684,34 @@ export default CaseForm;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: '100%',
+    justifyContent: "center",
+    width: "100%", height: "100%",
+    paddingHorizontal: 20,
   },
   content: {
-    // backgroundColor: '#fff',
-    // borderRadius: 5,
-    // elevation: 10,
-    padding: 10,
-    margin: 10,
-    // minHeight: "65%",
-    // maxHeight: "95%",
-    height: '100%',
-    // justifyContent: "space-around",
+    justifyContent: "center",
+     width: "100%", height: "100%",
+     marginTop: 10,
+     paddingHorizontal: 20,
+   },
+  content2: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+    width: "100%", height: "100%",
   },
   textSize: {
     fontSize: 18,
   },
   title: {
     fontWeight: 'bold',
-    // textAlign: 'center',
     fontSize: 18,
-    // alignSelf: "center",
     paddingTop: 10,
-    // paddingBottom: 5
-    // color: '#333',
-    // marginTop: 20,
-    // marginBottom: 10,
   },
   subtitle: {
     fontWeight: 'bold',
-    // textAlign: 'center',
     fontSize: 15,
-    // color: '#fff',
   },
   action: {
-    // flexDirection: 'row',
     paddingTop: 15,
     borderBottomColor: '#dedede',
     borderBottomWidth: 1,
@@ -762,4 +747,39 @@ const styles = StyleSheet.create({
   action2: {
     paddingTop: 10,
   },
+  scrollViewStyle: {
+    flex: 1,
+    padding: 15,
+    justifyContent: 'center',
+  },
+  headingStyle: {
+    fontSize: 30,
+    textAlign: 'center',
+    marginBottom: 40,
+  },
 });
+
+function TermsCheckBox(props) {
+  const { name, rules, shouldUnregister, defaultValue, control } = props;
+  const { field } = useController({
+    name,
+    rules,
+    shouldUnregister,
+    defaultValue,
+    control,
+  });
+
+  return (
+    <ListP.Item
+      title={'Remember me'}
+      left={() => (
+        <CheckboxP.Android
+          status={field.value}
+          onPress={() => {
+            field.onChange(field.value === 'checked' ? 'unchecked' : 'checked');
+          }}
+        />
+      )}
+    />
+  );
+}

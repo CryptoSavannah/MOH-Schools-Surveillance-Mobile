@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from "axios";
 import { PATIENTS_KEY, PATIENT_KEY, CONDITIONS_KEY, CASE_KEY } from '../../env.json';
 
+//data simulations
+
 var servPatients =
 {
   "status": 200,
@@ -34,102 +36,10 @@ var servConditions = {
 }
 
 export const fetchPatients = async () => {
-
-//   let pats = [];
-
-//   servPatients.data.map(x => {
-//     let date = new Date(x.dob);
-//     pats.push({
-//       id: x.patient_id,
-//       nin: x.nin,
-//       nin_hash: x.nin_hash,
-//       name: x.fname + ' ' + x.lname,
-//       dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
-//       gender: x.gender
-//     });
-//   });
-
-//   setPatients(pats);
-
-//   var config = {
-//     method: 'get',
-//     url: PATIENTS_KEY,
-//     headers: {
-//       'Authorization': `Bearer ${userToken}`
-//     }
-//   };
-
-  // console.log(JSON.stringify(config));
-
-  // await axios(config)
-  //   .then(res => {
-  //     let ps = [];
-  //     ps = res.data;
-
-  //     let pats = [];
-
-  //     console.log("Patients: " + JSON.stringify(ps));
-
-  //     ps.map(x => {
-  //       let date = new Date(x.dob);
-  //       pats.push({
-  //         id: x.patient_id,
-  //         nin: x.nin,
-  //         nin_hash: x.nin_hash,
-  //         name: x.fname + ' ' + x.lname,
-  //         dob: date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate() + 1),
-  //         gender: x.gender
-  //       });
-  //     });
-  //     setPatients(pats);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Fetching Patients: " + error);
-  //   });
-
   return servPatients
 };
 
 export const fetchChronicConditions = async () => {
-  // let conds = [];
-
-  // servConditions.data.map(x => {
-  //   conds.push({
-  //     id: x.condition_id,
-  //     name: x.condition,
-  //   });
-  // });
-
-//   setConditions(conds);
-
-//   var config = {
-//     method: 'get',
-//     url: CONDITIONS_KEY,
-//     headers: {
-//       'Authorization': `Bearer ${userToken}`
-//     }
-//   };
-
-  // console.log(JSON.stringify(config));
-
-  // await axios(config)
-  //   .then(res => {
-  //     let ps = [];
-  //     ps = res.data;
-  //     let conds = [];
-  //     console.log("Conditions: " + JSON.stringify(ps));
-  //     ps.data.map(x => {
-  //       conds.push({
-  //         id: x.condition_id,
-  //         name: x.condition,
-  //       });
-  //     });
-  //     setConditions(conds);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Fetching Conditions: " + error);
-  //   });
-
   return {"status": 200, "data": [{ "id":1,"condition_name": "Asthma"},
   {"id":2, "condition_name":"Sickle cell disease"},
   {"id":3, "condition_name":"TB on treatment"},
@@ -146,44 +56,30 @@ export const fetchChronicConditions = async () => {
 };
 
 export const fetchConditions = async () => {
-  // let conds = [];
-
-  // servConditions.data.map(x => {
-  //   conds.push({
-  //     id: x.condition_id,
-  //     name: x.condition,
-  //   });
-  // });
-
-//   setConditions(conds);
-
-//   var config = {
-//     method: 'get',
-//     url: CONDITIONS_KEY,
-//     headers: {
-//       'Authorization': `Bearer ${userToken}`
-//     }
-//   };
-
-  // console.log(JSON.stringify(config));
-
-  // await axios(config)
-  //   .then(res => {
-  //     let ps = [];
-  //     ps = res.data;
-  //     let conds = [];
-  //     console.log("Conditions: " + JSON.stringify(ps));
-  //     ps.data.map(x => {
-  //       conds.push({
-  //         id: x.condition_id,
-  //         name: x.condition,
-  //       });
-  //     });
-  //     setConditions(conds);
-  //   })
-  //   .catch((error) => {
-  //     console.error("Fetching Conditions: " + error);
-  //   });
-
   return servConditions;
 };
+
+//draft
+export const fetchReportList = async () => {
+  return {"status": 200, "data": [{ "report_id":1,"report_name": "WASH"},
+  {"report_id":2, "report_name":"Registry"},
+  {"report_id":3, "report_name":"Covid"},
+ ]};
+};
+
+export const fetchDisabilities = async () => {
+  return {"status": 200, "data": [{"id":"0", "disability_name":"None"},
+  {"id":"1", "disability_name":"Difficulty in seeing"},
+  {"id":"2", "disability_name":"Albinism"},
+  {"id":"3", "disability_name":"Difficulty in hearing"},
+  {"id":"4", "disability_name":"Delayed age specific motor development"},
+  {"id":"5", "disability_name":"Delayed age specific height for age (dwarfism)"},
+  {"id":"6", "disability_name":"Difficulty understanding"},
+  {"id":"7", "disability_name":"Difficulty in remembering"},
+  {"id":"8", "disability_name":"Difficulty in writing"},
+  {"id":"9", "disability_name":"Difficulty washing all over or dressing"},
+  {"id":"10", "disability_name":"Mentally impared"},
+  {"id":"11", "disability_name":"Emotionally impared"},
+]};
+};
+

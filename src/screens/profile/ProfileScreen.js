@@ -99,7 +99,7 @@ const PersonalScreen = ({ navigation }) => {
                         <TouchableOpacity>
                             <View style={[telStyles.container]}>
                                 <View style={telStyles.iconRow}>
-                                    <Icon name="ios-call" style={{ color: "#3a3838", }} size={26} />
+                                    <Icon name="ios-call" style={{ color: "#0388E5", }} size={26} />
                                 </View>
                                 <TouchableOpacity
                                     style={telStyles.telRow}>
@@ -116,7 +116,7 @@ const PersonalScreen = ({ navigation }) => {
                                     <Icon
                                         ios="logo-whatsapp"
                                         android="logo-whatsapp"
-                                        style={{ color: "#3a3838", }} />
+                                        style={{ color: "#0388E5", }} />
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -124,7 +124,7 @@ const PersonalScreen = ({ navigation }) => {
                         <TouchableOpacity>
                             <View style={[telStyles.container]}>
                                 <View style={telStyles.iconRow}>
-                                    <Icon name="ios-home" style={{ color: "#3a3838", }} size={26} />
+                                    <Icon name="ios-home" style={{ color: "#0388E5", }} size={26} />
                                 </View>
                                 {/* <TouchableOpacity
                                     style={telStyles.telRow}>
@@ -148,7 +148,7 @@ const PersonalScreen = ({ navigation }) => {
                                     <Icon
                                         ios="logo-whatsapp"
                                         android="logo-whatsapp"
-                                        style={{ color: "#3a3838", }} />
+                                        style={{ color: "#0388E5", }} />
                                 </View>
                             </View>
                         </TouchableOpacity>
@@ -164,8 +164,8 @@ const PersonalScreen = ({ navigation }) => {
                                 <View style={mailStyles.iconRow}>
                                     {/*<Icon*/}
                                     {/*    name="ios-mail"*/}
-                                    {/*    style={{color: "#3a3838",}}/>*/}
-                                    <Icon name="ios-mail" style={{ color: "#3a3838", }} size={26} />
+                                    {/*    style={{color: "#0388E5",}}/>*/}
+                                    <Icon name="ios-mail" style={{ color: "#0388E5", }} size={26} />
                                 </View>
                                 <TouchableOpacity
                                     style={mailStyles.emailRow}>
@@ -191,7 +191,7 @@ const PersonalScreen = ({ navigation }) => {
                                 <View style={mailStyles.iconRow}>
                                     <Icon
                                         name="md-globe"
-                                        style={{ color: "#3a3838", }}
+                                        style={{ color: "#0388E5", }}
                                         size={26}
                                     />
                                 </View>
@@ -220,7 +220,7 @@ const PersonalScreen = ({ navigation }) => {
                                 <View style={mailStyles.iconRow}>
                                     <Icon
                                         name="ios-pin"
-                                        style={{ color: "#3a3838", }}
+                                        style={{ color: "#0388E5", }}
                                         size={26}
                                     />
                                 </View>
@@ -252,7 +252,7 @@ const PersonalScreen = ({ navigation }) => {
                                     <Text>Signout</Text>
                                     <Icon
                                         name="ios-exit"
-                                        style={{ color: "#3a3838", }}
+                                        style={{ color: "#0388E5", }}
                                         size={26}
                                     />
                                 </View>
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     userImage: {
-        borderColor: '#3a3838',
+        borderColor: '#0388E5',
         borderRadius: 85,
         borderWidth: 3,
         height: 170,
@@ -356,7 +356,7 @@ const mailStyles = StyleSheet.create({
         marginBottom: 5,
     },
     emailIcon: {
-        color: '#3a3838',
+        color: '#0388E5',
         fontSize: 30,
     },
     emailNameColumn: {
@@ -437,7 +437,7 @@ const telStyles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
     telIcon: {
-        color: '#3a3838',
+        color: '#0388E5',
         fontSize: 30,
     },
     telNameColumn: {

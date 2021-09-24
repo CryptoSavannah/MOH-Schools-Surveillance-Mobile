@@ -12,6 +12,7 @@ import Case from "../screens/Case";
 import CaseForm from "../screens/CaseForm";
 import AddNew from "../screens/AddNew";
 import ProfileScreen from "../screens/profile/ProfileScreen";
+import CovidView from "../screens/CovidView";
 import { TouchableOpacity } from "react-native";
 import { Block, Text } from "../components";
 import PendingCases from "../screens/PendingCases";
@@ -33,31 +34,44 @@ const screenOptionStyle = {
 const HomeStackScreen = ({ navigation }) => (
   <Stack.Navigator screenOptions={{
     headerStyle: {
-      backgroundColor: '#3a3838',
+      backgroundColor: '#0388E5',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
       // fontWeight: 'bold'
     },
+    headerTitleAlign: 'center',
     safeAreaInsets: { top: 0, bottom: 0 }
   }}>
     <Stack.Screen name="Home" component={OverViewScreen} options={{
-      title: '',
+      title: 'U004 Wakiso',
       headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.openDrawer()} />
       ),
       // headerRight: () => (
-      //   <Icon2.Button name="dots-vertical" size={25} backgroundColor="#3a3838"
+      //   <Icon2.Button name="dots-vertical" size={25} backgroundColor="#0388E5"
       //     onPress={() =>
       //       //  {return(<View><Text>oooo</Text></View>);}
       //       navigation.navigate("FilterOptions")
       //     } />)
     }} />
+    <Stack.Screen name="CovidView" component={CovidView}
+    // component={() => (
+    //   <CaseForm navigation={navigation} />
+    // )} 
+    options={{
+      title: 'Covid',
+      headerLeft: () => (
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
+          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+      ),
+    }} />
+
     {/* <Stack.Screen name="Case" component={Case} options={{
       title: 'Record Case',
       headerLeft: () => (
-        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} /> */}
@@ -71,7 +85,7 @@ const HomeStackScreen = ({ navigation }) => (
     options={{
       // title: navigation.state.params.patient.name,
       headerLeft: () => (
-        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} /> */}
@@ -82,7 +96,7 @@ const HomeStackScreen = ({ navigation }) => (
     options={{
       title: 'Record Summary',
       headerLeft: () => (
-        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} />
@@ -92,9 +106,9 @@ const HomeStackScreen = ({ navigation }) => (
     //   <CaseForm navigation={navigation} />
     // )} 
     options={{
-      title: 'Record Covid Case',
+      title: 'Covid Report',
       headerLeft: () => (
-        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} />
@@ -109,14 +123,14 @@ const HomeStackScreen = ({ navigation }) => (
       // title: `Edit "${navigation.state.params.patient.name}"`,
       title: 'Update Case',
       headerLeft: () => (
-        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
       ),
     }} />
 
     <Stack.Screen name="Profile" component={ProfileScreen} options={{
       headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.openDrawer()} />
       ),
       headerShown: false,
@@ -124,27 +138,27 @@ const HomeStackScreen = ({ navigation }) => (
     <Stack.Screen name="AddNew" component={AddNew} options={{
       title: 'Patient Record',
       headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.openDrawer()} />
       )
     }} />
     {/* <Stack.Screen name="Pending" component={PendingCases} options={{
             headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
                     onPress={() => navigation.openDrawer()} />
             ),
         }} /> */}
     {/* <Stack.Screen name="ResultScreen" component={ResultScreen} options={{
             title: 'Case Record',
             headerLeft: () => (
-                <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+                <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
                     onPress={() => navigation.openDrawer()} />
             ),
         }} /> */}
     {/* <Stack.Screen name="FilterOptions" component={FilterScreen} options={{
             title: 'Select Period',
             headerLeft: () => (
-                <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#3a3838"
+                <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
                     onPress={() => navigation.goBack()} style={{paddingLeft: 20}}/>
             ),
         }} /> */}
@@ -154,7 +168,7 @@ const HomeStackScreen = ({ navigation }) => (
 const DepositStackScreen = ({ navigation }) => (
   <Stack.Navigator screenOptions={{
     headerStyle: {
-      backgroundColor: '#3a3838',
+      backgroundColor: '#0388E5',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -169,7 +183,7 @@ const DepositStackScreen = ({ navigation }) => (
 const ProfileStackScreen = ({ navigation }) => (
   <Stack.Navigator screenOptions={{
     headerStyle: {
-      backgroundColor: '#3a3838',
+      backgroundColor: '#0388E5',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -186,7 +200,7 @@ const ProfileStackScreen = ({ navigation }) => (
 const AddNewStackScreen = ({ navigation }) => (
   <Stack.Navigator screenOptions={{
     headerStyle: {
-      backgroundColor: '#3a3838',
+      backgroundColor: '#0388E5',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -197,7 +211,7 @@ const AddNewStackScreen = ({ navigation }) => (
     <Stack.Screen name="AddNew" component={AddNew} options={{
       title: 'Add Patient',
       headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.openDrawer()} />
       )
     }} />
@@ -207,7 +221,7 @@ const AddNewStackScreen = ({ navigation }) => (
 const DownloadStackScreen = ({ navigation }) => (
   <Stack.Navigator screenOptions={{
     headerStyle: {
-      backgroundColor: '#3a3838',
+      backgroundColor: '#0388E5',
     },
     headerTintColor: '#fff',
     headerTitleStyle: {
@@ -217,7 +231,7 @@ const DownloadStackScreen = ({ navigation }) => (
   }}>
     <Stack.Screen name="DownloadScreen" component={DownloadScreen} options={{
       headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25} backgroundColor="#3a3838"
+        <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.openDrawer()} />
       ),
       headerShown: false,
