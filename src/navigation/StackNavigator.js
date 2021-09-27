@@ -31,7 +31,7 @@ const screenOptionStyle = {
   headerBackTitle: "Back",
 };
 
-const HomeStackScreen = ({ navigation }) => (
+const HomeStackScreen = ({ route, navigation }) => (
   <Stack.Navigator screenOptions={{
     headerStyle: {
       backgroundColor: '#0388E5',
@@ -94,7 +94,7 @@ const HomeStackScreen = ({ navigation }) => (
     //   <CaseForm navigation={navigation} />
     // )} 
     options={{
-      title: 'Record Summary',
+      title: "",
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />

@@ -30,6 +30,12 @@ const SignInScreen = ({ navigation }) => {
   const loginHandle = () => {
     setIsLoading(true);
 
+    if(email == '' || password == ''){
+      alert('Fill in the required fields!')
+      setIsLoading(false)
+      return
+    }
+
     axios({
       url: SIGNIN_KEY,
       method: 'post',
@@ -77,7 +83,7 @@ const SignInScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={logo} />
-      <Text style={styles.header}>Login</Text>
+      <Text style={styles.header}>Login To Dashboard</Text>
       <View style={styles.inputView}>
         <TextInput
           style={styles.inputText}
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
   inputView: {
     width: '80%',
     backgroundColor: '#fff',
-    borderRadius: 25,
+    borderRadius: 2,
     height: 50,
     marginBottom: 20,
     justifyContent: 'center',
@@ -157,21 +163,12 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: 'rgba(3, 136, 229, 1)',
     justifyContent: 'center',
-    borderRadius: 50,
+    borderRadius: 4,
     padding: 10,
     alignItems: "center",
+    marginTop: 30
   },
   loginText: {
     color: 'white',
-  },
-  signup: {
-    marginTop: 20,
-    width: '80%',
-    borderRadius: 25,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // marginTop: 40,
-    marginBottom: 10,
   }
 });

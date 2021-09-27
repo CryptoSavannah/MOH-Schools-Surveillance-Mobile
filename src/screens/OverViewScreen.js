@@ -37,6 +37,7 @@ const OverViewScreen = ({ route, navigation }) => {
   const [cookie, setUserCookie] = useState('');
   const [toDate, setToDate] = useState('');
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
+  const defaultDate = new Date();
 
   const showToDatePicker = () => {
     setToDatePickerVisibility(true);
@@ -92,6 +93,9 @@ const OverViewScreen = ({ route, navigation }) => {
   };
 
   useEffect(() => {
+    let theDefDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + (defaultDate.getDate());
+    setToDate(theDefDate)
+    setFromDate(theDefDate)
     getReportList();
 
     AsyncStorage.getItem('user')
@@ -125,21 +129,21 @@ const OverViewScreen = ({ route, navigation }) => {
       method: 'post',
       headers: { "Content-Type": "application/json" },
       cookie: cookie,
-      data: { 
+      data: {
         "method": "getReports"
       }
     })
       .then(res => {
         console.log(res.data)
-        if(res.data.status == "500"){
+        if (res.data.status == "500") {
           AsyncStorage.clear().then(() => navigation.navigate("SignInScreen"))
-        }else{
+        } else {
           setReports(res.data.data);
         }
       })
       .catch(function (error) {
         console.log("Report list Error caught: " + error);
-        
+
       });
   };
 
@@ -152,38 +156,51 @@ const OverViewScreen = ({ route, navigation }) => {
   return (
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
-      <SafeAreaView style={{ backgroundColor: '#ffffff', padding: 10, flex: 1, justifyContent: 'space-around' }}>
-        <View style={{ width: '80%', alignSelf: 'center' }}>
-          <View style={{ width: "100%", marginTop: 15 }}>
-            <TouchableOpacity
-              activeOpacity={.5}
-              onPress={() => navigation.navigate("CovidView")}
-              style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 20, borderRadius: 4, elevation: 3 }}
-            >
-              <Text style={{ color: "white", fontSize: 18 }}>COVID</Text>
-            </TouchableOpacity>
-          </View>
+      <SafeAreaView style={{ backgroundColor: '#ffffff', padding: 20, flex: 1 }}>
+        {/* <View style={{ alignSelf: 'center' }}> */}
+        <View style={{ width: "100%", marginTop: 40, alignSelf: 'center' }}>
+          <TouchableOpacity
+            activeOpacity={.5}
+            onPress={() => navigation.navigate("CovidView")}
+            style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }}
+          >
+            <Text style={{ color: "white" }}>COVID</Text>
+          </TouchableOpacity>
         </View>
+        {/* </View> */}
 
-        <View style={{ flexDirection: 'row', justifyContent: "space-between", marginBottom: 10 }}>
-          <View style={{ width: '40%' }}>
-            <View style={styles.action}>
-              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="Date of Birth" placeholder="From Date:"
-                value={fromDate == '' ? '' : `From:  ${fromDate}`}
+        <View style={{ marginTop: 50}}>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontSize: 35, paddingBottom: 5 }}>Report</Text>
+          </View>
+
+          {/* <View style={{ flexDirection: 'row', justifyContent: "space-between", marginBottom: 10 }}> */}
+          <View style={{ paddingTop: 10 }}>
+            <View style={[styles.action, { flexDirection: 'row' }]}>
+              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date:"
+                value={`From:`}
+                showSoftInputOnFocus={false} />
+              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date:"
+                value={fromDate == '' ? '' : `${fromDate}`}
                 showSoftInputOnFocus={false} />
             </View>
             <DateTimePickerModal
               isVisible={isFromDatePickerVisible}
               mode="date"
+              date={defaultDate}
               onConfirm={handleFromConfirm}
               onCancel={hideFromDatePicker}
             />
           </View>
-          <View style={{ width: '40%' }}>
-            <View style={styles.action}>
+          <View style={{ paddingTop: 20 }}>
+            <View style={[styles.action, { flexDirection: 'row' }]}>
               <TextInput style={{ fontSize: 16 }}
                 onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
-                value={toDate == '' ? '' : `To:  ${toDate}`}
+                value={`To:`}
+                showSoftInputOnFocus={false} />
+              <TextInput style={{ fontSize: 16 }}
+                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
+                value={toDate == '' ? '' : `${toDate}`}
                 showSoftInputOnFocus={false} />
             </View>
             <DateTimePickerModal
@@ -193,32 +210,35 @@ const OverViewScreen = ({ route, navigation }) => {
               onCancel={hideToDatePicker}
             />
           </View>
-        </View>
+          {/* </View> */}
+          {/* <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 14, color: 'grey' }}>(select dates to change)</Text>
+          </View> */}
 
-        <View style={[styles.action2, { height: 50, marginVertical: 5, width: '100%', alignSelf: 'center' }]} >
-          <Picker style={{
-            color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
-            transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
-          }}
-            selectedValue={selectedReport}
-            onValueChange={(itemValue, itemIndex) => {
-              setSelectedReport(itemValue)
-            }} itemStyle={{ fontSize: 18 }} >
-            <Picker.Item value={null} label="Select Report" />
-            {renderReportList()}
-          </Picker>
-        </View>
-
-        <View style={{ alignItems: 'flex-end' }}>
-          <View style={{ width: 80, marginTop: 15 }}>
-            <TouchableOpacity
-              activeOpacity={.5}
-              disabled={(selectedReport === null)}
-              onPress={() => navigation.navigate("NewAggregate", { report: selectedReport })}
-              style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
-            >
-              <Text style={{ color: "white" }}>Next</Text>
-            </TouchableOpacity>
+          <View style={[styles.action2, { height: 50, marginVertical: 25, width: '100%', alignSelf: 'center' }]} >
+            <Picker style={{
+              color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+              transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+            }}
+              selectedValue={selectedReport}
+              onValueChange={(itemValue, itemIndex) => {
+                setSelectedReport(itemValue)
+              }} itemStyle={{ fontSize: 18 }} >
+              <Picker.Item value={null} label="Select Report" />
+              {renderReportList()}
+            </Picker>
+          </View>
+          <View style={{ alignItems: 'flex-end' }}>
+            <View style={{ width: 80, marginTop: 55 }}>
+              <TouchableOpacity
+                activeOpacity={.5}
+                disabled={(selectedReport === null)}
+                onPress={() => navigation.navigate("NewAggregate", { title: "work", report: selectedReport })}
+                style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
+              >
+                <Text style={{ color: "white" }}>Next</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </SafeAreaView>

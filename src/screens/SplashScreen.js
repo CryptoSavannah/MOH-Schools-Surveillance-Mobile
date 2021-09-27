@@ -20,9 +20,9 @@ const SplashScreen = ({navigation}) => {
     return (
         <View style={styles.container}>
             <Image source={require("../assets/logo.png")} style={{width: "80%", height: "30%"}} resizeMode="contain"/>
-            <Text style={styles.header}>Track students' health records</Text>
-            <Text style={styles.description}>Record student's statuses and their health records</Text>
-            <Text style={styles.description}>Let the ministry store info for you</Text>
+            <Text style={styles.header}>Track Students Health Records</Text>
+            <Text style={styles.description}>Record student's status and their health.</Text>
+            <Text style={styles.description}>Let the ministry store your info.</Text>
             {/*<Text style={styles.description}>Vestibulum varius mauris in eros scelerisque egestas.</Text>*/}
             <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('SignInScreen')}>
                 <Text style={styles.startText}>START NOW</Text>
@@ -49,13 +49,13 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     description: {
-        fontSize: 12,
+        fontSize: 15,
         color: "gray",
         padding: 5
     },
     startBtn: {
         backgroundColor: "rgba(3, 136, 229, 1)",
-        borderRadius: 50,
+        borderRadius: 4,
         padding: 10,
         width: "50%",
         alignItems: "center",

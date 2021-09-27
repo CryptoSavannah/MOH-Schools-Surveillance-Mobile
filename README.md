@@ -4,7 +4,14 @@ Mobile App written in React-Native and has read and write permissions to a Block
 
 ## Setup
 
-This project was built using expo cli (https://github.com/expo/expo-cli), and Javascript.
+This project was built using expo cli (https://github.com/expo/expo-cli), Javascript, and was moved to pure react-native setting.
+1. To start clone the repo, install dependencies preferrably using yarn.
+2. Next, create a folder for your url variables for the various environments in the files envs/development.json, envs/staging.json and envs/production.json.
+3. To set the environment for development, run the command below.
+```bash
+node scripts/set-environment.js development
+```
+4. Invoke the react native scripts in terminal to start.
 
 ## Features
 

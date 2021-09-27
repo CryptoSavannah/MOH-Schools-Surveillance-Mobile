@@ -96,7 +96,7 @@ export function DrawerContent(props) {
               )}
               label={() => (
                 <Text style={{ color: props.inactiveTintColor }}>
-                  + Covid Case
+                  Covid Case
                 </Text>
               )}
               onPress={() => {
