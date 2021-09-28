@@ -31,6 +31,6 @@ export default NextButton;
 
 const styles = StyleSheet.create({
     action: {},
-    activeBtn: {backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 50, elevation:3},
-    inActiveBtn: {backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 50, elevation:3}
+    activeBtn: {backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 4, elevation:3},
+    inActiveBtn: {backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 4, elevation:3}
 });

@@ -82,8 +82,6 @@ const CaseForm = ({ route, navigation }) => {
 
   const { control, setFocus, handleSubmit } = useForm({
     defaultValues: {
-      firstName: '',
-      lastName: '',
       email: '',
       password: '',
       city: '',
@@ -294,8 +292,8 @@ const CaseForm = ({ route, navigation }) => {
   }
 
   const onSubmit2 = handleSubmit((data) => {
-    console.log(data);
-    setPName(data.firstName + " " + data.lastName)
+    let pat = patients.find(x => x.value == data.patient).label
+    setPName(pat)
     goToNext(true, '');
   })
 
@@ -371,6 +369,7 @@ const CaseForm = ({ route, navigation }) => {
       setIsLoading(false)
       alert("Case has been Recorded");
       cancel()
+      // return
     }, 1000);
   };
 
@@ -378,8 +377,9 @@ const CaseForm = ({ route, navigation }) => {
   const stepList = [
     {
       content:
-        <View style={[styles.content]}>
-          <ScrollView style={{ paddingTop: 15 }} >
+          <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20,
+     width: "100%", height: "100%",
+     marginTop: 10, }}>
             <FormBuilder
               control={control}
               setFocus={setFocus}
@@ -455,35 +455,35 @@ const CaseForm = ({ route, navigation }) => {
                   },
                   options: [
                     {
-                      label: 'Lucknow',
+                      label: 'Kampala',
                       value: 1,
                     },
                     {
-                      label: 'Noida',
+                      label: 'Wakiso',
                       value: 2,
                     },
                     {
-                      label: 'Delhi',
+                      label: 'Mukono',
                       value: 3,
                     },
                     {
-                      label: 'Bangalore',
+                      label: 'Mpigi',
                       value: 4,
                     },
                     {
-                      label: 'Pune',
+                      label: 'Mbale',
                       value: 5,
                     },
                     {
-                      label: 'Mumbai',
+                      label: 'Buikwe',
                       value: 6,
                     },
                     {
-                      label: 'Ahmedabad',
+                      label: 'Jinja',
                       value: 7,
                     },
                     {
-                      label: 'Patna',
+                      label: 'Kiboga',
                       value: 8,
                     },
                   ],
@@ -521,7 +521,6 @@ const CaseForm = ({ route, navigation }) => {
             />
               <NextButton goToNext={onSubmit2} disable={false} />
           </ScrollView>
-        </View>,
     },
     {
       content:
@@ -646,12 +645,12 @@ const CaseForm = ({ route, navigation }) => {
           </View>
 
           <View style={{
-              flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 5,
+              flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 40,
               marginBottom: 10
             }}>
             <PrevButton goToPrev={goToPrev} />
             {isLoading ?
-              <LoadingButton isLoading={isLoading} />
+              <ActivityIndicator animating={isLoading} size='large' style={{paddingRight: 20, paddingTop: 10}} color="#1A5276" />
               :
               <FinishButton goToFinish={goToFinish} />}
 

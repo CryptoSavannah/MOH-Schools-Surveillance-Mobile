@@ -4,6 +4,7 @@ import { View, StyleSheet, Text, ActivityIndicator, Button, TouchableOpacity, Lo
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScrollView } from 'react-native-gesture-handler';
 import { CREATE_AGGREGATE_KEY } from '../../env.json';
+import { REPORT_LIST_KEY, REPORT_FIELDS_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import { fetchChronicConditions } from '../model/data';
 import axios from "axios";
@@ -21,9 +22,11 @@ const AggregateForm = ({route, navigation}) => {
   const [school_id, setSchool_id] = useState('');
   const [case_stats, setCase_Stats] = useState('');
   const [summaries_stats, setSummaries_Stats] = useState('');
+  const [cookie, setUserCookie] = useState('');
+
   // const stdRef = useRef(null);
 
-  const { report } = route.params ?? {};
+  const { report, reportFields, defaultValues } = route.params ?? {};
 
   let values = {};
   const [isLoading, setIsLoading] = useState(false);
@@ -41,22 +44,78 @@ const AggregateForm = ({route, navigation}) => {
   const [healedNo, setHealedNo] = useState('');
   const [selectedItemIndex, updateSelectedItem] = useState('');
   const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
+  const [reportFieldNames, setReportFieldNames] = useState({});
 
-  const { control, setFocus, handleSubmit } = useForm({
-    defaultValues: {
-      chronic_condition: '',
-      cases_num: '',
-      treated_num: '',
-      healed_num: '',
-      deceased_num: '',
-    },
-    mode: 'onChange',
-  });
+  const form = useForm();
+
+  const getReportFields = async () => {
+    console.log("report.report_id ", report.report_id)
+
+    let rprts = [];
+    let config = {
+      url: REPORT_FIELDS_KEY,
+      method: 'post',
+      headers: { "Content-Type": "application/json" },
+      cookie: cookie,
+      data: {
+        "method": "getReportFields",
+        "reportID": report.report_id
+      }
+    };
+    console.log("config ", config)
+    if (report.report_id !== null) {
+      axios(config)
+        .then(res => {
+          console.log('report fields response: ', res)
+          if (res.data.status == "500") {
+            signOut()
+          } else {
+            var df = {}
+            let rf = (res.data.data)
+            rf.forEach(x => {
+              let field = x.Name
+              df[field] = ''
+            })
+
+            console.log("df", df)
+
+            setReportFieldNames(df)
+          }
+        })
+        .catch(function (error) {
+          console.log("Report fields Error caught: " + error);
+          // AsyncStorage.clear().then(() => {
+          //   signOut()
+          // });
+        });
+    }
+    else {
+      alert('select again')
+    }
+  };
 
   useEffect(() => {
-    if(report){
-      console.log(report)
-    }
+    navigation.setOptions({
+      title: report.report_name,
+    });
+
+    AsyncStorage.getItem('user')
+      .then(user => {
+        if (user === null) {
+
+        } else {
+          let usr = JSON.parse(user);
+          setUserCookie(usr.cookie);
+          getReportFields()
+          console.log('fetching... ' + usr.cookie);
+        }
+      })
+      .catch(err => console.log(err));
+    // console.log("defaultValues: ", reportFieldNames)
+
+    // form.setValue(reportFieldNames);
+    // console.log("defaultValues form ", form.getValues())
+    // console.log("reportFields ag", reportFields[0])
     // retrieveUserId();
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
@@ -101,64 +160,64 @@ const AggregateForm = ({route, navigation}) => {
     return (str2[1] + '/' + str2[2] + '/' + str2[0])
   }
 
-  const onSubmit = handleSubmit(async (data) => {
-    setIsLoading(true)
-    console.log(data);
+  // const onSubmit = handleSubmit(async (data) => {
+  //   setIsLoading(true)
+  //   console.log(data);
 
-    setTimeout(() => {
-      setIsLoading(false)
-      alert("Case Summary Information saved.");
-      // cancel()
-    }, 1000);
+  //   setTimeout(() => {
+  //     setIsLoading(false)
+  //     alert("Case Summary Information saved.");
+  //     // cancel()
+  //   }, 1000);
 
-    // var data = {
-    //   "fromDate": `${fromDate}`,
-    //   "toDate": `${toDate}`,
-    //   "disease": `${selectedIllness}`,
-    //   "suspected": `${suspectedNo}`,
-    //   "tested": `${testedNo}`,
-    //   "confirmed": `${confirmedNo}`,
-    //   // "treated": `${treatedNo}`,
-    // };
+  //   // var data = {
+  //   //   "fromDate": `${fromDate}`,
+  //   //   "toDate": `${toDate}`,
+  //   //   "disease": `${selectedIllness}`,
+  //   //   "suspected": `${suspectedNo}`,
+  //   //   "tested": `${testedNo}`,
+  //   //   "confirmed": `${confirmedNo}`,
+  //   //   // "treated": `${treatedNo}`,
+  //   // };
 
-    // var config = {
-    //   method: 'post',
-    //   url: CREATE_AGGREGATE_KEY,
-    //   headers: {
-    //     'Authorization': `Bearer ${userId}`
-    //   },
-    //   data: data
-    // };
+  //   // var config = {
+  //   //   method: 'post',
+  //   //   url: CREATE_AGGREGATE_KEY,
+  //   //   headers: {
+  //   //     'Authorization': `Bearer ${userId}`
+  //   //   },
+  //   //   data: data
+  //   // };
 
-    // await axios.post(CREATE_AGGREGATE_KEY, {
-    //   values,
-    // })
-    //   .then(function (response) {
-    //     if (response.status === 200) {
+  //   // await axios.post(CREATE_AGGREGATE_KEY, {
+  //   //   values,
+  //   // })
+  //   //   .then(function (response) {
+  //   //     if (response.status === 200) {
 
-    //       alert('Success!', 'Case Summary Information saved.', [{
-    //         text: 'Okay', onPress: () => cancel(),
-    //       }]);
-    //       cancel();
+  //   //       alert('Success!', 'Case Summary Information saved.', [{
+  //   //         text: 'Okay', onPress: () => cancel(),
+  //   //       }]);
+  //   //       cancel();
 
-    //     } else {
+  //   //     } else {
 
-    //       console.log(response.status);
-    //       alert('Failed to save Case Summary Information.', 'Please try again.', [{
-    //         text: 'Okay', onPress: () => setCurrentStep(0),
-    //       }]);
-    //       setCurrentStep(0);
-    //     }
+  //   //       console.log(response.status);
+  //   //       alert('Failed to save Case Summary Information.', 'Please try again.', [{
+  //   //         text: 'Okay', onPress: () => setCurrentStep(0),
+  //   //       }]);
+  //   //       setCurrentStep(0);
+  //   //     }
 
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //     alert('Failed to save Case Summary Information.', error + '\nPlease try again.', [{
-    //       text: 'Okay', onPress: () => cancel(),
-    //     }]);
-    //     cancel()
-    //   }).finally(() => { setIsLoading(false) })
-  })
+  //   //   })
+  //   //   .catch(function (error) {
+  //   //     console.log(error);
+  //   //     alert('Failed to save Case Summary Information.', error + '\nPlease try again.', [{
+  //   //       text: 'Okay', onPress: () => cancel(),
+  //   //     }]);
+  //   //     cancel()
+  //   //   }).finally(() => { setIsLoading(false) })
+  // })
 
   const cancel = () => {
     //clear fields, back to home
@@ -172,84 +231,13 @@ const AggregateForm = ({route, navigation}) => {
   return (
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
-      <View style={[styles.container]}>
-        <ScrollView>
-          <Text style={{ fontSize: 20, fontWeight: "bold", paddingTop: 20, paddingBottom: 10 }}>
-            {report.report_name}: 
-             </Text>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
 
-             <FormBuilder
+             {/* <FormBuilder
               control={control}
               setFocus={setFocus}
-              formConfigArray={[
-                {
-                  name: 'chronic_condition',
-                  type: 'autocomplete',
-                  textInputProps: {
-                    label: 'Chronic medical condition/allergies:',
-                  },
-                  rules: {
-                    required: {
-                      value: true,
-                      message: 'Condition is required',
-                    },
-                  },
-                  options: conditions
-                },
-                {
-                  name: 'cases_num',
-                  type: 'text',
-                  textInputProps: {
-                    label: 'Number of Cases',
-                  },
-                  rules: {
-                    required: {
-                      value: true,
-                      message: 'Number of cases is required',
-                    },
-                  },
-                },
-                {
-                  name: 'treated_num',
-                  type: 'text',
-                  textInputProps: {
-                    label: 'Number of treated',
-                  },
-                  rules: {
-                    required: {
-                      value: true,
-                      message: 'Number of treated is required',
-                    },
-                  },
-                },
-                {
-                  name: 'healed_num',
-                  type: 'text',
-                  textInputProps: {
-                    label: 'Number of healed',
-                  },
-                  rules: {
-                    required: {
-                      value: true,
-                      message: 'Number of healed is required',
-                    },
-                  },
-                },
-                {
-                  name: 'deceased_num',
-                  type: 'text',
-                  textInputProps: {
-                    label: 'Number of deceased',
-                  },
-                  rules: {
-                    required: {
-                      value: true,
-                      message: 'Number of deceased is required',
-                    },
-                  },
-                },
-              ]}
-            />
+              formConfigArray={reportFields.slice(0,1)}
+            /> */}
           <View style={{
             flexDirection: 'row', justifyContent: 'space-between',
             paddingTop: 30, marginBottom: 10
@@ -280,7 +268,6 @@ const AggregateForm = ({route, navigation}) => {
             </View>
           </View>
         </ScrollView>
-      </View>
     </>
   );
 
@@ -289,14 +276,6 @@ const AggregateForm = ({route, navigation}) => {
 export default AggregateForm;
 
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    justifyContent: "center",
-    width: "100%", height: "100%",
-    // marginTop: 10,
-    paddingHorizontal: 20,
-    // backgroundColor: "#F3F6F9"
-  },
   textSize: {
     fontSize: 20
   },

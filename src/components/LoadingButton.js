@@ -21,7 +21,7 @@ const LoadingButton = ({ isLoading }) => {
             <View style={{ width: 80, marginTop: 15 }}>
                 <TouchableOpacity
                     style={[{
-                        alignItems: "center", padding: 10, borderRadius: 20
+                        alignItems: "center", padding: 12, borderRadius: 4
                         , elevation: 5, backgroundColor: "#1A5276"
                     }]}
                     underlayColor='#1A5276'

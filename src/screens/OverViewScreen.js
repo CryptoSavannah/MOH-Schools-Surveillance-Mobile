@@ -15,7 +15,7 @@ import {
 import Iconm from "react-native-vector-icons/MaterialCommunityIcons";
 import morganisms from '../assets/morganisms.png';
 import axios from "axios";
-import { REPORT_LIST_KEY, GRAPH_KEY } from '../../env.json';
+import { REPORT_LIST_KEY, REPORT_FIELDS_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import MenuCard2 from '../components/MenuCard2';
 import { fetchReportList } from '../model/data';
@@ -29,8 +29,12 @@ import realm, {
 import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import NextButton from '../components/NextButton';
+import { AuthContext } from "../components/context";
+import { Select } from 'react-native-paper';
 
 const OverViewScreen = ({ route, navigation }) => {
+
+  const { signOut } = React.useContext(AuthContext);
 
   const [selectedReport, setSelectedReport] = useState(null);
   const [reports, setReports] = useState([]);
@@ -38,6 +42,8 @@ const OverViewScreen = ({ route, navigation }) => {
   const [toDate, setToDate] = useState('');
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
   const defaultDate = new Date();
+  const [reportFields, setReportFields] = useState([]);
+  const [reportFieldNames, setReportFieldNames] = useState({});
 
   const showToDatePicker = () => {
     setToDatePickerVisibility(true);
@@ -101,11 +107,10 @@ const OverViewScreen = ({ route, navigation }) => {
     AsyncStorage.getItem('user')
       .then(user => {
         if (user === null) {
-          // this.setState({loading: false, showLoginForm: true});
+
         } else {
           let usr = JSON.parse(user);
           setUserCookie(usr.cookie);
-          // fetchData();
           console.log('fetching... ' + usr.cookie);
         }
       })
@@ -115,11 +120,10 @@ const OverViewScreen = ({ route, navigation }) => {
 
     // returned function will be called on component unmount 
     return () => {
-      // window.removeEventListener('mousemove', () => {})
-      // setSelectedReport('');
+
     }
 
-  }, []);
+  }, [selectedReport]);
 
   const getReportList = async () => {
 
@@ -134,17 +138,65 @@ const OverViewScreen = ({ route, navigation }) => {
       }
     })
       .then(res => {
-        console.log(res.data)
+        // console.log('report list response: ',res)
         if (res.data.status == "500") {
-          AsyncStorage.clear().then(() => navigation.navigate("SignInScreen"))
+          signOut()
         } else {
           setReports(res.data.data);
         }
       })
       .catch(function (error) {
         console.log("Report list Error caught: " + error);
-
+        AsyncStorage.clear().then(() => {
+          signOut()
+        });
       });
+  };
+
+  const getReportFields = async () => {
+    console.log("selectedReport.report_id ", selectedReport.report_id)
+
+    let rprts = [];
+    let config = {
+      url: REPORT_FIELDS_KEY,
+      method: 'post',
+      headers: { "Content-Type": "application/json" },
+      cookie: cookie,
+      data: {
+        "method": "getReportFields",
+        "reportID": selectedReport.report_id
+      }
+    };
+    console.log("config ", config)
+    if(selectedReport.report_id !== null){
+      axios(config)
+      .then(res => {
+        console.log('report fields response: ', res)
+        if (res.data.status == "500") {
+          signOut()
+        } else {
+          setReportFields((res.data.data));
+          var df = {}
+          reportFields.forEach(x => {
+            let field = x.Name
+            df[field] = ''
+          })
+
+          console.log("df", df)
+
+          setReportFieldNames(df)
+          console.log('reportFields ', JSON.stringify(reportFields))
+        }
+      })
+      .catch(function (error) {
+        console.log("Report fields Error caught: " + error);
+        // AsyncStorage.clear().then(() => {
+        //   signOut()
+        // });
+      });}
+      else{
+        alert('select again')
+      }
   };
 
   const renderReportList = () => {
@@ -169,7 +221,7 @@ const OverViewScreen = ({ route, navigation }) => {
         </View>
         {/* </View> */}
 
-        <View style={{ marginTop: 50}}>
+        <View style={{ marginTop: 50 }}>
           <View style={{ flexDirection: 'row' }}>
             <Text style={{ fontSize: 35, paddingBottom: 5 }}>Report</Text>
           </View>
@@ -220,9 +272,12 @@ const OverViewScreen = ({ route, navigation }) => {
               color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
               transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
             }}
-              selectedValue={selectedReport}
+              // selectedValue={selectedReport}
               onValueChange={(itemValue, itemIndex) => {
                 setSelectedReport(itemValue)
+                if (selectedReport !== null) {
+                  getReportFields().catch(e => console.log("error getting: ", e));
+                }
               }} itemStyle={{ fontSize: 18 }} >
               <Picker.Item value={null} label="Select Report" />
               {renderReportList()}
@@ -232,8 +287,8 @@ const OverViewScreen = ({ route, navigation }) => {
             <View style={{ width: 80, marginTop: 55 }}>
               <TouchableOpacity
                 activeOpacity={.5}
-                disabled={(selectedReport === null)}
-                onPress={() => navigation.navigate("NewAggregate", { title: "work", report: selectedReport })}
+                disabled={(reportFieldNames === {})}
+                onPress={() => navigation.navigate("NewAggregate", { title: "work", report: selectedReport, reportFields: reportFields, defaultValues: reportFieldNames })}
                 style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
               >
                 <Text style={{ color: "white" }}>Next</Text>

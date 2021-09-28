@@ -98,7 +98,9 @@ const SignInScreen = ({ navigation }) => {
           placeholder="Password"
           placeholderTextColor="#003f5c"
           name="password"
-          keyboardType="password"
+          // keyboardType="visible-password"
+          secureTextEntry
+           autoCorrect={false}
           onChangeText={(text) => setPassword(text)} />
       </View>
 

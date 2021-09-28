@@ -19,7 +19,7 @@ const PrevButton = ({ goToPrev }) => {
         //     </View>
         // </View>
 
-        <View style={{ width: 80, alignItems: 'flex-end' }}>
+        <View style={{ width: 80, alignItems: 'flex-end', marginTop: 15 }}>
             <Button
                 block
                 // style={styles.btn}

@@ -94,7 +94,7 @@ const HomeStackScreen = ({ route, navigation }) => (
     //   <CaseForm navigation={navigation} />
     // )} 
     options={{
-      title: "",
+      title: "Record Summary",
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
@@ -109,7 +109,7 @@ const HomeStackScreen = ({ route, navigation }) => (
       title: 'Covid Report',
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
-          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+          onPress={() => navigation.navigate("Home")} style={{ paddingLeft: 20 }} />
       ),
     }} />
 
