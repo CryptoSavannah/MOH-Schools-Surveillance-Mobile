@@ -40,9 +40,9 @@ const OverViewScreen = ({ route, navigation }) => {
   const [reports, setReports] = useState([]);
   const [cookie, setUserCookie] = useState('');
   const [toDate, setToDate] = useState('');
-  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
+  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false); 
   const defaultDate = new Date();
-  const [reportFields, setReportFields] = useState([]);
+  // const [reportFields, setReportFields] = useState([]);
   const [reportFieldNames, setReportFieldNames] = useState({});
 
   const showToDatePicker = () => {
@@ -153,8 +153,8 @@ const OverViewScreen = ({ route, navigation }) => {
       });
   };
 
-  const getReportFields = async () => {
-    console.log("selectedReport.report_id ", selectedReport.report_id)
+  const getReportFields = async (rep) => {
+    console.log("selectedReport.report_id ", rep.report_id)
 
     let rprts = [];
     let config = {
@@ -164,39 +164,40 @@ const OverViewScreen = ({ route, navigation }) => {
       cookie: cookie,
       data: {
         "method": "getReportFields",
-        "reportID": selectedReport.report_id
+        "reportID": rep.report_id
       }
     };
     console.log("config ", config)
-    if(selectedReport.report_id !== null){
+    if (rep.report_id !== null) {
       axios(config)
-      .then(res => {
-        console.log('report fields response: ', res)
-        if (res.data.status == "500") {
-          signOut()
-        } else {
-          setReportFields((res.data.data));
-          var df = {}
-          reportFields.forEach(x => {
-            let field = x.Name
-            df[field] = ''
-          })
+        .then(res => {
+          console.log('report fields response: ', res)
+          if (res.data.status == "500") {
+            signOut()
+          } else {
+            setReportFields((res.data.data));
+            var df = {}
+            reportFields.forEach(x => {
+              let field = x.Name
+              df[field] = ''
+            })
 
-          console.log("df", df)
+            console.log("df", df)
 
-          setReportFieldNames(df)
-          console.log('reportFields ', JSON.stringify(reportFields))
-        }
-      })
-      .catch(function (error) {
-        console.log("Report fields Error caught: " + error);
-        // AsyncStorage.clear().then(() => {
-        //   signOut()
-        // });
-      });}
-      else{
-        alert('select again')
-      }
+            setReportFieldNames(df)
+            console.log('reportFields ', JSON.stringify(reportFields))
+          }
+        })
+        .catch(function (error) {
+          console.log("Report fields Error caught: " + error);
+          // AsyncStorage.clear().then(() => {
+          //   signOut()
+          // });
+        });
+    }
+    else {
+      alert('select again')
+    }
   };
 
   const renderReportList = () => {
@@ -276,7 +277,7 @@ const OverViewScreen = ({ route, navigation }) => {
               onValueChange={(itemValue, itemIndex) => {
                 setSelectedReport(itemValue)
                 if (selectedReport !== null) {
-                  getReportFields().catch(e => console.log("error getting: ", e));
+                  getReportFields(itemValue).catch(e => console.log("error getting: ", e));
                 }
               }} itemStyle={{ fontSize: 18 }} >
               <Picker.Item value={null} label="Select Report" />
@@ -288,7 +289,11 @@ const OverViewScreen = ({ route, navigation }) => {
               <TouchableOpacity
                 activeOpacity={.5}
                 disabled={(reportFieldNames === {})}
-                onPress={() => navigation.navigate("NewAggregate", { title: "work", report: selectedReport, reportFields: reportFields, defaultValues: reportFieldNames })}
+                onPress={() =>
+                  {
+                    navigation.navigate("NewAggregate", { title: "work", report: selectedReport, dfs: reportFieldNames })
+                  }
+                }
                 style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
               >
                 <Text style={{ color: "white" }}>Next</Text>

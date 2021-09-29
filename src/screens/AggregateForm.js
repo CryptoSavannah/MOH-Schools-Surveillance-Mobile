@@ -14,7 +14,7 @@ import { useController, useForm } from 'react-hook-form';
 import { Checkbox as CheckboxP, List as ListP, TextInput } from 'react-native-paper';
 import { FormBuilder } from 'react-native-paper-form-builder';
 
-const AggregateForm = ({route, navigation}) => {
+const AggregateForm = ({ route, navigation }) => {
 
   const [userId, setUserId] = useState('');
   const [userToken, setUserToken] = useState('');
@@ -26,7 +26,7 @@ const AggregateForm = ({route, navigation}) => {
 
   // const stdRef = useRef(null);
 
-  const { report, reportFields, defaultValues } = route.params ?? {};
+  const { report } = route.params ?? {};
 
   let values = {};
   const [isLoading, setIsLoading] = useState(false);
@@ -45,8 +45,13 @@ const AggregateForm = ({route, navigation}) => {
   const [selectedItemIndex, updateSelectedItem] = useState('');
   const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
   const [reportFieldNames, setReportFieldNames] = useState({});
+  const [reportForm, setReportForm] = useState([]);
 
-  const form = useForm();
+  // const form = useForm();
+  const { control, setFocus, handleSubmit } = useForm({
+    defaultValues: route.params.dfs,
+    mode: 'onChange',
+  });
 
   const getReportFields = async () => {
     console.log("report.report_id ", report.report_id)
@@ -70,6 +75,9 @@ const AggregateForm = ({route, navigation}) => {
           if (res.data.status == "500") {
             signOut()
           } else {
+            setReportForm(res.data.data)
+            // console.log('the form ...')
+            // console.log(reportForm)
             var df = {}
             let rf = (res.data.data)
             rf.forEach(x => {
@@ -80,6 +88,8 @@ const AggregateForm = ({route, navigation}) => {
             console.log("df", df)
 
             setReportFieldNames(df)
+            
+            // renderReportForm()
           }
         })
         .catch(function (error) {
@@ -95,6 +105,8 @@ const AggregateForm = ({route, navigation}) => {
   };
 
   useEffect(() => {
+
+
     navigation.setOptions({
       title: report.report_name,
     });
@@ -226,48 +238,98 @@ const AggregateForm = ({route, navigation}) => {
     navigation.goBack();
   };
 
+  const renderReportForm = () => {
+
+    if (reportForm.length == 0) {
+
+      return null
+    } else {
+
+      // console.log(" .....jjdjd...")
+      // console.log(reportForm)
+
+      // let newForm = {}
+      var outterArray = [];
+       reportForm.forEach(field => {
+        let newfield = {}
+        newfield["name"] = field.Name
+        newfield["label"] = field.Name
+        // console.log("the type is: ", field.data.length)
+        if(field.data.length == 1){
+          newfield["type"] = "text"
+        }
+        else{
+          newfield["type"] = "select"
+          let options = []
+          field.data.forEach(option => {
+            let newOption = {"label": option.dataLabel, "value": option.varID}
+            options.push(newOption)
+          })
+          // console.log("the options are: ", options)
+          newfield["options"] = options
+        }
+
+        outterArray.push(newfield)
+
+        // console.log(outterArray)
+
+      })
+      // console.log("final form: ")
+      // console.log(outterArray)
+
+      return outterArray
+      // return reports.map((report) => {
+      //   return <Picker.item label={report.report_name} value={report} key={report.report_id} />
+      // })
+    }
+  }
+
   //-------------------------------------------------------------------------
 
   return (
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
-        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
 
-             {/* <FormBuilder
-              control={control}
-              setFocus={setFocus}
-              formConfigArray={reportFields.slice(0,1)}
-            /> */}
-          <View style={{
-            flexDirection: 'row', justifyContent: 'space-between',
-            paddingTop: 30, marginBottom: 10
-          }}>
-            <View style={{ width: 80, marginBottom: 10 }}>
-              <Button rounded
-                block
-                style={styles.btn}
-                color="grey" title="Cancel" onPress={() => { cancel() }} />
+        {(reportForm.length == 0) ? null :
+        // null
+          <FormBuilder
+            control={control}
+            setFocus={setFocus}
+            // defaultValues={reportFieldNames}
+            formConfigArray={renderReportForm()}
+          />
+          }
+        <View style={{
+          flexDirection: 'row', justifyContent: 'space-between',
+          paddingTop: 30, marginBottom: 10
+        }}>
+          <View style={{ width: 80, marginBottom: 10 }}>
+            <Button rounded
+              block
+              style={styles.btn}
+              color="grey" title="Cancel" onPress={() => { cancel() }} />
 
-            </View>
-            <View style={{ width: 80, marginBottom: 10 }}>
-              {!isLoading ? <Button title="Save"
-                rounded
-                block
-                style={styles.btn}
-                color="rgba(3, 136, 229, 1)"
-                onPress={() => { onSubmit() }}
-              >
-              </Button>
-                :
-                <TouchableOpacity
-                  style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "rgba(3, 136, 229, 1)" }]}
-                  underlayColor='rgba(3, 136, 229, 1)'
-                >
-                  <ActivityIndicator animating={isLoading} color="#fff" />
-                </TouchableOpacity>}
-            </View>
           </View>
-        </ScrollView>
+          <View style={{ width: 80, marginBottom: 10 }}>
+            {!isLoading ? <Button title="Save"
+              rounded
+              block
+              style={styles.btn}
+              color="rgba(3, 136, 229, 1)"
+              onPress={() => { onSubmit() }}
+            >
+            </Button>
+              :
+              <TouchableOpacity
+                style={[, styles.btn, { alignItems: "center", padding: 10, backgroundColor: "rgba(3, 136, 229, 1)" }]}
+                underlayColor='rgba(3, 136, 229, 1)'
+              >
+                <ActivityIndicator animating={isLoading} color="#fff" />
+              </TouchableOpacity>}
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 
