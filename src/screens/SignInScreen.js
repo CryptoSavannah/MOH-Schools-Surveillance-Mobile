@@ -59,13 +59,19 @@ const SignInScreen = ({ navigation }) => {
           console.log("SignIn Error: " + JSON.stringify(res));
         }
         else {
+          // console.log("SignIn res: " + JSON.stringify(res));
           let cookie = res.headers["set-cookie"]
+        //   "userData": {
+        //     "userid": "62",
+        //     "display_name": "frederick.o@savannah.ug"
+        // }
 
           const foundUser = {
             cookie: cookie,
-            email: email,
-            password: password
+            userid: res.data.userData.userid,
+            display_name: res.data.userData.display_name
           }
+          // console.log(foundUser)
           AsyncStorage.setItem('user', JSON.stringify(foundUser));
           signIn(foundUser);
         }

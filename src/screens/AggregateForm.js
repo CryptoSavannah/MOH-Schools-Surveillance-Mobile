@@ -1,62 +1,27 @@
 import React, { useState, useEffect, useRef, Fragment } from 'react';
-import Wizard from 'react-native-wizard';
 import { View, StyleSheet, Text, ActivityIndicator, Button, TouchableOpacity, LogBox, StatusBar } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { ScrollView } from 'react-native-gesture-handler';
-import { CREATE_AGGREGATE_KEY } from '../../env.json';
 import { REPORT_LIST_KEY, REPORT_FIELDS_KEY } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
-import { fetchChronicConditions } from '../model/data';
 import axios from "axios";
 import { Picker } from '@react-native-picker/picker';
-// import SearchableDropdown from 'react-native-searchable-dropdown';
-import { useController, useForm } from 'react-hook-form';
 import { Checkbox as CheckboxP, List as ListP, TextInput } from 'react-native-paper';
-import { FormBuilder } from 'react-native-paper-form-builder';
 
 const AggregateForm = ({ route, navigation }) => {
 
-  const [userId, setUserId] = useState('');
-  const [userToken, setUserToken] = useState('');
-  const [center_no, setCenter_no] = useState('');
-  const [school_id, setSchool_id] = useState('');
-  const [case_stats, setCase_Stats] = useState('');
-  const [summaries_stats, setSummaries_Stats] = useState('');
   const [cookie, setUserCookie] = useState('');
+  const [facilityID, setFacilityID] = useState('');
 
-  // const stdRef = useRef(null);
+  const { report, begin_date, end_date } = route.params ?? {};
 
-  const { report } = route.params ?? {};
-
-  let values = {};
   const [isLoading, setIsLoading] = useState(false);
-
-  const [conditions, setConditions] = useState([]);
-  const [selectedIllness, setSelectedIllness] = useState('');
-  const [selectedConditions, setSelectedConditions] = useState([]);
-
-  // const [suspectedNo, setSuspectedNo] = useState('');
-  // const [testedNo, setTestedNo] = useState('');
-  // const [confirmedNo, setConfirmedNo] = useState('');
-  const [casesNo, setCasesNo] = useState('');
-  const [treatedNo, setTreatedNo] = useState('');
-  const [deceasedNo, setDeceasedNo] = useState('');
-  const [healedNo, setHealedNo] = useState('');
-  const [selectedItemIndex, updateSelectedItem] = useState('');
-  const [otherMedicalCondition, setOtherMedicalCondition] = useState('');
   const [reportFieldNames, setReportFieldNames] = useState({});
   const [reportForm, setReportForm] = useState([]);
-
-  // const form = useForm();
-  const { control, setFocus, handleSubmit } = useForm({
-    defaultValues: route.params.dfs,
-    mode: 'onChange',
-  });
+  const [fieldArray, setFieldArray] = useState([]);
+  const [valuesArray, setValuesArray] = useState([]);
 
   const getReportFields = async () => {
-    console.log("report.report_id ", report.report_id)
 
-    let rprts = [];
     let config = {
       url: REPORT_FIELDS_KEY,
       method: 'post',
@@ -67,17 +32,13 @@ const AggregateForm = ({ route, navigation }) => {
         "reportID": report.report_id
       }
     };
-    console.log("config ", config)
     if (report.report_id !== null) {
       axios(config)
         .then(res => {
-          console.log('report fields response: ', res)
           if (res.data.status == "500") {
             signOut()
           } else {
             setReportForm(res.data.data)
-            // console.log('the form ...')
-            // console.log(reportForm)
             var df = {}
             let rf = (res.data.data)
             rf.forEach(x => {
@@ -85,18 +46,13 @@ const AggregateForm = ({ route, navigation }) => {
               df[field] = ''
             })
 
-            console.log("df", df)
-
             setReportFieldNames(df)
-            
-            // renderReportForm()
+
           }
         })
         .catch(function (error) {
           console.log("Report fields Error caught: " + error);
-          // AsyncStorage.clear().then(() => {
-          //   signOut()
-          // });
+
         });
     }
     else {
@@ -118,118 +74,74 @@ const AggregateForm = ({ route, navigation }) => {
         } else {
           let usr = JSON.parse(user);
           setUserCookie(usr.cookie);
+          setFacilityID(usr.userid)
           getReportFields()
           console.log('fetching... ' + usr.cookie);
         }
       })
       .catch(err => console.log(err));
-    // console.log("defaultValues: ", reportFieldNames)
-
-    // form.setValue(reportFieldNames);
-    // console.log("defaultValues form ", form.getValues())
-    // console.log("reportFields ag", reportFields[0])
-    // retrieveUserId();
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-
-    //fetch diseases
-    fetchChronicConditions().then(res => {
-      // console.log(res)
-      let conds = [];
-
-      res.data.map(x => {
-        conds.push({
-          value: x.id,
-          label: x.condition_name,
-        });
-      });
-
-      setConditions(conds)
-
-    })
-    AsyncStorage.getItem('user')
-      .then(user => {
-        if (user === null) {
-        } else {
-          let usr = JSON.parse(user);
-          setUserToken(usr.token);
-          setCenter_no(usr.center_no);
-        }
-      })
-      .catch(err => console.log(err));
-
-    AsyncStorage.getItem('summaries_stats')
-      .then(the_summaries_stats => {
-        if (the_summaries_stats !== null) {
-          setSummaries_Stats(the_summaries_stats);
-        }
-      })
-      .catch(err => console.log(`summaries_stats error just: `, err));
 
   }, [])
 
-  const dateReverseFormat = (str) => {
-    let str2 = str.split("-")
-    return (str2[1] + '/' + str2[2] + '/' + str2[0])
-  }
+  const onSubmit = (async () => {
+    setIsLoading(true)
+    // console.log(valuesArray);
 
-  // const onSubmit = handleSubmit(async (data) => {
-  //   setIsLoading(true)
-  //   console.log(data);
+    // setTimeout(() => {
+    //   setIsLoading(false)
+    //   alert(`${report.report_name}Saved!`);
+    //   cancel()
+    // }, 1000);
 
-  //   setTimeout(() => {
-  //     setIsLoading(false)
-  //     alert("Case Summary Information saved.");
-  //     // cancel()
-  //   }, 1000);
+    let config = {
+      url: REPORT_FIELDS_KEY,
+      method: 'post',
+      headers: { "Content-Type": "application/json" },
+      cookie: cookie,
+      method: "submitReport",
+      begin_date: begin_date,
+      end_date: end_date,
+      facilityID: facilityID,
+      reportID: report.report_id,
+      formdata: valuesArray
+    };
+    console.log("config: ", config)
 
-  //   // var data = {
-  //   //   "fromDate": `${fromDate}`,
-  //   //   "toDate": `${toDate}`,
-  //   //   "disease": `${selectedIllness}`,
-  //   //   "suspected": `${suspectedNo}`,
-  //   //   "tested": `${testedNo}`,
-  //   //   "confirmed": `${confirmedNo}`,
-  //   //   // "treated": `${treatedNo}`,
-  //   // };
+    await axios.post(REPORT_FIELDS_KEY, {
+      config,
+    })
+      .then(function (response) {
+        console.log("response: ", response)
+        if (response.status === 200) {
 
-  //   // var config = {
-  //   //   method: 'post',
-  //   //   url: CREATE_AGGREGATE_KEY,
-  //   //   headers: {
-  //   //     'Authorization': `Bearer ${userId}`
-  //   //   },
-  //   //   data: data
-  //   // };
+          alert('Success!', `${report.report_name} Saved!`, [{
+            text: 'Okay', onPress: () => {
+              cancel()
+            },
+          }]);
 
-  //   // await axios.post(CREATE_AGGREGATE_KEY, {
-  //   //   values,
-  //   // })
-  //   //   .then(function (response) {
-  //   //     if (response.status === 200) {
+        } else {
 
-  //   //       alert('Success!', 'Case Summary Information saved.', [{
-  //   //         text: 'Okay', onPress: () => cancel(),
-  //   //       }]);
-  //   //       cancel();
+          console.log(response.status);
+          alert(`Failed to save ${report.report_name}.\nPlease try again.`, [{
+            text: 'Okay', onPress: () => {
+              return
+            },
+          }]);
+        }
 
-  //   //     } else {
-
-  //   //       console.log(response.status);
-  //   //       alert('Failed to save Case Summary Information.', 'Please try again.', [{
-  //   //         text: 'Okay', onPress: () => setCurrentStep(0),
-  //   //       }]);
-  //   //       setCurrentStep(0);
-  //   //     }
-
-  //   //   })
-  //   //   .catch(function (error) {
-  //   //     console.log(error);
-  //   //     alert('Failed to save Case Summary Information.', error + '\nPlease try again.', [{
-  //   //       text: 'Okay', onPress: () => cancel(),
-  //   //     }]);
-  //   //     cancel()
-  //   //   }).finally(() => { setIsLoading(false) })
-  // })
+      })
+      .catch(function (error) {
+        console.log(error);
+        alert(`Failed to save ${report.report_name}.`, error + '\nPlease try again.', [{
+          text: 'Okay', onPress: () => {
+            return
+          },
+        }]);
+        // cancel()
+      }).finally(() => { setIsLoading(false) })
+  })
 
   const cancel = () => {
     //clear fields, back to home
@@ -250,19 +162,21 @@ const AggregateForm = ({ route, navigation }) => {
 
       // let newForm = {}
       var outterArray = [];
-       reportForm.forEach(field => {
+      reportForm.forEach(field => {
         let newfield = {}
         newfield["name"] = field.Name
         newfield["label"] = field.Name
-        // console.log("the type is: ", field.data.length)
-        if(field.data.length == 1){
+        newfield["varID"] = field.data[0].varID
+
+        // console.log("the varID is: ", field.data[0].varID)
+        if (field.data.length == 1) {
           newfield["type"] = "text"
         }
-        else{
+        else {
           newfield["type"] = "select"
           let options = []
           field.data.forEach(option => {
-            let newOption = {"label": option.dataLabel, "value": option.varID}
+            let newOption = { "label": option.dataLabel, "value": option.varID }
             options.push(newOption)
           })
           // console.log("the options are: ", options)
@@ -277,11 +191,74 @@ const AggregateForm = ({ route, navigation }) => {
       // console.log("final form: ")
       // console.log(outterArray)
 
-      return outterArray
+      return renderAField(outterArray)
       // return reports.map((report) => {
       //   return <Picker.item label={report.report_name} value={report} key={report.report_id} />
       // })
     }
+  }
+
+  const renderAField = (fields) => {
+
+    return (
+      <View>
+        {
+          fields.map(el => {
+            // console.log("el options ", el.options)
+            switch (el.type) {
+              case "text":
+                return <View style={styles.inputView} key={el.varID}>
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder={el.name}
+                    placeholderTextColor="#003f5c"
+                    name="password"
+                    autoCorrect={false}
+                    onChangeText={(text) => {
+                      var newEl = {
+                        "name": el.name,
+                        "VarID": el.varID,
+                        "value": text,
+                      }
+                      // console.log("the varID is: ", el.varID)
+
+                      setValuesArray([...valuesArray, newEl])
+
+                    }} />
+                </View>
+              case "select":
+                return (
+                  <View style={[styles.action2, { height: 50, marginBottom: 20, width: '100%', alignSelf: 'center' }]} key={el.varID} >
+                    <Picker style={{
+                      color: el.value === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+                      transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
+                    }}
+                      onValueChange={(itemValue, itemIndex) => {
+                        var newEl = {
+                          "name": el.name,
+                          "VarID": itemValue,
+                          "value": itemValue,
+                        }
+                        setValuesArray([...valuesArray, newEl])
+                      }} itemStyle={{ fontSize: 18 }} >
+                      <Picker.Item value={null} label={`Select ${el.label}`} />
+                      {
+                        // console.log("el.options: ..", el.options);
+                        el.options.map((option) => {
+                          return <Picker.item label={option.label} value={option} key={option.value} />
+                        })
+                      }
+                    </Picker>
+                  </View>)
+
+              default:
+                return null
+            }
+          })
+        }
+      </View>
+    )
+
   }
 
   //-------------------------------------------------------------------------
@@ -292,14 +269,8 @@ const AggregateForm = ({ route, navigation }) => {
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20 }}>
 
         {(reportForm.length == 0) ? null :
-        // null
-          <FormBuilder
-            control={control}
-            setFocus={setFocus}
-            // defaultValues={reportFieldNames}
-            formConfigArray={renderReportForm()}
-          />
-          }
+          renderReportForm()
+        }
         <View style={{
           flexDirection: 'row', justifyContent: 'space-between',
           paddingTop: 30, marginBottom: 10
@@ -369,6 +340,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
     padding: 10,
     flexDirection: 'row'
+  },
+  inputView: {
+    // width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 2,
+    height: 50,
+    marginBottom: 20,
+    justifyContent: 'center',
+    // padding: 20,
+  },
+  inputText: {
+    height: 50,
   },
   headerText: {
     // textAlign: 'center',

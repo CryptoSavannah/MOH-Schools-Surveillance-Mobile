@@ -31,10 +31,16 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import NextButton from '../components/NextButton';
 import { AuthContext } from "../components/context";
 import { Select } from 'react-native-paper';
+import { useController, useForm } from 'react-hook-form';
 
 const OverViewScreen = ({ route, navigation }) => {
 
   const { signOut } = React.useContext(AuthContext);
+
+  const form = useForm({
+    defaultValues: {},
+    mode: 'onChange',
+  });
 
   const [selectedReport, setSelectedReport] = useState(null);
   const [reports, setReports] = useState([]);
@@ -42,7 +48,7 @@ const OverViewScreen = ({ route, navigation }) => {
   const [toDate, setToDate] = useState('');
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false); 
   const defaultDate = new Date();
-  // const [reportFields, setReportFields] = useState([]);
+  const [reportFields, setReportFields] = useState([]);
   const [reportFieldNames, setReportFieldNames] = useState({});
 
   const showToDatePicker = () => {
@@ -112,6 +118,9 @@ const OverViewScreen = ({ route, navigation }) => {
           let usr = JSON.parse(user);
           setUserCookie(usr.cookie);
           console.log('fetching... ' + usr.cookie);
+          navigation.setOptions({
+            title: usr.display_name,
+          });
         }
       })
       .catch(err => console.log(err));
@@ -185,6 +194,10 @@ const OverViewScreen = ({ route, navigation }) => {
             console.log("df", df)
 
             setReportFieldNames(df)
+          
+            form.d
+            AsyncStorage.setItem('reportForm', JSON.stringify(form));
+
             console.log('reportFields ', JSON.stringify(reportFields))
           }
         })
@@ -214,17 +227,22 @@ const OverViewScreen = ({ route, navigation }) => {
         <View style={{ width: "100%", marginTop: 40, alignSelf: 'center' }}>
           <TouchableOpacity
             activeOpacity={.5}
-            onPress={() => navigation.navigate("CovidView")}
+            onPress={() =>
+              {
+                console.log("fromDate ", fromDate)
+                navigation.navigate("NewAggregate", { report: {"report_name": "Covid 19 Surveillance", "report_id": 10}, begin_date: fromDate, end_date: toDate} )
+              }
+            }
             style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }}
           >
-            <Text style={{ color: "white" }}>COVID</Text>
+            <Text style={{ color: "white" }}>COVID SURVEILLANCE</Text>
           </TouchableOpacity>
         </View>
         {/* </View> */}
 
         <View style={{ marginTop: 50 }}>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={{ fontSize: 35, paddingBottom: 5 }}>Report</Text>
+            <Text style={{ fontSize: 35, paddingBottom: 5 }}>Other Reports</Text>
           </View>
 
           {/* <View style={{ flexDirection: 'row', justifyContent: "space-between", marginBottom: 10 }}> */}
@@ -263,10 +281,6 @@ const OverViewScreen = ({ route, navigation }) => {
               onCancel={hideToDatePicker}
             />
           </View>
-          {/* </View> */}
-          {/* <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-            <Text style={{ fontSize: 14, color: 'grey' }}>(select dates to change)</Text>
-          </View> */}
 
           <View style={[styles.action2, { height: 50, marginVertical: 25, width: '100%', alignSelf: 'center' }]} >
             <Picker style={{
@@ -291,7 +305,7 @@ const OverViewScreen = ({ route, navigation }) => {
                 disabled={(reportFieldNames === {})}
                 onPress={() =>
                   {
-                    navigation.navigate("NewAggregate", { title: "work", report: selectedReport, dfs: reportFieldNames })
+                    navigation.navigate("NewAggregate", { report: selectedReport, begin_date: fromDate, end_date: toDate})
                   }
                 }
                 style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
