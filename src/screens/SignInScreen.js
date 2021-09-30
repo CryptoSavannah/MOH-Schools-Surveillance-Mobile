@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Alert, Text, View, TextInput, TouchableOpacity, BackHandler, Image, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import logo from '../assets/logo.png';
-import Users from '../model/users';
-import { useTheme } from 'react-native-paper';
 import { AuthContext } from '../components/context';
 import { SIGNIN_KEY } from '../../env.json';
 import axios from "axios";
@@ -10,27 +8,16 @@ import AsyncStorage from "@react-native-community/async-storage";
 
 const SignInScreen = ({ navigation }) => {
 
-  const [center_no, setcenter_no] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [location, setLocation] = useState(null);
 
   const { signIn } = React.useContext(AuthContext);
-
-  const [errorMsg, setErrorMsg] = useState(null);
-
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-  }
 
   const loginHandle = () => {
     setIsLoading(true);
 
-    if(email == '' || password == ''){
+    if (email == '' || password == '') {
       alert('Fill in the required fields!')
       setIsLoading(false)
       return
@@ -61,10 +48,10 @@ const SignInScreen = ({ navigation }) => {
         else {
           // console.log("SignIn res: " + JSON.stringify(res));
           let cookie = res.headers["set-cookie"]
-        //   "userData": {
-        //     "userid": "62",
-        //     "display_name": "frederick.o@savannah.ug"
-        // }
+          //   "userData": {
+          //     "userid": "62",
+          //     "display_name": "frederick.o@savannah.ug"
+          // }
 
           const foundUser = {
             cookie: cookie,
@@ -79,7 +66,7 @@ const SignInScreen = ({ navigation }) => {
       })
       .catch(function (error) {
         console.log("SignIn Error caught: " + error);
-        alert('Failed to find data store: Try again', [
+        alert('Internet error: Try again', [
           { text: 'Okay' }
         ]);
         setIsLoading(false);
@@ -104,9 +91,8 @@ const SignInScreen = ({ navigation }) => {
           placeholder="Password"
           placeholderTextColor="#003f5c"
           name="password"
-          // keyboardType="visible-password"
           secureTextEntry
-           autoCorrect={false}
+          autoCorrect={false}
           onChangeText={(text) => setPassword(text)} />
       </View>
 
@@ -124,8 +110,6 @@ const SignInScreen = ({ navigation }) => {
           }>
           <Text style={styles.loginText}>LOGIN</Text>
         </TouchableOpacity>
-
-
       }
     </View>
   );
@@ -163,6 +147,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     height: 50,
+    fontSize: 16
   },
   forgot: {
     fontSize: 11,

@@ -2,16 +2,12 @@ import React from 'react';
 import {
     View,
     TouchableOpacity,
-    Dimensions,
     StyleSheet,
     Image,
 } from 'react-native';
 import {
     Text,
-    Icon,
-    Button,
 } from "@99xt/first-born";
-import * as Animatable from 'react-native-animatable';
 import {useTheme} from '@react-navigation/native';
 
 const SplashScreen = ({navigation}) => {
@@ -23,7 +19,6 @@ const SplashScreen = ({navigation}) => {
             <Text style={styles.header}>Track Students Health Records</Text>
             <Text style={styles.description}>Record student's status and their health.</Text>
             <Text style={styles.description}>Let the ministry store your info.</Text>
-            {/*<Text style={styles.description}>Vestibulum varius mauris in eros scelerisque egestas.</Text>*/}
             <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('SignInScreen')}>
                 <Text style={styles.startText}>START NOW</Text>
             </TouchableOpacity>
@@ -49,7 +44,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     description: {
-        fontSize: 15,
+        fontSize: 16,
         color: "gray",
         padding: 5
     },

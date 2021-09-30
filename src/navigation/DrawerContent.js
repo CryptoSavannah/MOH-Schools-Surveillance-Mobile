@@ -1,10 +1,7 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Linking, Image, Text } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Linking, Text, Image } from 'react-native';
 import {
-  useTheme,
   Avatar,
-  Title,
-  Caption,
   Drawer,
 } from 'react-native-paper';
 import {
@@ -18,43 +15,29 @@ import Iconi from 'react-native-vector-icons/Ionicons';
 
 import { AuthContext } from '../components/context';
 import logo from '../assets/logo.png';
-// import aggregation from '../assets/logo.png';
-import aggregation from '../assets/aggregation2.png';
 
 
 export function DrawerContent(props) {
 
-  const paperTheme = useTheme();
-
-  const { signOut, toggleTheme } = React.useContext(AuthContext);
-
-  // useEffect(() => {
-  //   console.log('drawer props: ', props)
-  // })
+  const { signOut } = React.useContext(AuthContext);
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#4d505b' }}>
+    <View style={styles.container}>
       <DrawerContentScrollView {...props}>
         <View style={styles.drawerContent}>
+
           <Drawer.Section style={styles.drawerSection}>
-            <View style={styles.userInfoSection}>
-              <View style={{ marginTop: 15, marginBottom: 20 }}>
-                <View style={{ paddingLeft: '10%' }}>
-                  <Avatar.Image
-                    source={logo}
-                    size={100}
-                    backgroundColor={'#4d505b'}
-                    style={{ borderRadius: 0 }}
-                  />
-                </View>
-                {/* <View style={{ marginLeft: '15%', flexDirection: 'column' }}>
-                  <Title style={[styles.title, {color: props.inactiveTintColor}]}>U004</Title>
-                  <Caption style={[styles.caption, {color: props.inactiveTintColor}]}>Wakiso</Caption>
-                </View> */}
-              </View>
+            <View style={[styles.userInfoSection]}>
+              <Image
+                source={logo}
+                backgroundColor={'#4d505b'}
+                style={styles.image}
+              />
             </View>
           </Drawer.Section>
+
           <Drawer.Section style={styles.drawerSection}>
+
             <DrawerItem
               activeTintColor={props.activeTintColor}
               icon={({ color, size }) => (
@@ -64,28 +47,10 @@ export function DrawerContent(props) {
                   size={size}
                 />
               )}
-              label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  Home
-                </Text>
-              )}
-              onPress={() => {
-                props.navigation.navigate('Home')
-              }}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>Home</Text>)}
+              onPress={() => { props.navigation.navigate('Home') }}
             />
-            {/* <DrawerItem
-              icon={({ color, size }) => (
-                <Image source={aggregation} style={{ width: size, height: size }} />
-              )}
-              label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  Report
-                </Text>
-              )}
-              onPress={() => {
-                props.navigation.navigate('NewAggregate')
-              }}
-            /> */}
+
             <DrawerItem
               icon={({ color, size }) => (
                 <Iconi
@@ -94,13 +59,10 @@ export function DrawerContent(props) {
                   size={size}
                 />
               )}
-              label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  Covid Case
-                </Text>
-              )}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16 }}> Covid Case </Text>)}
               onPress={() => {
-                props.navigation.navigate('NewCase')
+                let theDefDate = (new Date()).getFullYear() + '-' + (new Date()).getMonth() + '-' + ((new Date()).getDate());
+                props.navigation.navigate("NewAggregate", { report: { "report_name": "Covid 19 Surveillance", "report_id": 10 }, begin_date: theDefDate, end_date: theDefDate })
               }}
             />
 
@@ -113,22 +75,16 @@ export function DrawerContent(props) {
                   size={size}
                 />
               )}
-              label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  New Patient
-                </Text>
-              )}
-              onPress={() => {
-                props.navigation.navigate('AddNew')
-              }}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16 }}> New Patient </Text>)}
+              onPress={() => { props.navigation.navigate('AddNew') }}
             />
 
           </Drawer.Section>
+
           <Drawer.Section title={
-            <Text style={{ color: props.inactiveTintColor }}>
-              Contacts
-            </Text>
+            <Text style={{ color: props.inactiveTintColor, fontSize: 16 }}> Contacts </Text>
           }>
+
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon
@@ -138,9 +94,7 @@ export function DrawerContent(props) {
                 />
               )}
               label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  Ministry
-                </Text>
+                <Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>  Ministry </Text>
               )}
               onPress={() => {
                 Linking
@@ -148,8 +102,11 @@ export function DrawerContent(props) {
                   .catch(err => console.error('An error occured', err));
               }}
             />
+
           </Drawer.Section>
+
           <Drawer.Section>
+
             <DrawerItem
               icon={({ color, size }) => (
                 <Iconf
@@ -158,15 +115,12 @@ export function DrawerContent(props) {
                   size={17}
                 />
               )}
-              label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  School
-                </Text>
-              )}
+              label={() => ( <Text style={{ color: props.inactiveTintColor, fontSize: 16 }}> School </Text> )}
               onPress={() => {
                 props.navigation.navigate('Profile')
               }}
             />
+
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon
@@ -175,15 +129,12 @@ export function DrawerContent(props) {
                   size={size}
                 />
               )}
-              label={() => (
-                <Text style={{ color: props.inactiveTintColor }}>
-                  Sign Out
-                </Text>
-              )}
+              label={() => ( <Text style={{ color: props.inactiveTintColor, fontSize: 16 }}> Sign Out  </Text> )}
               onPress={() => {
                 signOut()
               }}
             />
+
           </Drawer.Section>
         </View>
       </DrawerContentScrollView>
@@ -192,42 +143,19 @@ export function DrawerContent(props) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1, backgroundColor: '#4d505b'
+  },
   drawerContent: {
     flex: 1,
   },
   userInfoSection: {
-    paddingLeft: 20,
+    paddingLeft: 20, marginTop: 15, marginBottom: 20, paddingLeft: '17%'
   },
-  title: {
-    fontSize: 16,
-    // marginTop: 3,
-    // fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-  },
-  row: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: 'bold',
-    marginRight: 3,
+  image: {
+    width: 100, height: 100
   },
   drawerSection: {
     marginTop: 15,
-  },
-  preference: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
   },
 });
