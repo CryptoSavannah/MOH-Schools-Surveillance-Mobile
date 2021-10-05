@@ -114,7 +114,7 @@ const OverViewScreen = ({ route, navigation }) => {
   };
 
   const renderReportList = () => {
-    return reports.map((report) => {
+    return reports && reports.map((report) => {
       return <Picker.item label={report.report_name} value={report} key={report.report_id} />
     })
   }
