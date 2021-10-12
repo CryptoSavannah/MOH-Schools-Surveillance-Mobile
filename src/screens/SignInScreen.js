@@ -5,6 +5,7 @@ import { AuthContext } from '../components/context';
 import { SIGNIN_KEY } from '../../env.json';
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
+import { ScrollView } from 'react-native-gesture-handler';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -46,19 +47,12 @@ const SignInScreen = ({ navigation }) => {
           console.log("SignIn Error: " + JSON.stringify(res));
         }
         else {
-          // console.log("SignIn res: " + JSON.stringify(res));
           let cookie = res.headers["set-cookie"]
-          //   "userData": {
-          //     "userid": "62",
-          //     "display_name": "frederick.o@savannah.ug"
-          // }
-
           const foundUser = {
             cookie: cookie,
             userid: res.data.userData.userid,
             display_name: res.data.userData.display_name
           }
-          // console.log(foundUser)
           AsyncStorage.setItem('user', JSON.stringify(foundUser));
           signIn(foundUser);
         }
@@ -74,7 +68,7 @@ const SignInScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Image style={styles.logo} source={logo} />
       <Text style={styles.header}>Login To Dashboard</Text>
       <View style={styles.inputView}>
@@ -96,6 +90,7 @@ const SignInScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)} />
       </View>
 
+      <View style={{paddingBottom: 80}}>
       {isLoading ?
         <TouchableOpacity
           style={styles.loginBtn}
@@ -111,7 +106,8 @@ const SignInScreen = ({ navigation }) => {
           <Text style={styles.loginText}>LOGIN</Text>
         </TouchableOpacity>
       }
-    </View>
+      </View>
+    </ScrollView>
   );
 };
 
@@ -121,20 +117,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fbfafa',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingVertical: 80
   },
   logo: {
     width: 130,
     height: 130,
-    marginBottom: 20,
+    // marginVertical: 20,
+    alignSelf: 'center'
   },
   header: {
     fontWeight: "bold",
     fontSize: 24,
     color: "#333",
     marginTop: 20,
-    marginBottom: 30
+    marginBottom: 30,
+    alignSelf: 'center'
+
   },
   inputView: {
     width: '80%',
@@ -144,6 +142,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     justifyContent: 'center',
     padding: 20,
+    alignSelf: 'center'
   },
   inputText: {
     height: 50,
@@ -155,11 +154,11 @@ const styles = StyleSheet.create({
   loginBtn: {
     width: '80%',
     backgroundColor: 'rgba(3, 136, 229, 1)',
-    justifyContent: 'center',
     borderRadius: 4,
     padding: 10,
     alignItems: "center",
-    marginTop: 30
+    marginVertical: 30,
+    alignSelf: 'center'
   },
   loginText: {
     color: 'white',

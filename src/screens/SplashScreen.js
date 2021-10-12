@@ -15,7 +15,7 @@ const SplashScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/logo.png")} style={{ width: "80%", height: "30%" }} resizeMode="contain" />
+      <Image source={require("../assets/logo.png")} style={{ width: "80%", height: "30%", marginTop: 10 }} resizeMode="contain" />
       <Text style={styles.header}>Track Students Health Records</Text>
       <Text style={styles.description}>Record student's status and their health.</Text>
       <Text style={styles.description}>Let the ministry store your info.</Text>
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop:10
   },
   header: {
     fontWeight: "bold",
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "50%",
     alignItems: "center",
-    marginTop: 50
+    marginVertical: 50
   },
   startText: {
     color: "white"

@@ -6,7 +6,8 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
-  StatusBar
+  StatusBar,
+  Dimensions
 } from 'react-native';
 import axios from "axios";
 import { BASE_API } from '../../env.json';
@@ -14,6 +15,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AuthContext } from "../components/context";
+import { ScrollView } from "react-native-gesture-handler";
 
 const OverViewScreen = ({ route, navigation }) => {
 
@@ -25,6 +27,7 @@ const OverViewScreen = ({ route, navigation }) => {
   const [toDate, setToDate] = useState('');
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
   const defaultDate = new Date();
+  const [priorityReport, setPriorityReport] = useState(null);
 
   const showToDatePicker = () => {
     setToDatePickerVisibility(true);
@@ -80,7 +83,7 @@ const OverViewScreen = ({ route, navigation }) => {
     AsyncStorage.getItem('user')
       .then(user => {
         if (user === null) { }
-         else {
+        else {
           let usr = JSON.parse(user);
           setUserCookie(usr.cookie);
           navigation.setOptions({ title: usr.display_name });
@@ -88,7 +91,7 @@ const OverViewScreen = ({ route, navigation }) => {
       })
       .catch(err => console.log(err));
 
-  }, [selectedReport]);
+  }, [selectedReport, priorityReport]);
 
   const getReportList = async () => {
 
@@ -105,6 +108,9 @@ const OverViewScreen = ({ route, navigation }) => {
         if (res.data.status == "500") { signOut() }
         else {
           setReports(res.data.data);
+         let thepR =  null;
+         thepR = reports.find(x => x.priority == "1");
+         setPriorityReport(thepR)
         }
       })
       .catch(function (error) {
@@ -119,20 +125,24 @@ const OverViewScreen = ({ route, navigation }) => {
     })
   }
 
+  const renderPriorityReport = () => {
+    return priorityReport && (<TouchableOpacity
+      activeOpacity={.5}
+      onPress={() =>
+        navigation.navigate("NewAggregate", { report: priorityReport, begin_date: fromDate, end_date: toDate })
+      }
+      style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }}
+    >
+      <Text style={{ color: "white", fontSize: 17 }}>{(priorityReport.report_name).toUpperCase()}</Text>
+    </TouchableOpacity>)
+  }
+
   return (
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
-      <SafeAreaView style={{ backgroundColor: '#ffffff', padding: 20, flex: 1 }}>
+      <ScrollView style={{ backgroundColor: '#ffffff', padding: 20 }}>
         <View style={{ width: "100%", marginTop: 40, alignSelf: 'center' }}>
-          <TouchableOpacity
-            activeOpacity={.5}
-            onPress={() => 
-              navigation.navigate("NewAggregate", { report: { "report_name": "Covid 19 Surveillance", "report_id": 10 }, begin_date: fromDate, end_date: toDate })
-            }
-            style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }}
-          >
-            <Text style={{ color: "white", fontSize: 16 }}>COVID SURVEILLANCE</Text>
-          </TouchableOpacity>
+          {reports && (renderPriorityReport())}
         </View>
 
         <View style={{ marginTop: 50 }}>
@@ -140,41 +150,39 @@ const OverViewScreen = ({ route, navigation }) => {
             <Text style={{ fontSize: 35, paddingBottom: 5 }}>Other Reports</Text>
           </View>
 
-          <View style={{ paddingTop: 10 }}>
-            <View style={[styles.action, { flexDirection: 'row' }]}>
-              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date:"
+          <View style={{ flexDirection: 'row' }}>
+            <View>
+              <TextInput style={[styles.action, { fontWeight: 'bold' }]} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date"
                 value={`From:`}
                 showSoftInputOnFocus={false} />
-              <TextInput style={{ fontSize: 16 }} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date:"
+              <TextInput style={[styles.action, { fontWeight: 'bold' }]}
+                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date"
+                value={`To:`} />
+
+            </View>
+            <View style={{ width: Dimensions.get('window').width }}>
+              <TextInput style={styles.action} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date"
                 value={fromDate == '' ? '' : `${fromDate}`}
                 showSoftInputOnFocus={false} />
+              <TextInput style={styles.action}
+                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date"
+                value={toDate == '' ? '' : `${toDate}`} />
             </View>
-            <DateTimePickerModal
-              isVisible={isFromDatePickerVisible}
-              mode="date"
-              date={defaultDate}
-              onConfirm={handleFromConfirm}
-              onCancel={hideFromDatePicker}
-            />
           </View>
-          <View style={{ paddingTop: 20 }}>
-            <View style={[styles.action, { flexDirection: 'row' }]}>
-              <TextInput style={{ fontSize: 16 }}
-                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
-                value={`To:`}
-                showSoftInputOnFocus={false} />
-              <TextInput style={{ fontSize: 16 }}
-                onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date:"
-                value={toDate == '' ? '' : `${toDate}`}
-                showSoftInputOnFocus={false} />
-            </View>
-            <DateTimePickerModal
-              isVisible={isToDatePickerVisible}
-              mode="date"
-              onConfirm={handleToConfirm}
-              onCancel={hideToDatePicker}
-            />
-          </View>
+          <DateTimePickerModal
+            isVisible={isFromDatePickerVisible}
+            mode="date"
+            date={defaultDate}
+            onConfirm={handleFromConfirm}
+            onCancel={hideFromDatePicker}
+          />
+
+          <DateTimePickerModal
+            isVisible={isToDatePickerVisible}
+            mode="date"
+            onConfirm={handleToConfirm}
+            onCancel={hideToDatePicker}
+          />
 
           <View style={[styles.action2, { height: 50, marginVertical: 25, width: '100%', alignSelf: 'center' }]} >
             <Picker style={{
@@ -187,11 +195,11 @@ const OverViewScreen = ({ route, navigation }) => {
             </Picker>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-            <View style={{ width: 80, marginTop: 55 }}>
+            <View style={{ width: 80, marginVertical: 55}}>
               <TouchableOpacity
                 activeOpacity={.5}
                 disabled={(selectedReport === null)}
-                onPress={() => 
+                onPress={() =>
                   navigation.navigate("NewAggregate", { report: selectedReport, begin_date: fromDate, end_date: toDate })
                 }
                 style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
@@ -201,7 +209,7 @@ const OverViewScreen = ({ route, navigation }) => {
             </View>
           </View>
         </View>
-      </SafeAreaView>
+      </ScrollView>
     </>
   );
 };
@@ -217,6 +225,8 @@ const styles = StyleSheet.create({
   action: {
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
+    fontSize: 17,
+    paddingTop: 20
   },
   activeBtn: { backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 },
   inActiveBtn: { backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }

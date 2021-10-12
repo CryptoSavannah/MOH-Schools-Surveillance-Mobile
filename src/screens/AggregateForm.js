@@ -76,12 +76,14 @@ const AggregateForm = ({ route, navigation }) => {
       cookie: cookie,
       data: {
         "method": "getReportFields",
-        "reportID": report.report_id
+        "reportID": report.report_id,
+        "format": "fill"
       }
     };
     if (report.report_id !== null) {
       axios(config)
         .then(res => {
+          // console.log("the res  ", res)
           if (res.data.status == "500") { signOut() }
           else {
             setReportForm(res.data.data); // console.log("the report  ", res.data.data[2].data)
@@ -123,39 +125,57 @@ const AggregateForm = ({ route, navigation }) => {
   const onSubmit = (async () => {
     setIsLoading(true)
 
-    console.log("valuesArray: ", valuesArray)
+    valuesArray.forEach(x => {
+      delete x.name
+    })
+    // console.log("valuesArray: ", valuesArray)
 
     let config = {
       url: BASE_API,
       method: 'post',
       headers: { "Content-Type": "application/json" },
       cookie: cookie,
-      method: "submitReport",
-      begin_date: begin_date,
-      end_date: end_date,
-      facilityID: facilityID,
-      reportID: report.report_id,
-      formdata: valuesArray
+      data: {
+        "method": "submitReport",
+        "begin_date": begin_date,
+        "end_date": end_date,
+        "facilityID": facilityID,
+        "reportID": report.report_id,
+        "formdata": valuesArray
+      }
     };
     // console.log("config: ", config)
 
-    await axios.post(BASE_API, { config })
-      .then(function (response) {
-        console.log("response: ", response)
-        if (response.status === 200) {
+    axios({
+      url: BASE_API,
+      method: 'post',
+      headers: { "Content-Type": "application/json" },
+      cookie: cookie,
+      data: {
+        "method": "submitForm",
+        "begin_date": begin_date,
+        "end_date": end_date,
+        "facilityID": facilityID,
+        "reportID": report.report_id,
+        "formdata": valuesArray
+      }
+    })
+      .then(res => {
+        // console.log("response: ", res)
+        if (res.status === 200) {
 
-          alert('Success!', `${report.report_name} Saved!`, [{
-            text: 'Okay', onPress: () => { cancel() },
+          alert(res.data.errorDetail, [{
+            text: 'Okay', onPress: () => { },
           }]);
+          cancel() 
 
         } else {
 
-          console.log(response.status);
-          alert(`Failed to save ${report.report_name}.\nPlease try again.`, [{
+          console.log(res.status);
+          alert(res.data.errorDetail, [{
             text: 'Okay', onPress: () => { return },
           }]);
         }
-
       })
       .catch(function (error) {
         console.log(error);
@@ -169,9 +189,9 @@ const AggregateForm = ({ route, navigation }) => {
 
   const getChecked = (varID) => {
     // return true
-    return valuesArray.some(function(el) {
+    return valuesArray.some(function (el) {
       return el.VarID === varID;
-    }); 
+    });
   }
 
   const renderReportForm = () => {
@@ -216,7 +236,7 @@ const AggregateForm = ({ route, navigation }) => {
             switch (el.type) {
               case "textInput":
                 return (
-                  <View style={styles.inputView} key={el.varID}>
+                  <View style={styles.inputView} key={el.fieldID}>
                     <TextInput
                       style={styles.inputText}
                       placeholder={el.name}
@@ -238,7 +258,7 @@ const AggregateForm = ({ route, navigation }) => {
                   </View>)
               case "numericInput":
                 return (
-                  <View style={styles.inputView} key={el.varID}>
+                  <View style={styles.inputView} key={el.fieldID}>
                     <TextInput
                       style={styles.inputText}
                       placeholder={el.name}
@@ -261,8 +281,8 @@ const AggregateForm = ({ route, navigation }) => {
 
               case "select":
                 return (
-                  <View style={{ marginHorizontal: 25 }}>
-                    <View style={[styles.action2, styles.pickerWrapper]} key={el.varID} >
+                  <View style={{ marginHorizontal: 25 }} key={el.fieldID} >
+                    <View style={[styles.action2, styles.pickerWrapper]} >
                       <Picker style={styles.picker}
                         onValueChange={(itemValue, itemIndex) => {
                           let newArr = valuesArray.filter(x => x.VarID !== el.varID)
