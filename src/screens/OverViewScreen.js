@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  SafeAreaView,
   StatusBar,
   Dimensions
 } from 'react-native';
@@ -16,6 +15,7 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { AuthContext } from "../components/context";
 import { ScrollView } from "react-native-gesture-handler";
+import { formatTheDateLabel, defaultDate, formatTheDateText } from "../helpers/helpers";
 
 const OverViewScreen = ({ route, navigation }) => {
 
@@ -24,9 +24,10 @@ const OverViewScreen = ({ route, navigation }) => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [reports, setReports] = useState([]);
   const [cookie, setUserCookie] = useState('');
-  const [toDate, setToDate] = useState('');
+  const [toDate, setToDate] = useState(defaultDate);
   const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
-  const defaultDate = new Date();
+  const [fromDate, setFromDate] = useState(defaultDate);
+  const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
   const [priorityReport, setPriorityReport] = useState(null);
 
   const showToDatePicker = () => {
@@ -34,7 +35,7 @@ const OverViewScreen = ({ route, navigation }) => {
   };
 
   const hideToDatePicker = () => {
-    setToDatePickerVisibility(false); setToDate('');
+    setToDatePickerVisibility(false);
   };
 
   const handleToConfirm = (e) => {
@@ -42,24 +43,19 @@ const OverViewScreen = ({ route, navigation }) => {
     var date = new Date(e);
 
     if (isNaN(date.getTime())) {
-      setToDate('')
+      setToDate(defaultDate)
     }
     else {
-      setToDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate()))
+      setToDate(date)
     }
   };
-
-
-  const [fromDate, setFromDate] = useState('');
-
-  const [isFromDatePickerVisible, setFromDatePickerVisibility] = useState(false);
 
   const showFromDatePicker = () => {
     setFromDatePickerVisibility(true);
   };
 
   const hideFromDatePicker = () => {
-    setFromDatePickerVisibility(false); setFromDate('');
+    setFromDatePickerVisibility(false);
   };
 
   const handleFromConfirm = (e) => {
@@ -67,17 +63,14 @@ const OverViewScreen = ({ route, navigation }) => {
     var date = new Date(e);
 
     if (isNaN(date.getTime())) {
-      setFromDate('')
+      setFromDate(defaultDate)
     }
     else {
-      setFromDate(date.getFullYear() + '-' + date.getMonth() + '-' + (date.getDate()))
+      setFromDate(date)
     }
   };
 
   useEffect(() => {
-    let theDefDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + (defaultDate.getDate());
-    setToDate(theDefDate)
-    setFromDate(theDefDate)
     getReportList();
 
     AsyncStorage.getItem('user')
@@ -91,7 +84,7 @@ const OverViewScreen = ({ route, navigation }) => {
       })
       .catch(err => console.log(err));
 
-  }, [selectedReport, priorityReport]);
+  }, [selectedReport, priorityReport, fromDate, toDate]);
 
   const getReportList = async () => {
 
@@ -108,9 +101,9 @@ const OverViewScreen = ({ route, navigation }) => {
         if (res.data.status == "500") { signOut() }
         else {
           setReports(res.data.data);
-         let thepR =  null;
-         thepR = reports.find(x => x.priority == "1");
-         setPriorityReport(thepR)
+          let thepR = null;
+          thepR = reports.find(x => x.priority == "1");
+          setPriorityReport(thepR)
         }
       })
       .catch(function (error) {
@@ -129,7 +122,7 @@ const OverViewScreen = ({ route, navigation }) => {
     return priorityReport && (<TouchableOpacity
       activeOpacity={.5}
       onPress={() =>
-        navigation.navigate("NewAggregate", { report: priorityReport, begin_date: fromDate, end_date: toDate })
+        navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
       }
       style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }}
     >
@@ -157,22 +150,23 @@ const OverViewScreen = ({ route, navigation }) => {
                 showSoftInputOnFocus={false} />
               <TextInput style={[styles.action, { fontWeight: 'bold' }]}
                 onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date"
-                value={`To:`} />
+                value={`To:`}
+                showSoftInputOnFocus={false} />
 
             </View>
             <View style={{ width: Dimensions.get('window').width }}>
               <TextInput style={styles.action} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date"
-                value={fromDate == '' ? '' : `${fromDate}`}
-                showSoftInputOnFocus={false} />
+                value={fromDate == '' ? '' : formatTheDateLabel(fromDate)
+                } />
               <TextInput style={styles.action}
                 onFocus={showToDatePicker} onKeyPress={showToDatePicker} label="To Date" placeholder="To Date"
-                value={toDate == '' ? '' : `${toDate}`} />
+                value={toDate == '' ? '' : formatTheDateLabel(toDate)} />
             </View>
           </View>
           <DateTimePickerModal
             isVisible={isFromDatePickerVisible}
             mode="date"
-            date={defaultDate}
+            date={fromDate}
             onConfirm={handleFromConfirm}
             onCancel={hideFromDatePicker}
           />
@@ -180,6 +174,7 @@ const OverViewScreen = ({ route, navigation }) => {
           <DateTimePickerModal
             isVisible={isToDatePickerVisible}
             mode="date"
+            date={toDate}
             onConfirm={handleToConfirm}
             onCancel={hideToDatePicker}
           />
@@ -195,12 +190,12 @@ const OverViewScreen = ({ route, navigation }) => {
             </Picker>
           </View>
           <View style={{ alignItems: 'flex-end' }}>
-            <View style={{ width: 80, marginVertical: 55}}>
+            <View style={{ width: 80, marginVertical: 55 }}>
               <TouchableOpacity
                 activeOpacity={.5}
                 disabled={(selectedReport === null)}
                 onPress={() =>
-                  navigation.navigate("NewAggregate", { report: selectedReport, begin_date: fromDate, end_date: toDate })
+                  navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
                 }
                 style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
               >

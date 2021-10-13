@@ -6,10 +6,10 @@ import axios from "axios";
 import { Picker } from '@react-native-picker/picker';
 import CheckBox from '@react-native-community/checkbox';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
+import { Collapse, CollapseHeader, CollapseBody, AccordionList } from 'accordion-collapse-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BASE_API } from '../../env.json';
-import { fetchReportFields } from '../model/data';
+import { defaultDate, formatTheDateLabel, formatTheDateText } from '../helpers/helpers';
 
 const AggregateForm = ({ route, navigation }) => {
 
@@ -30,37 +30,35 @@ const AggregateForm = ({ route, navigation }) => {
     }));
   };
 
-  const defaultDate = new Date();
-  let theDefDate = defaultDate.getFullYear() + '-' + defaultDate.getMonth() + '-' + (defaultDate.getDate());
-
-  const [sindex, setSIndex] = useState({ varID: "", name: "" });
-  const [isToDatePickerVisible, setToDatePickerVisibility] = useState(false);
+  const [sindex, setSIndex] = useState({ fieldID: "", varID: "", name: "" });
+  const [pickerDate, setPickerDate] = useState(defaultDate);
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [sAccordion, setSAccordion] = useState("");
 
-  const showToDatePicker = (varID, name) => {
-    setSIndex({ varID: varID, name: name })
-    setToDatePickerVisibility(true);
+  const showDatePicker = (fieldID, varID, name) => {
+    setSIndex({fieldID:fieldID, varID: varID, name: name })
+    setDatePickerVisibility(true);
   };
 
-  const hideToDatePicker = () => {
-    setToDatePickerVisibility(false);
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
   };
 
-  const handleToConfirm = (e) => {
-    hideToDatePicker();
+  const handleConfirm = (e) => {
+    hideDatePicker();
 
     var date = new Date(e);
     if (isNaN(date.getTime())) {
     }
     else {
-      const theDate = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate()
-      handleDatesChange(sindex.varID, theDate)
+      handleDatesChange(sindex.varID, date)
 
       let newArr = valuesArray.filter(x => x.name !== sindex.name)
       var newEl = {
         "name": sindex.name,
+        "IndicatorID": sindex.fieldID,
         "VarID": sindex.varID,
-        "value": theDate,
+        "value": formatTheDateText(date),
       }
 
       setValuesArray([...newArr, newEl])
@@ -86,15 +84,10 @@ const AggregateForm = ({ route, navigation }) => {
           // console.log("the res  ", res)
           if (res.data.status == "500") { signOut() }
           else {
-            setReportForm(res.data.data); // console.log("the report  ", res.data.data[2].data)
+            setReportForm(res.data.data); // console.log("the report  ", res.data.data)
           }
         })
         .catch(function (error) { console.log("Report fields Error caught: " + error); });
-
-      // fetchReportFields().then(res => {
-      //   // console.log("reportForm ", res.data)
-      //   setReportForm(res.data)
-      // })
     }
     else {
       alert('select again')
@@ -118,33 +111,25 @@ const AggregateForm = ({ route, navigation }) => {
         }
       })
       .catch(err => console.log(err));
-    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
 
-  }, [sindex, sAccordion])
+    //warnings: ...
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested', 'Warning:']);
+
+  }, [sindex, sAccordion, pickerDate])
 
   const onSubmit = (async () => {
     setIsLoading(true)
 
+    // valid responses ? continue : return
+
+    // clean response
     valuesArray.forEach(x => {
       delete x.name
     })
-    // console.log("valuesArray: ", valuesArray)
 
-    let config = {
-      url: BASE_API,
-      method: 'post',
-      headers: { "Content-Type": "application/json" },
-      cookie: cookie,
-      data: {
-        "method": "submitReport",
-        "begin_date": begin_date,
-        "end_date": end_date,
-        "facilityID": facilityID,
-        "reportID": report.report_id,
-        "formdata": valuesArray
-      }
-    };
-    // console.log("config: ", config)
+    // console.log("valuesArray: ", valuesArray)
+    // setIsLoading(false)
+    // return
 
     axios({
       url: BASE_API,
@@ -167,7 +152,7 @@ const AggregateForm = ({ route, navigation }) => {
           alert(res.data.errorDetail, [{
             text: 'Okay', onPress: () => { },
           }]);
-          cancel() 
+          cancel()
 
         } else {
 
@@ -186,13 +171,6 @@ const AggregateForm = ({ route, navigation }) => {
   })
 
   const cancel = () => { navigation.goBack(); };
-
-  const getChecked = (varID) => {
-    // return true
-    return valuesArray.some(function (el) {
-      return el.VarID === varID;
-    });
-  }
 
   const renderReportForm = () => {
 
@@ -248,6 +226,7 @@ const AggregateForm = ({ route, navigation }) => {
                         let newArr = valuesArray.filter(x => x.VarID !== el.varID)
                         var newEl = {
                           "name": el.name,
+                          "IndicatorID": el.fieldID,
                           "VarID": el.varID,
                           "value": text,
                         }
@@ -270,6 +249,7 @@ const AggregateForm = ({ route, navigation }) => {
                         let newArr = valuesArray.filter(x => x.VarID !== el.varID)
                         var newEl = {
                           "name": el.name,
+                          "IndicatorID": el.fieldID,
                           "VarID": el.varID,
                           "value": text,
                         }
@@ -288,13 +268,14 @@ const AggregateForm = ({ route, navigation }) => {
                           let newArr = valuesArray.filter(x => x.VarID !== el.varID)
                           var newEl = {
                             "name": el.name,
+                            "IndicatorID": el.fieldID,
                             "VarID": itemValue.value,
                             "value": itemValue.value,
                           }
 
                           setValuesArray([...newArr, newEl])
                         }} itemStyle={styles.pickerItem} >
-                        <Picker.Item value={null} label={`Select ${el.label}`} />
+                        <Picker.Item value={null} label={`Select ${el.label}`} key={"null"} />
                         {
                           el.options && el.options.map((option) => {
                             return <Picker.item label={option.label} value={option} key={option.value} />
@@ -315,7 +296,23 @@ const AggregateForm = ({ route, navigation }) => {
                       <CollapseBody>
                         {el.options.map((option) => {
                           return (
-                            <View style={styles.checkBoxGrp} key={option.value} >
+                            <TouchableOpacity style={styles.checkBoxGrp} key={option.value} onPress={() => {
+                              handleDatesChange(option.value, !(state[option.value]))
+
+                              let newArr = valuesArray.filter(x => x.VarID !== el.varID)
+                              var newEl = {
+                                "name": option.name,
+                                "IndicatorID": el.fieldID,
+                                "VarID": option.value,
+                                "value": !(state[option.value]),
+                              }
+                              if (!(state[option.value])) {
+                                setValuesArray([...newArr, newEl])
+                              }
+                              else {
+                                setValuesArray([...newArr])
+                              }
+                            }} >
                               <CheckBox
                                 value={state[option.value] || false}
                                 onValueChange={(itemValue) => {
@@ -337,12 +334,28 @@ const AggregateForm = ({ route, navigation }) => {
                               />
                               <Text style={styles.headerText}>{option.label}</Text>
 
-                            </View>)
+                            </TouchableOpacity>)
                         })}
                       </CollapseBody>
                     </Collapse>
                     :
-                    <View style={styles.checkBoxGrp} key={el.varID} >
+                    <TouchableOpacity style={styles.checkBoxGrp} key={el.varID} onPress={() => {
+                      handleDatesChange(el.varID, !(state[el.varID]))
+
+                      let newArr = valuesArray.filter(x => x.VarID !== el.varID)
+                      var newEl = {
+                        "name": el.name,
+                        "IndicatorID": el.fieldID,
+                        "VarID": el.varID,
+                        "value": !(state[el.varID]),
+                      }
+                      if (!(state[el.varID])) {
+                        setValuesArray([...newArr, newEl])
+                      }
+                      else {
+                        setValuesArray([...newArr])
+                      }
+                    }}>
                       <Text style={styles.headerText}>{el.name}</Text>
                       <CheckBox
                         value={state[el.varID] || false}
@@ -352,8 +365,9 @@ const AggregateForm = ({ route, navigation }) => {
                           let newArr = valuesArray.filter(x => x.VarID !== el.varID)
                           var newEl = {
                             "name": el.name,
+                            "IndicatorID": el.fieldID,
                             "VarID": el.varID,
-                            "value": el.varID,
+                            "value": itemValue,
                           }
                           if (itemValue) {
                             setValuesArray([...newArr, newEl])
@@ -363,7 +377,7 @@ const AggregateForm = ({ route, navigation }) => {
                           }
                         }}
                       />
-                    </View>
+                    </TouchableOpacity>
                   }
                 </>)
 
@@ -378,24 +392,24 @@ const AggregateForm = ({ route, navigation }) => {
                       <CollapseBody>
                         {el.options.map((option) => {
                           return (
-                            <View style={[styles.action4, { flexDirection: 'row' }]} key={option.value}>
-                              <TextInput style={{ fontSize: 18 }} onFocus={() => showToDatePicker(option.value, option.label)} onKeyPress={() => showToDatePicker(option.value, option.label)} label={option.label} placeholder={option.label}
+                            <TouchableOpacity style={[styles.action4, { flexDirection: 'row' }]} key={option.value} onPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }}>
+                              <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} onKeyPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} label={option.label} placeholder={option.label}
                                 value={`${option.label}:`}
                                 showSoftInputOnFocus={false} />
-                              <TextInput style={{ fontSize: 18 }} onFocus={() => showToDatePicker(option.value, option.label)} onKeyPress={() => showToDatePicker(option.value, option.label)} label={option.label} placeholder={option.label}
-                                value={state[option.value] || theDefDate} />
-                            </View>)
+                              <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} onKeyPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} label={option.label} placeholder={option.label}
+                                value={formatTheDateLabel(state[option.value]) || formatTheDateLabel(defaultDate)} />
+                            </TouchableOpacity>)
                         })}
                       </CollapseBody>
                     </Collapse>
                     :
-                    <View style={[styles.action4, { flexDirection: 'row' }]} key={el.varID}>
-                      <TextInput style={{ fontSize: 18 }} onFocus={() => showToDatePicker(el.varID, el.name)} onKeyPress={() => showToDatePicker(el.varID, el.name)} label={el.Name} placeholder={el.Name}
+                    <TouchableOpacity style={[styles.action4, { flexDirection: 'row' }]} key={el.varID} onPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }}>
+                      <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} onKeyPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} label={el.Name} placeholder={el.Name}
                         value={`${el.name}:`}
                         showSoftInputOnFocus={false} />
-                      <TextInput style={{ fontSize: 18 }} onFocus={() => showToDatePicker(el.varID, el.name)} onKeyPress={() => showToDatePicker(el.varID, el.name)} label={el.Name} placeholder={el.Name}
-                        value={state[el.varID] || theDefDate} />
-                    </View>
+                      <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} onKeyPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} label={el.Name} placeholder={el.Name}
+                        value={formatTheDateLabel(state[el.varID]) || formatTheDateLabel(defaultDate)} />
+                    </TouchableOpacity>
                   }
                 </>)
 
@@ -450,10 +464,11 @@ const AggregateForm = ({ route, navigation }) => {
           </>
         }
         <DateTimePickerModal
-          isVisible={isToDatePickerVisible}
+          isVisible={isDatePickerVisible}
           mode="date"
-          onConfirm={handleToConfirm}
-          onCancel={hideToDatePicker}
+          date={pickerDate}
+          onConfirm={handleConfirm}
+          onCancel={hideDatePicker}
         />
       </ScrollView>
     </>
