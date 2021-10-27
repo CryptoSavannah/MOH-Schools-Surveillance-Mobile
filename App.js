@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {View, ActivityIndicator, LogBox} from 'react-native';
+import React, { useEffect } from 'react';
+import { View, ActivityIndicator, LogBox } from 'react-native';
 import {
   NavigationContainer,
   DefaultTheme as NavigationDefaultTheme,
@@ -11,7 +11,7 @@ import {
   DarkTheme as PaperDarkTheme
 } from 'react-native-paper';
 
-import {AuthContext} from './src/components/context';
+import { AuthContext } from './src/components/context';
 
 import RootStackScreen from './src/navigation/RootStackScreen';
 
@@ -26,7 +26,7 @@ const App = () => {
   LogBox.ignoreLogs(['React.createElement: type is invalid']);
 
   LogBox.ignoreAllLogs();
-  
+
   // const [isLoading, setIsLoading] = React.useState(true);
   // const [token, settoken] = React.useState(null);
 
@@ -109,7 +109,7 @@ const App = () => {
         console.log(e);
       }
       // console.log('user token: ', token);
-      dispatch({type: 'LOGIN', id: center_no, token: token});
+      dispatch({ type: 'LOGIN', id: center_no, token: token });
     },
     signOut: async () => {
       // settoken(null);
@@ -119,7 +119,7 @@ const App = () => {
       } catch (e) {
         console.log(e);
       }
-      dispatch({type: 'LOGOUT'});
+      dispatch({ type: 'LOGOUT' });
     },
     signUp: () => {
       // settoken('fgkj');
@@ -140,30 +140,30 @@ const App = () => {
       } catch (e) {
         console.log(e);
       }
-      dispatch({type: 'RETRIEVE_TOKEN', token: token});
+      dispatch({ type: 'RETRIEVE_TOKEN', token: token });
     }, 1000);
   }, []);
 
   if (loginState.isLoading) {
     return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size="large"/>
-        </View>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
     );
   }
   return (
-      <PaperProvider theme={theme}>
-        <AuthContext.Provider value={authContext}>
-          <NavigationContainer theme={theme}>
-            {loginState.token !== null ? (
-                    <DrawerNavigator/>
-                )
-                :
-                <RootStackScreen/>
-            }
-          </NavigationContainer>
-        </AuthContext.Provider>
-      </PaperProvider>
+    <PaperProvider theme={theme}>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer theme={theme}>
+          {loginState.token !== null ? (
+              <DrawerNavigator />
+          )
+            :
+            <RootStackScreen />
+          }
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </PaperProvider>
   );
 };
 

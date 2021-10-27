@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../components/context';
@@ -14,6 +14,12 @@ const SignInScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { signIn } = React.useContext(AuthContext);
+
+  const txt1 = useRef(null);
+
+  useEffect(() => {
+    txt1.current.focus();
+  }, []);
 
   const loginHandle = () => {
     setIsLoading(true);
@@ -44,7 +50,7 @@ const SignInScreen = ({ navigation }) => {
           alert('Invalid Credentials!', [
             { text: 'Okay' }
           ]);
-          console.log("SignIn Error: " + JSON.stringify(res));
+          // console.log("SignIn Error: " + JSON.stringify(res));
         }
         else {
           let cookie = res.headers["set-cookie"]
@@ -59,7 +65,7 @@ const SignInScreen = ({ navigation }) => {
         setIsLoading(false);
       })
       .catch(function (error) {
-        console.log("SignIn Error caught: " + error);
+        // console.log("SignIn Error caught: " + error);
         alert('Internet error: Try again', [
           { text: 'Okay' }
         ]);
@@ -73,6 +79,7 @@ const SignInScreen = ({ navigation }) => {
       <Text style={styles.header}>Login To Dashboard</Text>
       <View style={styles.inputView}>
         <TextInput
+          ref={txt1}
           style={styles.inputText}
           placeholder="Email Address"
           placeholderTextColor="#003f5c"
@@ -122,7 +129,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 130,
     height: 130,
-    // marginVertical: 20,
     alignSelf: 'center'
   },
   header: {

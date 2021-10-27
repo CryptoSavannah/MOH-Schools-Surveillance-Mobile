@@ -3,8 +3,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OverViewScreen from "../screens/OverViewScreen";
 import AggregateForm from "../screens/AggregateForm";
 import Icon from "react-native-vector-icons/Ionicons";
-import AddNew from "../screens/AddNew";
 import ProfileScreen from "../screens/ProfileScreen";
+import HowToUse from "../screens/HowToUse";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +28,13 @@ const HomeStackScreen = ({ route, navigation }) => (
           onPress={() => navigation.openDrawer()} />
       ),
     }} />
+    <Stack.Screen name="HowTo" component={HowToUse} options={{
+      title: 'How to guide',
+      headerLeft: () => (
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
+          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+      ),
+    }} />
     <Stack.Screen name="NewAggregate" component={AggregateForm}
     options={{
       title: "Record Summary",
@@ -42,13 +49,6 @@ const HomeStackScreen = ({ route, navigation }) => (
           onPress={() => navigation.openDrawer()} />
       ),
       headerShown: false,
-    }} />
-    <Stack.Screen name="AddNew" component={AddNew} options={{
-      title: 'Patient Record',
-      headerLeft: () => (
-        <Icon.Button name="ios-menu" size={25} backgroundColor="#0388E5"
-          onPress={() => navigation.openDrawer()} />
-      )
     }} />
 
   </Stack.Navigator>

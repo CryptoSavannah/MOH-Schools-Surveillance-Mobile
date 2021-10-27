@@ -7,7 +7,7 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
-  Image
+  Image,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 import logo from '../assets/logo.png';
@@ -81,84 +81,56 @@ const PersonalScreen = ({ navigation }) => {
       <View style={styles.container}>
         {renderHeader()}
 
-        <Card>
-          <View style={{ padding: 10 }}>
+        <View style={{ padding: 10 }}>
+          {renderSeparator()}
 
-            <TouchableOpacity>
-              <View style={[telStyles.container]}>
+          <TouchableOpacity>
+            <View style={[telStyles.container, { paddingTop: 10 }]}>
 
-                {renderRow("ios-call", "Phone", "")}
+              {renderRow("ios-home", "Center", usrName)}
 
-              </View>
-            </TouchableOpacity>
-
-            {renderSeparator()}
-
-            <TouchableOpacity>
-              <View style={[telStyles.container]}>
-
-                {renderRow("ios-home", "Center", usrName)}
-
-              </View>
-            </TouchableOpacity>
-
-            {renderSeparator()}
-
-            <TouchableOpacity>
-              <View style={[mailStyles.container]}>
-
-                {renderRow("ios-mail", "Email", "")}
-
-              </View>
-            </TouchableOpacity>
-
-            {renderSeparator()}
-
-            <TouchableOpacity>
-              <View style={[mailStyles.container]}>
-
-                {renderRow("md-globe", "Website", "")}
-
-              </View>
-            </TouchableOpacity>
-
-            {renderSeparator()}
-
-            <TouchableOpacity>
-              <View style={[mailStyles.container]}>
-                {renderRow("ios-pin", "Location", "Wakiso")}
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity onPress={() => { signOut() }}
-            style={{
-              elevation: 2, backgroundColor: '#F3F6F9',
-              shadowOpacity: 0.5, borderColor: '#F3F6F9', paddingTop: 25
-            }}>
-            <View style={[mailStyles.container]}>
-              <View style={mailStyles.emailRow}>
-                <View style={[mailStyles.emailColumn, { justifyContent: "space-around" }]}>
-                  <Text style={telStyles.telNumberText}>Signout</Text>
-                  <Icon
-                    name="ios-exit"
-                    style={{ color: "#0388E5", }}
-                    size={26}
-                  />
-                </View>
-              </View>
             </View>
           </TouchableOpacity>
-        </Card>
+
+          {renderSeparator()}
+
+          <TouchableOpacity>
+            <View style={[mailStyles.container, { paddingTop: 10 }]}>
+              {renderRow("ios-pin", "Location", "Wakiso")}
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={styles.loginBtn}
+          onPress={() =>
+            signOut()
+          }>
+          <Text style={styles.loginText}>Sign Out</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
+  loginBtn: {
+    width: '80%',
+    backgroundColor: 'rgba(3, 136, 229, 1)',
+    borderRadius: 4,
+    padding: 10,
+    alignItems: "center",
+    marginVertical: 20,
+    alignSelf: 'center'
+  },
+  loginText: {
+    color: 'white',
+    fontSize: 16
+  },
   mapContainer: {
     width: '100%',
     height: 270,
+    marginBottom: 60
   },
   container: {
     flex: 1,
@@ -170,7 +142,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '5%',
     alignSelf: 'center',
-    borderRadius: 5
+    borderRadius: 5,
+    marginTop: 50,
   },
 });
 const mailStyles = StyleSheet.create({

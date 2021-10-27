@@ -9,32 +9,31 @@ import {
   Text,
 } from "@99xt/first-born";
 import { useTheme } from '@react-navigation/native';
+import { Button } from 'react-native-paper';
 
-const SplashScreen = ({ navigation }) => {
+const HowToUse = ({ navigation }) => {
   const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/logo.png")} style={{ width: "80%", height: "30%" }} resizeMode="contain" />
-      <Text style={styles.header}>Track Students Health Records</Text>
-      <Text style={styles.description}>Record student's status and their health.</Text>
-      <Text style={styles.description}>Let the ministry store your info.</Text>
-      <TouchableOpacity style={styles.startBtn} onPress={() => navigation.navigate('SignInScreen')}>
-        <Text style={styles.startText}>START NOW</Text>
-      </TouchableOpacity>
+      <Text style={styles.description}>Follow the guide on how to use the surveillance tool:</Text>
 
+      <Button 
+      onPress={() =>
+        navigation.navigate("Home", { start_guide: "start" })
+      }
+      >Start Guide</Button>
     </View>
   );
 };
 
-export default SplashScreen;
+export default HowToUse;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   header: {
     fontWeight: "bold",
@@ -46,7 +45,8 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 16,
     color: "gray",
-    padding: 5
+    padding: 20,
+    alignSelf: 'center'
   },
   startBtn: {
     backgroundColor: "rgba(3, 136, 229, 1)",

@@ -127,7 +127,16 @@ const AggregateForm = ({ route, navigation }) => {
       delete x.name
     })
 
-    // console.log("valuesArray: ", valuesArray)
+    const data= {
+      "method": "submitForm",
+      "begin_date": begin_date,
+      "end_date": end_date,
+      "facilityID": facilityID,
+      "reportID": report.report_id,
+      "formdata": valuesArray
+    }
+
+    console.log("valuesArray: ", data)
     // setIsLoading(false)
     // return
 
@@ -146,7 +155,7 @@ const AggregateForm = ({ route, navigation }) => {
       }
     })
       .then(res => {
-        // console.log("response: ", res)
+        console.log("response: ", res)
         if (res.status === 200) {
 
           alert(res.data.errorDetail, [{
@@ -218,7 +227,7 @@ const AggregateForm = ({ route, navigation }) => {
                     <TextInput
                       style={styles.inputText}
                       placeholder={el.name}
-                      placeholderTextColor="#003f5c"
+                      placeholderTextColor="#000"
                       name={el.name}
                       autoCorrect={false}
                       onChangeText={(text) => {
@@ -241,7 +250,7 @@ const AggregateForm = ({ route, navigation }) => {
                     <TextInput
                       style={styles.inputText}
                       placeholder={el.name}
-                      placeholderTextColor="#003f5c"
+                      placeholderTextColor="#000"
                       name={el.name}
                       keyboardType="numeric"
                       autoCorrect={false}
@@ -321,6 +330,7 @@ const AggregateForm = ({ route, navigation }) => {
                                   let newArr = valuesArray.filter(x => x.VarID !== el.varID)
                                   var newEl = {
                                     "name": option.name,
+                                    "IndicatorID": el.fieldID,
                                     "VarID": option.value,
                                     "value": itemValue,
                                   }
@@ -505,14 +515,14 @@ const styles = StyleSheet.create({
     fontSize: 18
   },
   scrollViewStyle: {
-    flexGrow: 1, justifyContent: 'center'
+    flexGrow: 1
   },
   pickerWrapper: {
     height: 50, marginBottom: 20, width: '100%', alignSelf: 'center',
   },
   btnWrapper: {
     flexDirection: 'row', justifyContent: 'space-between',
-    paddingTop: 30, marginBottom: 10, marginHorizontal: 20
+    paddingTop: 30, marginBottom: 10, marginHorizontal: 25
   },
   btn: {
     width: 80, marginBottom: 10
