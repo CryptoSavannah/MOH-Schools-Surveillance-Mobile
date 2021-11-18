@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createRef, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, ActivityIndicator, Button, TouchableOpacity, LogBox, StatusBar, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from "@react-native-community/async-storage";
@@ -6,10 +6,11 @@ import axios from "axios";
 import { Picker } from '@react-native-picker/picker';
 import CheckBox from '@react-native-community/checkbox';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Collapse, CollapseHeader, CollapseBody, AccordionList } from 'accordion-collapse-react-native';
+import { Collapse, CollapseHeader, CollapseBody } from 'accordion-collapse-react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BASE_API } from '../../env.json';
 import { defaultDate, formatTheDateLabel, formatTheDateText } from '../helpers/helpers';
+import actuatedNormalize from '../helpers/actuatedNormalize';
 
 const AggregateForm = ({ route, navigation }) => {
 
@@ -217,7 +218,7 @@ const AggregateForm = ({ route, navigation }) => {
   const renderAField = (fields) => {
 
     return (
-      <View style={{ paddingTop: 20 }}>
+      <View style={{ paddingTop: actuatedNormalize(20) }}>
         {
           fields && fields.map(el => {
             switch (el.type) {
@@ -270,7 +271,7 @@ const AggregateForm = ({ route, navigation }) => {
 
               case "select":
                 return (
-                  <View style={{ marginHorizontal: 25 }} key={el.fieldID} >
+                  <View style={{ marginHorizontal: actuatedNormalize(25) }} key={el.fieldID} >
                     <View style={[styles.action2, styles.pickerWrapper]} >
                       <Picker style={styles.picker}
                         onValueChange={(itemValue, itemIndex) => {
@@ -297,10 +298,10 @@ const AggregateForm = ({ route, navigation }) => {
               case "checkbox":
                 return (<>
                   {el.options ?
-                    <Collapse key={el.fieldID} style={{ marginHorizontal: 10, marginVertical: 5 }} isExpanded={(sAccordion === `${el.name}`)} onToggle={(s) => { setSAccordion(el.name) }}>
+                    <Collapse key={el.fieldID} style={{ marginHorizontal: actuatedNormalize(10), marginVertical: actuatedNormalize(5) }} isExpanded={(sAccordion === `${el.name}`)} onToggle={(s) => { setSAccordion(el.name) }}>
                       <CollapseHeader style={styles.header}>
-                        <Text style={[styles.headerText, { color: 'black', marginVertical: 10 }]}>{el.name + (sAccordion !== `${el.name}` ? " " : " :")}</Text>
-                        {(sAccordion !== `${el.name}`) ? <Icon name="hand-o-right" color="black" size={15} style={{ paddingTop: 16 }} /> : null}
+                        <Text style={[styles.headerText, { color: 'black', marginVertical: actuatedNormalize(10) }]}>{el.name + (sAccordion !== `${el.name}` ? " " : " :")}</Text>
+                        {(sAccordion !== `${el.name}`) ? <Icon name="hand-o-right" color="black" size={actuatedNormalize(15)} style={{ paddingTop: actuatedNormalize(16) }} /> : null}
                       </CollapseHeader>
                       <CollapseBody>
                         {el.options.map((option) => {
@@ -394,19 +395,19 @@ const AggregateForm = ({ route, navigation }) => {
               case "date":
                 return (<>
                   {el.options ?
-                    <Collapse key={el.fieldID} style={{ marginHorizontal: 10 }} isExpanded={(sAccordion === `${el.name}`)} onToggle={(s) => { setSAccordion(el.name) }}>
+                    <Collapse key={el.fieldID} style={{ marginHorizontal: actuatedNormalize(10) }} isExpanded={(sAccordion === `${el.name}`)} onToggle={(s) => { setSAccordion(el.name) }}>
                       <CollapseHeader style={styles.header}>
-                        <Text style={[styles.headerText, { color: 'black', marginVertical: 10 }]}>{el.name + (sAccordion !== `${el.name}` ? " " : " :")}</Text>
-                        {(sAccordion !== `${el.name}`) ? <Icon name="hand-o-right" color="black" size={15} style={{ paddingTop: 16 }} /> : null}
+                        <Text style={[styles.headerText, { color: 'black', marginVertical: actuatedNormalize(10) }]}>{el.name + (sAccordion !== `${el.name}` ? " " : " :")}</Text>
+                        {(sAccordion !== `${el.name}`) ? <Icon name="hand-o-right" color="black" size={actuatedNormalize(15)} style={{ paddingTop: actuatedNormalize(16) }} /> : null}
                       </CollapseHeader>
                       <CollapseBody>
                         {el.options.map((option) => {
                           return (
                             <TouchableOpacity style={[styles.action4, { flexDirection: 'row' }]} key={option.value} onPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }}>
-                              <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} onKeyPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} label={option.label} placeholder={option.label}
+                              <TextInput style={{ fontSize: actuatedNormalize(18) }} onFocus={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} onKeyPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} label={option.label} placeholder={option.label}
                                 value={`${option.label}:`}
                                 showSoftInputOnFocus={false} />
-                              <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} onKeyPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} label={option.label} placeholder={option.label}
+                              <TextInput style={{ fontSize: actuatedNormalize(18) }} onFocus={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} onKeyPress={() => { setPickerDate(state[option.value]); showDatePicker(el.fieldID, option.value, option.label) }} label={option.label} placeholder={option.label}
                                 value={formatTheDateLabel(state[option.value]) || formatTheDateLabel(defaultDate)} />
                             </TouchableOpacity>)
                         })}
@@ -414,10 +415,10 @@ const AggregateForm = ({ route, navigation }) => {
                     </Collapse>
                     :
                     <TouchableOpacity style={[styles.action4, { flexDirection: 'row' }]} key={el.varID} onPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }}>
-                      <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} onKeyPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} label={el.Name} placeholder={el.Name}
+                      <TextInput style={{ fontSize: actuatedNormalize(18) }} onFocus={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} onKeyPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} label={el.Name} placeholder={el.Name}
                         value={`${el.name}:`}
                         showSoftInputOnFocus={false} />
-                      <TextInput style={{ fontSize: 18 }} onFocus={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} onKeyPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} label={el.Name} placeholder={el.Name}
+                      <TextInput style={{ fontSize: actuatedNormalize(18) }} onFocus={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} onKeyPress={() => { setPickerDate(state[el.varID]); showDatePicker(el.fieldID, el.varID, el.name) }} label={el.Name} placeholder={el.Name}
                         value={formatTheDateLabel(state[el.varID]) || formatTheDateLabel(defaultDate)} />
                     </TouchableOpacity>
                   }
@@ -489,62 +490,62 @@ export default AggregateForm;
 
 const styles = StyleSheet.create({
   action2: {
-    paddingTop: 5,
+    // paddingTop: actuatedNormalize(0),
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
   },
   inputView: {
     backgroundColor: '#fff',
     borderRadius: 2,
-    height: 50,
-    marginBottom: 20,
+    height: actuatedNormalize(48),
+    marginBottom: actuatedNormalize(17),
     justifyContent: 'center',
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
-    marginHorizontal: 25
+    marginHorizontal: actuatedNormalize(25)
   },
   inputText: {
-    height: 50,
-    fontSize: 18
+    height: actuatedNormalize(50),
+    fontSize: actuatedNormalize(18)
   },
   picker: {
-    color: '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+    color: '#000', height: '100%', width: '90%', fontSize: actuatedNormalize(18), fontWeight: '100',
     transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
   },
   pickerItem: {
-    fontSize: 18
+    fontSize: actuatedNormalize(18)
   },
   scrollViewStyle: {
     flexGrow: 1
   },
   pickerWrapper: {
-    height: 50, marginBottom: 20, width: '100%', alignSelf: 'center',
+    height: actuatedNormalize(50), marginBottom: actuatedNormalize(18), width: '100%', alignSelf: 'center',
   },
   btnWrapper: {
     flexDirection: 'row', justifyContent: 'space-between',
-    paddingTop: 30, marginBottom: 10, marginHorizontal: 25
+    paddingTop: actuatedNormalize(30), marginBottom: actuatedNormalize(10), marginHorizontal: actuatedNormalize(25)
   },
   btn: {
-    width: 80, marginBottom: 10
+    width: actuatedNormalize(80), marginBottom: actuatedNormalize(10)
   },
   activityIndicator: {
-    alignItems: "center", padding: 10, backgroundColor: "rgba(3, 136, 229, 1)"
+    alignItems: "center", padding: actuatedNormalize(10), backgroundColor: "rgba(3, 136, 229, 1)"
   },
   action4: {
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
-    marginBottom: 5,
-    marginHorizontal: 25
+    marginBottom: actuatedNormalize(5),
+    marginHorizontal: actuatedNormalize(25)
   },
   headerText: {
-    paddingLeft: 18,
-    fontSize: 18,
+    paddingLeft: actuatedNormalize(18),
+    fontSize: actuatedNormalize(18),
     fontWeight: '500',
-    paddingBottom: 5
+    paddingBottom: actuatedNormalize(5)
   },
   checkBoxGrp: {
     flexDirection: 'row',
-    marginHorizontal: 10
+    marginHorizontal: actuatedNormalize(10)
   },
   header: { flexDirection: 'row' }
 });

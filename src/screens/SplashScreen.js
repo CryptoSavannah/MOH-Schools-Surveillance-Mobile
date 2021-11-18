@@ -9,6 +9,7 @@ import {
   Text,
 } from "@99xt/first-born";
 import { useTheme } from '@react-navigation/native';
+import actuatedNormalize from '../helpers/actuatedNormalize';
 
 const SplashScreen = ({ navigation }) => {
   const { colors } = useTheme();
@@ -38,23 +39,23 @@ const styles = StyleSheet.create({
   },
   header: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: actuatedNormalize(24),
     color: "#333",
-    marginTop: 40,
-    marginBottom: 10
+    marginTop: actuatedNormalize(40),
+    marginBottom: actuatedNormalize(10)
   },
   description: {
-    fontSize: 16,
+    fontSize: actuatedNormalize(16),
     color: "gray",
-    padding: 5
+    padding: actuatedNormalize(5)
   },
   startBtn: {
     backgroundColor: "rgba(3, 136, 229, 1)",
     borderRadius: 4,
-    padding: 10,
+    padding: actuatedNormalize(10),
     width: "50%",
     alignItems: "center",
-    marginVertical: 50
+    marginVertical: actuatedNormalize(50)
   },
   startText: {
     color: "white"
