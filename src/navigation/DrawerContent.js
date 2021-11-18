@@ -14,7 +14,7 @@ import Iconf from 'react-native-vector-icons/FontAwesome';
 
 import { AuthContext } from '../components/context';
 import logo from '../assets/logo.png';
-
+import actuatedNormalize from '../helpers/actuatedNormalize';
 
 export function DrawerContent(props) {
 
@@ -43,10 +43,10 @@ export function DrawerContent(props) {
                 <Icon
                   name="home-outline"
                   color={props.inactiveTintColor}
-                  size={size}
+                  size={actuatedNormalize(size)}
                 />
               )}
-              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>Home</Text>)}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: actuatedNormalize(16) }}>Home</Text>)}
               onPress={() => { props.navigation.navigate('Home') }}
             />
 
@@ -56,17 +56,17 @@ export function DrawerContent(props) {
                 <Iconf
                   name="info-circle"
                   color={props.inactiveTintColor}
-                  size={size}
+                  size={actuatedNormalize(size)}
                 />
               )}
-              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>How to</Text>)}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: actuatedNormalize(16) }}>How to</Text>)}
               onPress={() => { props.navigation.navigate('HowTo') }}
             />
 
           </Drawer.Section>
 
           <Drawer.Section title={
-            <Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>Contacts</Text>
+            <Text style={{ color: props.inactiveTintColor, fontSize: actuatedNormalize(16) }}>Contacts</Text>
           }>
 
             <DrawerItem
@@ -74,11 +74,11 @@ export function DrawerContent(props) {
                 <Icon
                   name="web"
                   color={props.inactiveTintColor}
-                  size={size}
+                  size={actuatedNormalize(size)}
                 />
               )}
               label={() => (
-                <Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>Ministry</Text>
+                <Text style={{ color: props.inactiveTintColor, fontSize: actuatedNormalize(16) }}>Ministry</Text>
               )}
               onPress={() => {
                 Linking
@@ -96,7 +96,7 @@ export function DrawerContent(props) {
                   style={{ paddingLeft: 3 }}
                 />
               )}
-              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16, paddingLeft: 2 }}>Center</Text>)}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: actuatedNormalize(16), paddingLeft: actuatedNormalize(2) }}>Center</Text>)}
               onPress={() => {
                 props.navigation.navigate('Profile')
               }}
@@ -111,10 +111,10 @@ export function DrawerContent(props) {
                 <Icon
                   name="exit-to-app"
                   color={props.inactiveTintColor}
-                  size={size}
+                  size={actuatedNormalize(size)}
                 />
               )}
-              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: 16 }}>Sign Out</Text>)}
+              label={() => (<Text style={{ color: props.inactiveTintColor, fontSize: actuatedNormalize(16) }}>Sign Out</Text>)}
               onPress={() => {
                 signOut()
               }}
@@ -135,12 +135,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   userInfoSection: {
-    paddingLeft: 20, marginTop: 25, marginBottom: 8, paddingLeft: '17%', paddingBottom: 20
+    paddingLeft: actuatedNormalize(20), marginTop: actuatedNormalize(25), marginBottom: actuatedNormalize(8), paddingLeft: '17%', paddingBottom: actuatedNormalize(20)
   },
   image: {
-    width: 100, height: 100
+    width: actuatedNormalize(100), height: actuatedNormalize(100)
   },
   drawerSection: {
-    marginTop: 15,
+    marginTop: actuatedNormalize(15),
   },
 });

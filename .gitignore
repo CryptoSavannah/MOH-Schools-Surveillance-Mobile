@@ -84,3 +84,4 @@ android/gradle.properties
 package-lock.json
 yarn.lock
 expressions.txt
+.hprof

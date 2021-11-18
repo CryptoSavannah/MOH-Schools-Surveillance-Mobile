@@ -6,6 +6,7 @@ import { SIGNIN_KEY } from '../../env.json';
 import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
 import { ScrollView } from 'react-native-gesture-handler';
+import actuatedNormalize from '../helpers/actuatedNormalize';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -97,7 +98,7 @@ const SignInScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)} />
       </View>
 
-      <View style={{paddingBottom: 80}}>
+      <View style={{paddingBottom: actuatedNormalize(80)}}>
       {isLoading ?
         <TouchableOpacity
           style={styles.loginBtn}
@@ -124,19 +125,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fbfafa',
-    paddingVertical: 80
+    paddingVertical: actuatedNormalize(80)
   },
   logo: {
-    width: 130,
-    height: 130,
+    width: actuatedNormalize(130),
+    height: actuatedNormalize(130),
     alignSelf: 'center'
   },
   header: {
     fontWeight: "bold",
-    fontSize: 24,
+    fontSize: actuatedNormalize(24),
     color: "#333",
-    marginTop: 20,
-    marginBottom: 30,
+    marginTop: actuatedNormalize(20),
+    marginBottom: actuatedNormalize(30),
     alignSelf: 'center'
 
   },
@@ -144,26 +145,26 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: '#fff',
     borderRadius: 2,
-    height: 50,
-    marginBottom: 20,
+    height: actuatedNormalize(50),
+    marginBottom: actuatedNormalize(20),
     justifyContent: 'center',
-    padding: 20,
+    padding: actuatedNormalize(20),
     alignSelf: 'center'
   },
   inputText: {
-    height: 50,
-    fontSize: 16
+    height: actuatedNormalize(50),
+    fontSize: actuatedNormalize(16)
   },
   forgot: {
-    fontSize: 11,
+    fontSize: actuatedNormalize(11),
   },
   loginBtn: {
     width: '80%',
     backgroundColor: 'rgba(3, 136, 229, 1)',
     borderRadius: 4,
-    padding: 10,
+    padding: actuatedNormalize(10),
     alignItems: "center",
-    marginVertical: 30,
+    marginVertical: actuatedNormalize(30),
     alignSelf: 'center'
   },
   loginText: {

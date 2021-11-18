@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Card } from 'native-base'
 import {
   ScrollView,
   StyleSheet,
@@ -13,6 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../components/context';
 import AsyncStorage from "@react-native-community/async-storage";
+import actuatedNormalize from '../helpers/actuatedNormalize';
 
 const PersonalScreen = ({ navigation }) => {
 
@@ -57,7 +57,7 @@ const PersonalScreen = ({ navigation }) => {
     return (
       <>
         <View style={telStyles.iconRow}>
-          <Icon name={iconName} style={{ color: "#0388E5", }} size={26} />
+          <Icon name={iconName} style={{ color: "#0388E5", }} size={actuatedNormalize(26)} />
         </View>
 
         <TouchableOpacity style={telStyles.telRow}>
@@ -81,11 +81,11 @@ const PersonalScreen = ({ navigation }) => {
       <View style={styles.container}>
         {renderHeader()}
 
-        <View style={{ padding: 10 }}>
+        <View style={{ padding: actuatedNormalize(10) }}>
           {renderSeparator()}
 
           <TouchableOpacity>
-            <View style={[telStyles.container, { paddingTop: 10 }]}>
+            <View style={[telStyles.container, { paddingTop: actuatedNormalize(10) }]}>
 
               {renderRow("ios-home", "Center", usrName)}
 
@@ -95,7 +95,7 @@ const PersonalScreen = ({ navigation }) => {
           {renderSeparator()}
 
           <TouchableOpacity>
-            <View style={[mailStyles.container, { paddingTop: 10 }]}>
+            <View style={[mailStyles.container, { paddingTop: actuatedNormalize(10) }]}>
               {renderRow("ios-pin", "Location", "Wakiso")}
             </View>
           </TouchableOpacity>
@@ -118,19 +118,19 @@ const styles = StyleSheet.create({
     width: '80%',
     backgroundColor: 'rgba(3, 136, 229, 1)',
     borderRadius: 4,
-    padding: 10,
+    padding: actuatedNormalize(10),
     alignItems: "center",
-    marginVertical: 20,
+    marginVertical: actuatedNormalize(20),
     alignSelf: 'center'
   },
   loginText: {
     color: 'white',
-    fontSize: 16
+    fontSize: actuatedNormalize(16)
   },
   mapContainer: {
     width: '100%',
-    height: 270,
-    marginBottom: 60
+    height: actuatedNormalize(270),
+    marginBottom: actuatedNormalize(60)
   },
   container: {
     flex: 1,
@@ -143,19 +143,19 @@ const styles = StyleSheet.create({
     top: '5%',
     alignSelf: 'center',
     borderRadius: 5,
-    marginTop: 50,
+    marginTop: actuatedNormalize(50),
   },
 });
 const mailStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: 19,
+    marginBottom: actuatedNormalize(19),
   },
   emailColumn: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: 5,
+    marginBottom: actuatedNormalize(5),
   },
   emailRow: {
     flex: 8,
@@ -184,7 +184,7 @@ const telStyles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: 19,
+    marginBottom: actuatedNormalize(19),
   },
   iconRow: {
     flex: 2,
@@ -200,23 +200,21 @@ const telStyles = StyleSheet.create({
   },
   telNameText: {
     color: 'gray',
-    fontSize: 16,
+    fontSize: actuatedNormalize(16),
     fontWeight: '200',
   },
   telNumberColumn: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    marginBottom: 5,
+    marginBottom: actuatedNormalize(5),
   },
   telNumberText: {
-    fontSize: 16,
+    fontSize: actuatedNormalize(16),
   },
   telRow: {
     flex: 6,
     flexDirection: 'column',
-    // justifyContent: 'center',
-  },
-  powerColumn: {}
+  }
 });
 
 export default PersonalScreen

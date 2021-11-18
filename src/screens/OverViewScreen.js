@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 import {
-  SafeAreaView,
   StyleSheet,
   Text,
-  Image,
   View,
   TouchableOpacity,
-  Switch,
   StatusBar,
   Dimensions,
   TextInput,
 } from 'react-native';
-
 
 import axios from "axios";
 import { BASE_API } from '../../env.json';
@@ -24,6 +20,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { formatTheDateLabel, defaultDate, formatTheDateText } from "../helpers/helpers";
 
 import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot';
+import actuatedNormalize from "../helpers/actuatedNormalize";
 
 const OverViewScreen = (props) => {
   const [selectedStep, setSelectedStep] = useState('');
@@ -164,13 +161,13 @@ const OverViewScreen = (props) => {
     <>
       <StatusBar backgroundColor='#4d505b' barStyle="Light-content" />
 
-      {selectedStep != "" ? <ScrollView contentContainerStyle={{ backgroundColor: '#ffffff', padding: 20 }}>
-        <View style={{ marginTop: 40 }}>
+      {selectedStep != "" ? <ScrollView contentContainerStyle={{ backgroundColor: '#ffffff', padding: actuatedNormalize(20) }}>
+        <View style={{ marginTop: actuatedNormalize(40) }}>
           <CopilotStep
             text="This is the period over which the report is made."
             order={1}
             name="firstUniqueKey">
-            <WalkthroughableText style={[styles.title, { paddingBottom: selectedStep == 'firstUniqueKey' ? 70 : 0 }]}>
+            <WalkthroughableText style={[styles.title, { paddingBottom: selectedStep == 'firstUniqueKey' ? actuatedNormalize(70) : 0 }]}>
               Reporting Period
             </WalkthroughableText>
           </CopilotStep>
@@ -178,7 +175,7 @@ const OverViewScreen = (props) => {
             text="Edit these dates according to your reporting period."
             order={2}
             name="SecondUniqueKey">
-            <WalkthroughableText style={{ flexDirection: 'row', paddingBottom: selectedStep == 'SecondUniqueKey' ? 70 : 0 }}>
+            <WalkthroughableText style={{ flexDirection: 'row', paddingBottom: selectedStep == 'SecondUniqueKey' ? actuatedNormalize(70) : 0 }}>
               <View>
                 <TextInput style={[styles.action, { fontWeight: 'bold' }]} onFocus={showFromDatePicker} onKeyPress={showFromDatePicker} label="From Date" placeholder="From Date"
                   value={`From:`}
@@ -217,18 +214,18 @@ const OverViewScreen = (props) => {
           />
           {priorityReport && (
             <CopilotStep text={`This is the priority report.\n\nThis button takes you directly to the form.`} order={3} name="thirdUniqueKey">
-              <WalkthroughableText style={{ paddingBottom: selectedStep == 'thirdUniqueKey' ? 70 : 0, marginTop: 60, marginBottom: 50, alignSelf: 'center' }}>
+              <WalkthroughableText style={{ paddingBottom: selectedStep == 'thirdUniqueKey' ? actuatedNormalize(70) : 0, marginTop: actuatedNormalize(60), marginBottom: actuatedNormalize(50), alignSelf: 'center' }}>
                 <TouchableOpacity
                   activeOpacity={.5}
                   onPress={() =>
                     props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
                   }
                   style={{
-                    backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3,
-                    width: (Dimensions.get('screen').width - 40)
+                    backgroundColor: "#F39C12", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3,
+                    width: (Dimensions.get('screen').width - actuatedNormalize(40))
                   }}
                 >
-                  <Text style={{ color: "white", fontSize: 17 }}>{(priorityReport.report_name).toUpperCase()}</Text>
+                  <Text style={{ color: "white", fontSize: actuatedNormalize(17) }}>{(priorityReport.report_name).toUpperCase()}</Text>
                 </TouchableOpacity>
               </WalkthroughableText>
             </CopilotStep>)}
@@ -237,14 +234,14 @@ const OverViewScreen = (props) => {
             text="This is a dropdown list of other reports that can be recorded."
             order={4}
             name="fourthUniqueKey">
-            <WalkthroughableText style={{ paddingBottom: selectedStep == 'fourthUniqueKey' ? 70 : 0 }}>
-              <Text style={{ fontSize: 20 }}>Other reports:</Text>
-              <View style={[styles.action2, { height: 50, marginVertical: 15, width: (Dimensions.get('screen').width - 40), alignSelf: 'center' }]} >
+            <WalkthroughableText style={{ paddingBottom: selectedStep == 'fourthUniqueKey' ? actuatedNormalize(70) : 0 }}>
+              <Text style={{ fontSize: actuatedNormalize(20) }}>Other reports:</Text>
+              <View style={[styles.action2, { height: actuatedNormalize(50), marginVertical: actuatedNormalize(15), width: (Dimensions.get('screen').width - actuatedNormalize(40)), alignSelf: 'center' }]} >
                 <Picker style={{
-                  color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+                  color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: actuatedNormalize(18), fontWeight: '100',
                   transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
                 }}
-                  onValueChange={(itemValue, itemIndex) => setSelectedReport(itemValue)} itemStyle={{ fontSize: 18 }} >
+                  onValueChange={(itemValue, itemIndex) => setSelectedReport(itemValue)} itemStyle={{ fontSize: actuatedNormalize(18) }} >
                   <Picker.Item value={null} label="Select Report" />
                   {renderReportList()}
                 </Picker>
@@ -252,14 +249,13 @@ const OverViewScreen = (props) => {
             </WalkthroughableText>
           </CopilotStep>
 
-          <View style={{ marginVertical: 55 }}>
+          <View style={{ marginVertical: actuatedNormalize(55) }}>
             <CopilotStep
               text={`Prepare the information needed to fill in your report.\nPress 'Next' to continue to the form.`}
               order={5}
               name="fifththUniqueKey">
-              <WalkthroughableText style={{ paddingBottom: selectedStep == 'fifththUniqueKey' ? 70 : 0 }}>
-                <View style={{ alignItems: 'flex-end' }}>
-                  <View style={{ width: 80 }}>
+              <WalkthroughableText style={{ paddingBottom: selectedStep == 'fifththUniqueKey' ? actuatedNormalize(70) : 0, alignSelf: 'flex-end' }}>
+                  <View style={{ width: actuatedNormalize(80) }}>
                     <TouchableOpacity
                       activeOpacity={.5}
                       disabled={(selectedReport === null)}
@@ -271,17 +267,16 @@ const OverViewScreen = (props) => {
                       <Text style={{ color: "white" }}>Next</Text>
                     </TouchableOpacity>
                   </View>
-                </View>
               </WalkthroughableText>
             </CopilotStep>
           </View>
         </View>
       </ScrollView>
         :
-        <ScrollView style={{ backgroundColor: '#ffffff', padding: 20 }}>
+        <ScrollView style={{ backgroundColor: '#ffffff', padding: actuatedNormalize(20) }}>
 
-          <View style={{ marginTop: 40 }}>
-            <Text style={{ fontSize: 30, paddingBottom: 5 }}>Reporting Period</Text>
+          <View style={{ marginTop: actuatedNormalize(40) }}>
+            <Text style={{ fontSize: actuatedNormalize(30), paddingBottom: actuatedNormalize(5) }}>Reporting Period</Text>
 
             <View style={{ flexDirection: 'row' }}>
               <View>
@@ -319,32 +314,32 @@ const OverViewScreen = (props) => {
               onCancel={hideToDatePicker}
             />
 
-            <View style={{ width: "100%", marginTop: 60, marginBottom: 50, alignSelf: 'center' }}>
+            <View style={{ width: "100%", marginTop: actuatedNormalize(60), marginBottom: actuatedNormalize(50), alignSelf: 'center' }}>
               {priorityReport && (<TouchableOpacity
                 activeOpacity={.5}
                 onPress={() =>
                   props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
                 }
-                style={{ backgroundColor: "#F39C12", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 }}
+                style={{ backgroundColor: "#F39C12", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3 }}
               >
-                <Text style={{ color: "white", fontSize: 17 }}>{(priorityReport.report_name).toUpperCase()}</Text>
+                <Text style={{ color: "white", fontSize: actuatedNormalize(17) }}>{(priorityReport.report_name).toUpperCase()}</Text>
               </TouchableOpacity>)}
             </View>
 
-            <Text style={{ fontSize: 20 }}>Other reports:</Text>
+            <Text style={{ fontSize: actuatedNormalize(20) }}>Other reports:</Text>
 
-            <View style={[styles.action2, { height: 50, marginVertical: 15, width: '100%', alignSelf: 'center' }]} >
+            <View style={[styles.action2, { height: actuatedNormalize(50), marginVertical: actuatedNormalize(15), width: '100%', alignSelf: 'center' }]} >
               <Picker style={{
-                color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: 18, fontWeight: '100',
+                color: selectedReport === null ? '#A9A9A9' : '#000', height: '100%', width: '90%', fontSize: actuatedNormalize(18), fontWeight: '100',
                 transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
               }}
-                onValueChange={(itemValue, itemIndex) => setSelectedReport(itemValue)} itemStyle={{ fontSize: 18 }} >
+                onValueChange={(itemValue, itemIndex) => setSelectedReport(itemValue)} itemStyle={{ fontSize: actuatedNormalize(18) }} >
                 <Picker.Item value={null} label="Select Report" />
                 {renderReportList()}
               </Picker>
             </View>
             <View style={{ alignItems: 'flex-end' }}>
-              <View style={{ width: 80, marginVertical: 55 }}>
+              <View style={{ width: actuatedNormalize(80), marginVertical: actuatedNormalize(55) }}>
                 <TouchableOpacity
                   activeOpacity={.5}
                   disabled={(selectedReport === null)}
@@ -365,42 +360,37 @@ const OverViewScreen = (props) => {
 };
 
 export default copilot({
-  animated: true, // Can be true or false
-  overlay: 'svg', // Can be either view or svg
+  animated: true, 
+  overlay: 'svg', 
 })(OverViewScreen);
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: '#fff',
-    // paddingTop: 40,
-    backgroundColor: '#ffffff', padding: 20
+    backgroundColor: '#ffffff', padding: actuatedNormalize(20)
   },
   title: {
-    fontSize: 30,
-    paddingBottom: 5
-    // paddingBottom: 35
-    // textAlign: 'center',
-    // margin: 20,
+    fontSize: actuatedNormalize(30),
+    paddingBottom: actuatedNormalize(5)
   },
   action: {
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
-    fontSize: 17,
-    paddingTop: 20
+    fontSize: actuatedNormalize(17),
+    paddingTop: actuatedNormalize(20)
   },
   action2: {
-    paddingTop: 5,
+    paddingTop: actuatedNormalize(5),
     borderBottomColor: "#dedede",
     borderBottomWidth: 1,
   },
-  activeBtn: { backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 },
-  inActiveBtn: { backgroundColor: "grey", alignItems: "center", padding: 10, borderRadius: 4, elevation: 3 },
+  activeBtn: { backgroundColor: "rgba(3, 136, 229, 1)", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3 },
+  inActiveBtn: { backgroundColor: "grey", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3 },
   activeSwitchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: actuatedNormalize(20),
     alignItems: 'center',
-    paddingHorizontal: 40,
+    paddingHorizontal: actuatedNormalize(40),
   },
 });
