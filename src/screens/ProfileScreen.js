@@ -28,7 +28,9 @@ const PersonalScreen = ({ navigation }) => {
           setUsrName(usr.display_name);
         }
       })
-      .catch(err => console.log(err));
+      .catch(err =>{
+        // console.log(err)
+      });
 
   }, []);
 

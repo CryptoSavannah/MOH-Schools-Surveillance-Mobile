@@ -59,7 +59,8 @@
     "react-native-svg": "^12.1.1",
     "react-native-swiper": "^1.6.0",
     "react-native-vector-icons": "^8.1.0",
-    "react-native-wizard": "^2.1.0"
+    "react-native-wizard": "^2.1.0",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",

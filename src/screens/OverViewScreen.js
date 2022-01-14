@@ -10,7 +10,6 @@ import {
   TextInput,
 } from 'react-native';
 
-import axios from "axios";
 import { BASE_API } from '../../env.json';
 import AsyncStorage from "@react-native-community/async-storage";
 import { Picker } from '@react-native-picker/picker';
@@ -21,6 +20,7 @@ import { formatTheDateLabel, defaultDate, formatTheDateText } from "../helpers/h
 
 import { copilot, walkthroughable, CopilotStep } from 'react-native-copilot';
 import actuatedNormalize from "../helpers/actuatedNormalize";
+import RNFetchBlob from 'rn-fetch-blob';
 
 const OverViewScreen = (props) => {
   const [selectedStep, setSelectedStep] = useState('');
@@ -81,29 +81,33 @@ const OverViewScreen = (props) => {
 
   const fetchReportList = useCallback(async () => {
 
-    axios({
-      url: BASE_API,
-      method: 'post',
-      headers: { "Content-Type": "application/json" },
-      cookie: cookie,
-      data: {
-        "method": "getReports"
-      }
+    RNFetchBlob.config({
+      trusty: true
     })
+      .fetch('POST', BASE_API, {
+        'Content-Type': 'application/json'
+      },
+        JSON.stringify({
+          cookie: cookie,
+          method: "getReports"
+        })
+      )
       .then(res => {
+        // console.log('overview res:', res.data)
+        let obj = JSON.parse(res.data)
         if (!mountedRef.current) return null;
 
-        if (res.data.status == "500") { signOut() }
+        if (obj.status == "500") { signOut() }
         else {
-          setReports(res.data.data);
+          setReports(obj.data);
 
           let thepR = null;
-          thepR = res.data.data.find(x => x.priority == "1");
+          thepR = obj.data.find(x => x.priority == "1");
           setPriorityReport(thepR)
         }
       })
       .catch(function (error) {
-        console.log("Report list Error caught: " + error);
+        // console.log("Report list Error caught: " + error);
         AsyncStorage.clear().then(() => { signOut() });
       });
 
@@ -131,7 +135,9 @@ const OverViewScreen = (props) => {
           props.navigation.setOptions({ title: usr.display_name });
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        // console.log(err)
+      });
 
     return () => {
       mountedRef.current = false;
@@ -146,7 +152,7 @@ const OverViewScreen = (props) => {
   };
 
   const handleStop = (step) => {
-    props.navigation.setParams({start_guide: null})
+    props.navigation.setParams({ start_guide: null })
   };
 
   const WalkthroughableText = walkthroughable(Text);
@@ -156,6 +162,48 @@ const OverViewScreen = (props) => {
       return <Picker.item label={report.report_name} value={report} key={report.report_id} />
     })
   }
+
+  const proceedToForm = async (reportt) => {
+    if (reportt.report_id !== null) {
+
+      RNFetchBlob.config({
+        trusty : true
+      })
+      .fetch('POST', BASE_API, {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify({
+        cookie: cookie,
+        method: "getReportFields",
+        reportID: reportt.report_id,
+        format: "fill"
+      })
+      )
+      .then(res => {
+        // console.log('Report fields res:', res)
+        let obj = JSON.parse(res.data)
+        // console.log('Report fields res.data:', res.data)
+
+        try {
+          if (obj.status == "500") { signOut() }
+          else if(obj.status == "400" && obj.errorCode == "400"){
+            alert('Form not available.');
+          }
+          else {
+            props.navigation.navigate("NewAggregate", { report: reportt, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
+          }
+        } catch (error) {
+          alert('Fields Error\n' + res)
+          return
+        }
+
+      })
+      .catch(function (error) { console.log("Report fields Error caught: " + error); });
+    }
+    else {
+      alert('select again')
+    }
+  };
 
   return (
     <>
@@ -217,9 +265,9 @@ const OverViewScreen = (props) => {
               <WalkthroughableText style={{ paddingBottom: selectedStep == 'thirdUniqueKey' ? actuatedNormalize(70) : 0, marginTop: actuatedNormalize(60), marginBottom: actuatedNormalize(50), alignSelf: 'center' }}>
                 <TouchableOpacity
                   activeOpacity={.5}
-                  onPress={() =>
-                    props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                  }
+                  onPress={() => { 
+                    // props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
+                  }}
                   style={{
                     backgroundColor: "#F39C12", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3,
                     width: (Dimensions.get('screen').width - actuatedNormalize(40))
@@ -255,18 +303,18 @@ const OverViewScreen = (props) => {
               order={5}
               name="fifththUniqueKey">
               <WalkthroughableText style={{ paddingBottom: selectedStep == 'fifththUniqueKey' ? actuatedNormalize(70) : 0, alignSelf: 'flex-end' }}>
-                  <View style={{ width: actuatedNormalize(80) }}>
-                    <TouchableOpacity
-                      activeOpacity={.5}
-                      disabled={(selectedReport === null)}
-                      onPress={() =>
-                        props.navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                      }
-                      style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
-                    >
-                      <Text style={{ color: "white" }}>Next</Text>
-                    </TouchableOpacity>
-                  </View>
+                <View style={{ width: actuatedNormalize(80) }}>
+                  <TouchableOpacity
+                    activeOpacity={.5}
+                    disabled={(selectedReport === null)}
+                    onPress={() =>{
+                      // props.navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
+                    }}
+                    style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
+                  >
+                    <Text style={{ color: "white" }}>Next</Text>
+                  </TouchableOpacity>
+                </View>
               </WalkthroughableText>
             </CopilotStep>
           </View>
@@ -317,9 +365,9 @@ const OverViewScreen = (props) => {
             <View style={{ width: "100%", marginTop: actuatedNormalize(60), marginBottom: actuatedNormalize(50), alignSelf: 'center' }}>
               {priorityReport && (<TouchableOpacity
                 activeOpacity={.5}
-                onPress={() =>
-                  props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                }
+                onPress={() => { proceedToForm(priorityReport)
+                  // props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
+                }}
                 style={{ backgroundColor: "#F39C12", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3 }}
               >
                 <Text style={{ color: "white", fontSize: actuatedNormalize(17) }}>{(priorityReport.report_name).toUpperCase()}</Text>
@@ -343,9 +391,9 @@ const OverViewScreen = (props) => {
                 <TouchableOpacity
                   activeOpacity={.5}
                   disabled={(selectedReport === null)}
-                  onPress={() =>
-                    props.navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                  }
+                  onPress={() =>{ proceedToForm(selectedReport)
+                    // props.navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
+                  }}
                   style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
                 >
                   <Text style={{ color: "white" }}>Next</Text>
@@ -360,8 +408,8 @@ const OverViewScreen = (props) => {
 };
 
 export default copilot({
-  animated: true, 
-  overlay: 'svg', 
+  animated: true,
+  overlay: 'svg',
 })(OverViewScreen);
 
 const styles = StyleSheet.create({

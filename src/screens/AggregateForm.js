@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, ActivityIndicator, Button, TouchableOpacity, LogBox, StatusBar, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from "@react-native-community/async-storage";
-import axios from "axios";
 import { Picker } from '@react-native-picker/picker';
 import CheckBox from '@react-native-community/checkbox';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
@@ -11,6 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { BASE_API } from '../../env.json';
 import { defaultDate, formatTheDateLabel, formatTheDateText } from '../helpers/helpers';
 import actuatedNormalize from '../helpers/actuatedNormalize';
+import RNFetchBlob from 'rn-fetch-blob';
 
 const AggregateForm = ({ route, navigation }) => {
 
@@ -68,27 +68,42 @@ const AggregateForm = ({ route, navigation }) => {
 
   const getReportFields = async () => {
 
-    let config = {
-      url: BASE_API,
-      method: 'post',
-      headers: { "Content-Type": "application/json" },
-      cookie: cookie,
-      data: {
-        "method": "getReportFields",
-        "reportID": report.report_id,
-        "format": "fill"
-      }
-    };
     if (report.report_id !== null) {
-      axios(config)
-        .then(res => {
-          // console.log("the res  ", res)
-          if (res.data.status == "500") { signOut() }
-          else {
-            setReportForm(res.data.data); // console.log("the report  ", res.data.data)
+
+      RNFetchBlob.config({
+        trusty : true
+      })
+      .fetch('POST', BASE_API, {
+        'Content-Type': 'application/json'
+      },
+      JSON.stringify({
+        cookie: cookie,
+        method: "getReportFields",
+        reportID: report.report_id,
+        format: "fill"
+      })
+      )
+      .then(res => {
+        // console.log('Report fields res:', res)
+        let obj = JSON.parse(res.data)
+        // console.log('Report fields res.data:', res.data)
+
+        try {
+          if (obj.status == "500") { signOut() }
+          else if(obj.status == "400" && obj.errorCode == "400"){
+            alert('Form not available.');
+            navigation.goBack()
           }
-        })
-        .catch(function (error) { console.log("Report fields Error caught: " + error); });
+          else {
+            setReportForm(obj.data); // console.log("the report  ", obj.data)
+          }
+        } catch (error) {
+          alert('Fields Error\n' + res)
+          return
+        }
+
+      })
+      .catch(function (error) { console.log("Report fields Error caught: " + error); });
     }
     else {
       alert('select again')
@@ -128,35 +143,31 @@ const AggregateForm = ({ route, navigation }) => {
       delete x.name
     })
 
-    const data= {
-      "method": "submitForm",
-      "begin_date": begin_date,
-      "end_date": end_date,
-      "facilityID": facilityID,
-      "reportID": report.report_id,
-      "formdata": valuesArray
-    }
-
-    console.log("valuesArray: ", data)
+    // console.log("valuesArray: ", data)
     // setIsLoading(false)
     // return
 
-    axios({
-      url: BASE_API,
-      method: 'post',
-      headers: { "Content-Type": "application/json" },
-      cookie: cookie,
-      data: {
-        "method": "submitForm",
-        "begin_date": begin_date,
-        "end_date": end_date,
-        "facilityID": facilityID,
-        "reportID": report.report_id,
-        "formdata": valuesArray
-      }
+
+    RNFetchBlob.config({
+      trusty : true
     })
-      .then(res => {
-        console.log("response: ", res)
+    .fetch('POST', BASE_API, {
+      'Content-Type': 'application/json'
+    },
+    JSON.stringify({
+      cookie: cookie,
+      method: "submitForm",
+      begin_date: begin_date,
+      end_date: end_date,
+      facilityID: facilityID,
+      reportID: report.report_id,
+      formdata: valuesArray
+    })
+    )
+    .then(res => {
+      // console.log('Submit res:', res.data)
+      let obj = JSON.parse(res.data)
+      // console.log("response: ", res)
         if (res.status === 200) {
 
           alert(res.data.errorDetail, [{
@@ -166,18 +177,19 @@ const AggregateForm = ({ route, navigation }) => {
 
         } else {
 
-          console.log(res.status);
+          // console.log(res.status);
           alert(res.data.errorDetail, [{
             text: 'Okay', onPress: () => { return },
           }]);
         }
       })
       .catch(function (error) {
-        console.log(error);
+        // console.log(error);
         alert(`Failed to save ${report.report_name}.`, error + '\nPlease try again.', [{
           text: 'Okay', onPress: () => { return },
         }]);
       }).finally(() => { setIsLoading(false) })
+
   })
 
   const cancel = () => { navigation.goBack(); };

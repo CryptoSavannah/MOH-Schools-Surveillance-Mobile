@@ -106,7 +106,7 @@ const App = () => {
       try {
         await AsyncStorage.setItem('token', token);
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
       // console.log('user token: ', token);
       dispatch({ type: 'LOGIN', id: center_no, token: token });
@@ -117,7 +117,7 @@ const App = () => {
       try {
         await AsyncStorage.removeItem('token');
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
       dispatch({ type: 'LOGOUT' });
     },
@@ -138,7 +138,7 @@ const App = () => {
       try {
         token = await AsyncStorage.getItem('token');
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
       dispatch({ type: 'RETRIEVE_TOKEN', token: token });
     }, 1000);
