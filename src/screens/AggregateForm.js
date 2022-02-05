@@ -166,27 +166,34 @@ const AggregateForm = ({ route, navigation }) => {
     )
     .then(res => {
       // console.log('Submit res:', res.data)
+      // console.log('Submit res...:')
       let obj = JSON.parse(res.data)
       // console.log("response: ", res)
-        if (res.status === 200) {
+      console.log( obj.status)
 
-          alert(res.data.errorDetail, [{
-            text: 'Okay', onPress: () => { },
+        if (obj.status == 200) {
+
+          alert(obj.errorDetail, [{
+            text: 'Okay', onPress: () => {
+             },
           }]);
           cancel()
 
         } else {
 
           // console.log(res.status);
-          alert(res.data.errorDetail, [{
-            text: 'Okay', onPress: () => { return },
+          alert(obj.errorDetail, [{
+            text: 'Okay', onPress: () => { 
+              console.log(obj.errorDetail);
+              return },
           }]);
         }
       })
       .catch(function (error) {
         // console.log(error);
         alert(`Failed to save ${report.report_name}.`, error + '\nPlease try again.', [{
-          text: 'Okay', onPress: () => { return },
+          text: 'Okay', onPress: () => { console.log(obj.errorDetail);
+            return },
         }]);
       }).finally(() => { setIsLoading(false) })
 
