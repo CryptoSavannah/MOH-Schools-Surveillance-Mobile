@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator, Alert } from 'react-native';
 import logo from '../assets/logo.png';
 import { AuthContext } from '../components/context';
 import { SIGNIN_KEY } from '../../env.json';
@@ -44,29 +44,42 @@ const SignInScreen = ({ navigation }) => {
         })
     )
     .then(res => {
-      // console.log('signIn res:', res.data)
+      console.log('signIn res:', res.data)
       let obj = JSON.parse(res.data)
-      if (obj.status !== 200) {
-        alert('Server Error!', [
-          { text: 'Okay' }
-        ]);
-      }
       if (obj.status == 500) {
         alert('Invalid Credentials!', [
           { text: 'Okay' }
         ]);
       }
+      if (obj.status !== 200) {
+        alert('Server Error!', [
+          { text: 'Okay' }
+        ]);
+      } 
       else {
+
+        if(obj.facilities.length <= 0){
+          Alert.alert(
+            "Invalid User",
+            "You do not have access to this platform.",
+            [
+              { text: "OK", onPress: () => {} }
+            ]
+          );
+        }
+        else {
 
         const foundUser = {
           cookie: obj.token,
           userid: obj.userData.userid,
-          display_name: obj.userData.display_name
+          display_name: obj.userData.display_name,
+          facilities: obj.facilities
         }
         // console.log('signIn res2:', foundUser)
 
         AsyncStorage.setItem('user', JSON.stringify(foundUser));
         signIn(foundUser);
+      }
       }
       setIsLoading(false);
     })

@@ -5,6 +5,7 @@ import AggregateForm from "../screens/AggregateForm";
 import Icon from "react-native-vector-icons/Ionicons";
 import ProfileScreen from "../screens/ProfileScreen";
 import HowToUse from "../screens/HowToUse";
+import FacilityScreen from "../screens/FacilityScreen";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +31,14 @@ const HomeStackScreen = ({ route, navigation }) => (
     }} />
     <Stack.Screen name="HowTo" component={HowToUse} options={{
       title: 'How to guide',
+      headerLeft: () => (
+        <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
+          onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />
+      ),
+    }} />
+    <Stack.Screen name="FacilityScreen" component={FacilityScreen}
+    options={{
+      title: "SELECT FACILITY",
       headerLeft: () => (
         <Icon.Button name="ios-arrow-back" size={25} backgroundColor="#0388E5"
           onPress={() => navigation.goBack()} style={{ paddingLeft: 20 }} />

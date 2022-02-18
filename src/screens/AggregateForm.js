@@ -15,9 +15,10 @@ import RNFetchBlob from 'rn-fetch-blob';
 const AggregateForm = ({ route, navigation }) => {
 
   const [cookie, setUserCookie] = useState('');
-  const [facilityID, setFacilityID] = useState('');
+  const [UserID, setUserID] = useState('');
+  const [facilities, setFacilities] = useState([]);
 
-  const { report, begin_date, end_date } = route.params ?? {};
+  const { report, begin_date, end_date, facility } = route.params ?? {};
 
   const [isLoading, setIsLoading] = useState(false);
   const [reportForm, setReportForm] = useState([]);
@@ -122,7 +123,8 @@ const AggregateForm = ({ route, navigation }) => {
         else {
           let usr = JSON.parse(user);
           setUserCookie(usr.cookie);
-          setFacilityID(usr.userid)
+          setUserID(usr.userid)
+          setFacilities(usr.facilities)
           getReportFields()
         }
       })
@@ -148,6 +150,15 @@ const AggregateForm = ({ route, navigation }) => {
     // return
 
 
+    // console.log("Request: ", {
+    //   cookie: cookie,
+    //   method: "submitForm",
+    //   begin_date: begin_date,
+    //   end_date: end_date,
+    //   facilityID: facility,
+    //   reportID: report.report_id,
+    //   formdata: valuesArray
+    // })
     RNFetchBlob.config({
       trusty : true
     })
@@ -159,17 +170,17 @@ const AggregateForm = ({ route, navigation }) => {
       method: "submitForm",
       begin_date: begin_date,
       end_date: end_date,
-      facilityID: facilityID,
+      facilityID: facility,
       reportID: report.report_id,
       formdata: valuesArray
     })
     )
     .then(res => {
-      // console.log('Submit res:', res.data)
-      // console.log('Submit res...:')
+      // console.log('Submit res:', res)
+      // console.log('Submit res. facility..:', facility)
       let obj = JSON.parse(res.data)
       // console.log("response: ", res)
-      console.log( obj.status)
+      // console.log( obj.status)
 
         if (obj.status == 200) {
 
@@ -184,7 +195,7 @@ const AggregateForm = ({ route, navigation }) => {
           // console.log(res.status);
           alert(obj.errorDetail, [{
             text: 'Okay', onPress: () => { 
-              console.log(obj.errorDetail);
+              // console.log(obj.errorDetail);
               return },
           }]);
         }
@@ -192,14 +203,24 @@ const AggregateForm = ({ route, navigation }) => {
       .catch(function (error) {
         // console.log(error);
         alert(`Failed to save ${report.report_name}.`, error + '\nPlease try again.', [{
-          text: 'Okay', onPress: () => { console.log(obj.errorDetail);
+          text: 'Okay', onPress: () => { console.log(error);
             return },
         }]);
       }).finally(() => { setIsLoading(false) })
 
   })
 
-  const cancel = () => { navigation.goBack(); };
+  const cancel = () => { 
+    if(facilities.length == 1){
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }]
+   })
+    }
+    else{
+      navigation.goBack();
+    }
+   };
 
   const renderReportForm = () => {
 

@@ -164,41 +164,12 @@ const OverViewScreen = (props) => {
   }
 
   const proceedToForm = async (reportt) => {
+
     if (reportt.report_id !== null) {
 
-      RNFetchBlob.config({
-        trusty : true
-      })
-      .fetch('POST', BASE_API, {
-        'Content-Type': 'application/json'
-      },
-      JSON.stringify({
-        cookie: cookie,
-        method: "getReportFields",
-        reportID: reportt.report_id,
-        format: "fill"
-      })
-      )
-      .then(res => {
-        // console.log('Report fields res:', res)
-        let obj = JSON.parse(res.data)
-        // console.log('Report fields res.data:', res.data)
+      // send to FacilityScreen from which we make this call
+      props.navigation.navigate("FacilityScreen", { report: reportt, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
 
-        try {
-          if (obj.status == "500") { signOut() }
-          else if(obj.status == "400" && obj.errorCode == "400"){
-            alert('Form not available.');
-          }
-          else {
-            props.navigation.navigate("NewAggregate", { report: reportt, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-          }
-        } catch (error) {
-          alert('Fields Error\n' + res)
-          return
-        }
-
-      })
-      .catch(function (error) { console.log("Report fields Error caught: " + error); });
     }
     else {
       alert('select again')
@@ -265,9 +236,7 @@ const OverViewScreen = (props) => {
               <WalkthroughableText style={{ paddingBottom: selectedStep == 'thirdUniqueKey' ? actuatedNormalize(70) : 0, marginTop: actuatedNormalize(60), marginBottom: actuatedNormalize(50), alignSelf: 'center' }}>
                 <TouchableOpacity
                   activeOpacity={.5}
-                  onPress={() => { 
-                    // props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                  }}
+                  onPress={() => { }}
                   style={{
                     backgroundColor: "#F39C12", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3,
                     width: (Dimensions.get('screen').width - actuatedNormalize(40))
@@ -307,12 +276,10 @@ const OverViewScreen = (props) => {
                   <TouchableOpacity
                     activeOpacity={.5}
                     disabled={(selectedReport === null)}
-                    onPress={() =>{
-                      // props.navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                    }}
+                    onPress={() => { }}
                     style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
                   >
-                    <Text style={{ color: "white" }}>Next</Text>
+                    <Text style={{ color: "white" }}>NEXT</Text>
                   </TouchableOpacity>
                 </View>
               </WalkthroughableText>
@@ -365,9 +332,7 @@ const OverViewScreen = (props) => {
             <View style={{ width: "100%", marginTop: actuatedNormalize(60), marginBottom: actuatedNormalize(50), alignSelf: 'center' }}>
               {priorityReport && (<TouchableOpacity
                 activeOpacity={.5}
-                onPress={() => { proceedToForm(priorityReport)
-                  // props.navigation.navigate("NewAggregate", { report: priorityReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                }}
+                onPress={() => { proceedToForm(priorityReport) }}
                 style={{ backgroundColor: "#F39C12", alignItems: "center", padding: actuatedNormalize(10), borderRadius: 4, elevation: 3 }}
               >
                 <Text style={{ color: "white", fontSize: actuatedNormalize(17) }}>{(priorityReport.report_name).toUpperCase()}</Text>
@@ -391,12 +356,10 @@ const OverViewScreen = (props) => {
                 <TouchableOpacity
                   activeOpacity={.5}
                   disabled={(selectedReport === null)}
-                  onPress={() =>{ proceedToForm(selectedReport)
-                    // props.navigation.navigate("NewAggregate", { report: selectedReport, begin_date: formatTheDateText(fromDate), end_date: formatTheDateText(toDate) })
-                  }}
+                  onPress={() => { proceedToForm(selectedReport) }}
                   style={(selectedReport === null) ? styles.inActiveBtn : styles.activeBtn}
                 >
-                  <Text style={{ color: "white" }}>Next</Text>
+                  <Text style={{ color: "white" }}>NEXT</Text>
                 </TouchableOpacity>
               </View>
             </View>

@@ -3,7 +3,7 @@ export const formatTheDateLabel = (dateStr = defaultDate) => {
 }
 
 export const formatTheDateText = (dateStr) => {
-  return dateStr.getFullYear() + '-' + dateStr.getMonth() + '-' + dateStr.getDate()
+  return dateStr.getFullYear() + '-' + (dateStr.getMonth() + 1 )+ '-' + dateStr.getDate()
 }
 
 export const defaultDate = new Date();
