@@ -7,6 +7,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-community/async-storage";
 import { ScrollView } from 'react-native-gesture-handler';
 import actuatedNormalize from '../helpers/actuatedNormalize';
+import Geolocation from '@react-native-community/geolocation';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -31,47 +32,61 @@ const SignInScreen = ({ navigation }) => {
       return
     }
 
-    axios({
-      url: SIGNIN_KEY,
-      method: 'post',
-      headers: { "Content-Type": "application/json" },
-      data: {
-        "uname": email,
-        "passwd": password,
-        "mm_api": "123456"
-      }
-    })
-      .then(res => {
-        if (res.status !== 200) {
-          alert('Server Error!', [
-            { text: 'Okay' }
-          ]);
+    Geolocation.getCurrentPosition(position => {
+      const currentLongitude = 
+          JSON.stringify(position.coords.longitude);
+      const currentLatitude = 
+        JSON.stringify(position.coords.latitude);
+      // console.log("your location: ", currentLongitude + "," + currentLatitude)
+      // console.log("axios config: ", JSON.stringify({
+      //   "uname": email,
+      //   "passwd": password,
+      //   "mm_api": "123456",
+      //   "location": JSON.stringify({long: currentLongitude, lat: currentLatitude})
+      // }))
+      axios({
+        url: SIGNIN_KEY,
+        method: 'post',
+        headers: { "Content-Type": "application/json" },
+        data: {
+          "uname": email,
+          "passwd": password,
+          "mm_api": "123456",
+          "location": JSON.stringify({long: currentLongitude, lat: currentLatitude})
         }
-        if (res.data.status == 500) {
-          alert('Invalid Credentials!', [
-            { text: 'Okay' }
-          ]);
-          // console.log("SignIn Error: " + JSON.stringify(res));
-        }
-        else {
-          let cookie = res.headers["set-cookie"]
-          const foundUser = {
-            cookie: cookie,
-            userid: res.data.userData.userid,
-            display_name: res.data.userData.display_name
-          }
-          AsyncStorage.setItem('user', JSON.stringify(foundUser));
-          signIn(foundUser);
-        }
-        setIsLoading(false);
       })
-      .catch(function (error) {
-        // console.log("SignIn Error caught: " + error);
-        alert('Internet error: Try again', [
-          { text: 'Okay' }
-        ]);
-        setIsLoading(false);
-      });
+        .then(res => {
+          if (res.status !== 200) {
+            alert('Server Error!', [
+              { text: 'Okay' }
+            ]);
+          }
+          if (res.data.status == 500) {
+            alert('Invalid Credentials!', [
+              { text: 'Okay' }
+            ]);
+            // console.log("SignIn Error: " + JSON.stringify(res));
+          }
+          else {
+            let cookie = res.headers["set-cookie"]
+            const foundUser = {
+              cookie: cookie,
+              userid: res.data.userData.userid,
+              display_name: res.data.userData.display_name
+            }
+            AsyncStorage.setItem('user', JSON.stringify(foundUser));
+            signIn(foundUser);
+          }
+          setIsLoading(false);
+        })
+        .catch(function (error) {
+          // console.log("SignIn Error caught: " + error);
+          alert('Internet error: Try again', [
+            { text: 'Okay' }
+          ]);
+          setIsLoading(false);
+        });
+    });
   };
 
   return (
