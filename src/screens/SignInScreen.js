@@ -7,6 +7,7 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { ScrollView } from 'react-native-gesture-handler';
 import actuatedNormalize from '../helpers/actuatedNormalize';
 import RNFetchBlob from 'rn-fetch-blob';
+import Geolocation from '@react-native-community/geolocation';
 
 const SignInScreen = ({ navigation }) => {
 
@@ -31,66 +32,81 @@ const SignInScreen = ({ navigation }) => {
       return
     }
 
-    RNFetchBlob.config({
-      trusty : true
-    })
-    .fetch('POST', SIGNIN_KEY, {
-      'Content-Type': 'application/json'
-    },
-    JSON.stringify({
-          uname: email,
-          passwd: password,
-          mm_api: "123456"
+    Geolocation.getCurrentPosition(position => {
+      const currentLongitude =
+        JSON.stringify(position.coords.longitude);
+      const currentLatitude =
+        JSON.stringify(position.coords.latitude);
+      // console.log("your location: ", currentLongitude + "," + currentLatitude)
+      // console.log("fetch config: ", JSON.stringify({
+      //   "uname": email,
+      //   "passwd": password,
+      //   "mm_api": "123456",
+      //   "location": JSON.stringify({long: currentLongitude, lat: currentLatitude})
+      // }))
+
+      RNFetchBlob.config({
+        trusty: true
+      })
+        .fetch('POST', SIGNIN_KEY, {
+          'Content-Type': 'application/json'
+        },
+          JSON.stringify({
+            uname: email,
+            passwd: password,
+            mm_api: "123456",
+            "location": JSON.stringify({ long: currentLongitude, lat: currentLatitude })
+          })
+        )
+        .then(res => {
+          console.log('signIn res:', res.data)
+          let obj = JSON.parse(res.data)
+          if (obj.status == 500) {
+            alert('Invalid Credentials!', [
+              { text: 'Okay' }
+            ]);
+          }
+          if (obj.status !== 200) {
+            alert('Server Error!', [
+              { text: 'Okay' }
+            ]);
+          }
+          else {
+
+            if (obj.facilities.length <= 0) {
+              Alert.alert(
+                "Invalid User",
+                "You do not have access to this platform.",
+                [
+                  { text: "OK", onPress: () => { } }
+                ]
+              );
+            }
+            else {
+
+              const foundUser = {
+                cookie: obj.token,
+                userid: obj.userData.userid,
+                display_name: obj.userData.display_name,
+                facilities: obj.facilities
+              }
+              // console.log('signIn res2:', foundUser)
+
+              AsyncStorage.setItem('user', JSON.stringify(foundUser));
+              signIn(foundUser);
+            }
+          }
+          setIsLoading(false);
         })
-    )
-    .then(res => {
-      console.log('signIn res:', res.data)
-      let obj = JSON.parse(res.data)
-      if (obj.status == 500) {
-        alert('Invalid Credentials!', [
-          { text: 'Okay' }
-        ]);
-      }
-      if (obj.status !== 200) {
-        alert('Server Error!', [
-          { text: 'Okay' }
-        ]);
-      } 
-      else {
-
-        if(obj.facilities.length <= 0){
-          Alert.alert(
-            "Invalid User",
-            "You do not have access to this platform.",
-            [
-              { text: "OK", onPress: () => {} }
-            ]
-          );
-        }
-        else {
-
-        const foundUser = {
-          cookie: obj.token,
-          userid: obj.userData.userid,
-          display_name: obj.userData.display_name,
-          facilities: obj.facilities
-        }
-        // console.log('signIn res2:', foundUser)
-
-        AsyncStorage.setItem('user', JSON.stringify(foundUser));
-        signIn(foundUser);
-      }
-      }
-      setIsLoading(false);
-    })
-    .catch(function (error) {
-      // console.log("SignIn Error caught: " + error);
-      alert('Internet error: Try again', [
-        { text: 'Okay' }
-      ]);
-      setIsLoading(false);
+        .catch(function (error) {
+          // console.log("SignIn Error caught: " + error);
+          alert('Internet error: Try again', [
+            { text: 'Okay' }
+          ]);
+          setIsLoading(false);
+        });
     });
- };
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -116,22 +132,22 @@ const SignInScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)} />
       </View>
 
-      <View style={{paddingBottom: actuatedNormalize(80)}}>
-      {isLoading ?
-        <TouchableOpacity
-          style={styles.loginBtn}
-        >
-          <ActivityIndicator animating={isLoading} color="#fff" />
-        </TouchableOpacity>
-        :
-        <TouchableOpacity
-          style={styles.loginBtn}
-          onPress={() =>
-            loginHandle()
-          }>
-          <Text style={styles.loginText}>LOGIN</Text>
-        </TouchableOpacity>
-      }
+      <View style={{ paddingBottom: actuatedNormalize(80) }}>
+        {isLoading ?
+          <TouchableOpacity
+            style={styles.loginBtn}
+          >
+            <ActivityIndicator animating={isLoading} color="#fff" />
+          </TouchableOpacity>
+          :
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={() =>
+              loginHandle()
+            }>
+            <Text style={styles.loginText}>LOGIN</Text>
+          </TouchableOpacity>
+        }
       </View>
     </ScrollView>
   );

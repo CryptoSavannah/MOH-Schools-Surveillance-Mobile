@@ -11,6 +11,7 @@ import { BASE_API } from '../../env.json';
 import { defaultDate, formatTheDateLabel, formatTheDateText } from '../helpers/helpers';
 import actuatedNormalize from '../helpers/actuatedNormalize';
 import RNFetchBlob from 'rn-fetch-blob';
+import Geolocation from '@react-native-community/geolocation';
 
 const AggregateForm = ({ route, navigation }) => {
 
@@ -38,7 +39,7 @@ const AggregateForm = ({ route, navigation }) => {
   const [sAccordion, setSAccordion] = useState("");
 
   const showDatePicker = (fieldID, varID, name) => {
-    setSIndex({fieldID:fieldID, varID: varID, name: name })
+    setSIndex({ fieldID: fieldID, varID: varID, name: name })
     setDatePickerVisibility(true);
   };
 
@@ -145,7 +146,22 @@ const AggregateForm = ({ route, navigation }) => {
       delete x.name
     })
 
+    const data = {
+      "method": "submitForm",
+      "begin_date": begin_date,
+      "end_date": end_date,
+      "facilityID": facility,
+      "reportID": report.report_id,
+      "formdata": valuesArray
+    }
+
     // console.log("valuesArray: ", data)
+    // Geolocation.getCurrentPosition(position => {
+    //   const currentLongitude = 
+    //       JSON.stringify(position.coords.longitude);
+    //   const currentLatitude = 
+    //     JSON.stringify(position.coords.latitude);
+    //   console.log("your location: ", currentLongitude + "," + currentLatitude)});
     // setIsLoading(false)
     // return
 
@@ -221,6 +237,37 @@ const AggregateForm = ({ route, navigation }) => {
       navigation.goBack();
     }
    };
+  const getOneTimeLocation = () => {
+    setLocationStatus('Getting Location ...');
+    Geolocation.getCurrentPosition(
+      //Will give you the current location
+      (position) => {
+        setLocationStatus('You are Here');
+
+        //getting the Longitude from the location json
+        const currentLongitude = 
+          JSON.stringify(position.coords.longitude);
+
+        //getting the Latitude from the location json
+        const currentLatitude = 
+          JSON.stringify(position.coords.latitude);
+
+        //Setting Longitude state
+        setCurrentLongitude(currentLongitude);
+        
+        //Setting Longitude state
+        setCurrentLatitude(currentLatitude);
+      },
+      (error) => {
+        setLocationStatus(error.message);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 30000,
+        maximumAge: 1000
+      },
+    );
+  };
 
   const renderReportForm = () => {
 
@@ -264,10 +311,11 @@ const AggregateForm = ({ route, navigation }) => {
             switch (el.type) {
               case "textInput":
                 return (
-                  <View style={styles.inputView} key={el.fieldID}>
+                  <View style={[styles.inputView, {marginTop: actuatedNormalize(15)}]} key={el.fieldID}>
+                    {<Text style={[styles.inputText2, { paddingTop: actuatedNormalize(8) }]}>{`${el.name}:`}</Text>}
                     <TextInput
                       style={styles.inputText}
-                      placeholder={el.name}
+                      // placeholder={el.name}
                       placeholderTextColor="#000"
                       name={el.name}
                       autoCorrect={false}
@@ -283,14 +331,18 @@ const AggregateForm = ({ route, navigation }) => {
 
                         setValuesArray([...newArr, newEl])
 
-                      }} />
+                      }}
+                    // value={`${el.name} ${valuesArray[el.name] ? ": "+valuesArray[el.name] : ""}`}
+                    />
                   </View>)
               case "numericInput":
                 return (
-                  <View style={styles.inputView} key={el.fieldID}>
+                  <View style={[styles.inputView, {marginTop: actuatedNormalize(15)}]} key={el.fieldID}>
+                    {<Text style={[styles.inputText2, { paddingTop: actuatedNormalize(8) }]}>{`${el.name}:`}</Text>}
+
                     <TextInput
                       style={styles.inputText}
-                      placeholder={el.name}
+                      // placeholder={el.name}
                       placeholderTextColor="#000"
                       name={el.name}
                       keyboardType="numeric"
@@ -312,27 +364,32 @@ const AggregateForm = ({ route, navigation }) => {
               case "select":
                 return (
                   <View style={{ marginHorizontal: actuatedNormalize(25) }} key={el.fieldID} >
+                    <Text style={[styles.inputText2]} placeholderTextColor="#000">{` ${el.label}:`}</Text>
+                    {/* <View style={{width: '60%'}}> */}
                     <View style={[styles.action2, styles.pickerWrapper]} >
                       <Picker style={styles.picker}
                         onValueChange={(itemValue, itemIndex) => {
-                          let newArr = valuesArray.filter(x => x.VarID !== el.varID)
-                          var newEl = {
-                            "name": el.name,
-                            "IndicatorID": el.fieldID,
-                            "VarID": itemValue.value,
-                            "value": itemValue.value,
-                          }
+                          if (itemValue) {
+                            let newArr = valuesArray.filter(x => x.VarID !== el.varID)
+                            var newEl = {
+                              "name": el.name,
+                              "IndicatorID": el.fieldID,
+                              "VarID": itemValue.value,
+                              "value": itemValue.value,
+                            }
 
-                          setValuesArray([...newArr, newEl])
+                            setValuesArray([...newArr, newEl])
+                          }
                         }} itemStyle={styles.pickerItem} >
-                        <Picker.Item value={null} label={`Select ${el.label}`} key={"null"} />
+                        <Picker.Item value={null} label={`Select ${el.name}`} key={"null"} />
                         {
                           el.options && el.options.map((option) => {
-                            return <Picker.item label={option.label} value={option} key={option.value} />
+                            return <Picker.item label={`${option.label}`} value={option} key={option.value} />
                           })
                         }
                       </Picker>
                     </View>
+                    {/* </View> */}
                   </View>)
 
               case "checkbox":
@@ -545,11 +602,15 @@ const styles = StyleSheet.create({
     marginHorizontal: actuatedNormalize(25)
   },
   inputText: {
-    height: actuatedNormalize(50),
-    fontSize: actuatedNormalize(18)
+    height: actuatedNormalize(40),
+    fontSize: actuatedNormalize(17.5)
+  },
+  inputText2: {
+    // height: actuatedNormalize(50),
+    fontSize: actuatedNormalize(17.5)
   },
   picker: {
-    color: '#000', height: '100%', width: '90%', fontSize: actuatedNormalize(18), fontWeight: '100',
+    color: '#000', height: '100%', width: '100%', fontSize: actuatedNormalize(18), fontWeight: '100',
     transform: [{ scaleX: 1.12 }, { scaleY: 1.12 }], left: '4%', position: 'absolute',
   },
   pickerItem: {
