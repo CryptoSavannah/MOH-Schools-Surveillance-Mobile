@@ -1,87 +1,12 @@
-node_modules/**/*
-.expo/*
-npm-debug.*
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-web-build/
-android/app/build/outputs/*
-android/.gradle/6.2/executionHistory/*
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
 
-# macOS
-.DS_Store
-package-lock.json
-env.json
-envs/
+## Sublime Text cache files
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+*.sublime-project
 
-# OSX
-#
-.DS_Store
-
-# Xcode
-#
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-
-# Android/IntelliJ
-#
-build/
-.idea
-.gradle
-local.properties
-*.iml
-
-# node.js
-#
-npm-debug.log
-yarn-error.log
-
-# BUCK 
-buck-out/
-\.buckd/
-*.keystore
-*.pem
-*.jks
-!debug.keystore
-android/gradle.properties
-*.apk
-
-
-# fastlane
-#
-# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
-# screenshots whenever they are needed.
-# For more information about the recommended setup visit:
-# https://docs.fastlane.tools/best-practices/source-control/
-
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
-
-# Bundle artifact
-*.jsbundle
-
-# CocoaPods
-/ios/Pods/
-
-package-lock.json
-yarn.lock
-expressions.txt
-.hprof
